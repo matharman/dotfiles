@@ -1,0 +1,123 @@
+call plug#begin()
+    Plug 'ajh17/Spacegray.vim'
+    Plug 'itchyny/vim-gitbranch'
+    Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
+    Plug 'junegunn/fzf.vim'
+    Plug 'christoomey/vim-tmux-navigator'
+    Plug 'romainl/vim-cool'
+    Plug 'ajh17/VimCompletesMe'
+    Plug 'tpope/vim-commentary'
+    Plug 'tpope/vim-surround'
+    Plug 'ludovicchabant/vim-gutentags'
+    "Plug 'w0rp/ale'
+    "let g:ale_set_loclist = 0
+    "let g:ale_set_quickfix = 1
+    "let g:ale_fix_on_save = 1
+    "let g:ale_fixers = {
+    "\   '*' : ['remove_trailing_lines', 'trim_whitespace'],
+    "\}
+
+    "let g:ale_linters_explicit = 1
+    "let g:ale_c_parse_makefile = 1
+    "let g:ale_linters = {
+    "\   'c': ['gcc'],
+    "\   'vim': ['vint'],
+    "\   'python': ['flake8'],
+    "\}
+call plug#end()
+
+if has('termguicolors')
+    " set Vim-specific sequences for RGB colors
+    " DO NOT change these to single quote strings
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    set termguicolors
+endif
+
+colorscheme spacegray
+set relativenumber
+
+function! StatusLine() abort
+    let l:status_line = ' %f %m%r %= %y %l/%L '
+
+    if exists('g:loaded_gitbranch')
+        let l:branch_name = gitbranch#name()
+
+        if !empty(l:branch_name)
+            let l:status_line = ' %f [' . l:branch_name . '] %m%r %= %y %l/%L '
+        endif
+    endif
+
+    return l:status_line
+endfunction
+
+set statusline=%!StatusLine()
+set laststatus=2
+
+" Speed up terminal code timeout
+set timeout
+set timeoutlen=5000
+set ttimeoutlen=100
+
+" Limit fold depth
+set foldnestmax=1
+
+" Backspace handles whitespace
+set backspace=indent,eol,start
+
+" Leader = Spacebar
+let mapleader = "\<Space>"
+
+" Open vimrc
+nnoremap <leader><Space>v :e $MYVIMRC<CR>
+
+" Movement by visual lines
+nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
+nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
+
+" Easy set paste
+nnoremap <leader>ip :set paste<CR>
+
+" No completion from standard libraries
+" DO add completion from macros
+set complete-=i
+set complete+=d
+
+" Tabs -> 4 spaces
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" Search settings
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" Centralize swapfiles
+set directory=$HOME/.vim/.swap//
+
+" Show cmdline completion above the cmdline
+set wildignorecase
+set wildmenu
+
+" Allow switching from buffers with unwritten changes
+set hidden
+
+augroup VimrcGeneral
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+    autocmd InsertLeave * set nopaste
+augroup end
+
+augroup PerFiletype
+    autocmd!
+    autocmd BufEnter *.h set filetype=c
+    autocmd FileType make setlocal noexpandtab
+    autocmd FileType python,c setlocal foldmethod=syntax
+augroup end
+
+augroup AutoTemplates
+    autocmd!
+    autocmd BufNewFile makefile,Makefile 0r ~/.vim/templates/skeleton.make
+augroup end

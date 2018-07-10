@@ -1,0 +1,10 @@
+#!/bin/sh
+
+## Start compositor
+compton &
+
+## Set background
+~/.fehbg
+
+## start window manager
+exec /usr/bin/i3 >> /dev/null

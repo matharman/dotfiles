@@ -1,0 +1,25 @@
+#!/bin/bash
+
+DOT_DIR=$HOME/.config/dotfiles
+
+declare -A LINK_SRC_TG
+LINK_SRC_TG["shell/bashprofile"]=".bash_profile"
+LINK_SRC_TG["shell/bashrc"]=".bashrc"
+LINK_SRC_TG["shell/tmux_conf"]=".tmux.conf"
+LINK_SRC_TG["editor/vimrc"]=".vim/vimrc"
+LINK_SRC_TG["editor/vimtemplates"]=".vim/templates"
+LINK_SRC_TG["gui/polybar/polyconfig"]=".config/polybar/config"
+LINK_SRC_TG["gui/polybar/polylaunch"]=".config/polybar/launch.sh"
+LINK_SRC_TG["gui/i3config"]=".config/i3/config"
+LINK_SRC_TG["gui/xinitrc"]=".xinitrc"
+LINK_SRC_TG["gitexclude"]=".gitexclude"
+
+# Create directory dependencies
+mkdir -p $HOME/.vim
+mkdir $HOME/.vim/.swap
+
+for SRC in "${!LINK_SRC_TG[@]}"; do
+    if [ -f $DOT_DIR/$SRC ] || [ -d $DOT_DIR/$SRC ]; then
+        ln -s $DOT_DIR/$SRC $HOME/${LINK_SRC_TG[$SRC]}
+    fi
+done

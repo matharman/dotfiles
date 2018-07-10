@@ -1,0 +1,29 @@
+# bashrc -- runs for interactive non-login shells
+
+export HISTIGNORE=clear:ls:"ls -al"
+export HISTCONTROL=ignorespace:erasedups
+export HISTFILESIZE=10000
+export HISTSIZE=10000
+export HISTFILE=$HOME/.config/bash_history
+
+export EDITOR=vim
+export BROWSER=firefox
+export FZF_DEFAULT_COMMAND='find /'
+export FZF_DEFAULT_OPTS='--layout=reverse'
+
+PROMPT_COLOR_END="$(echo -e "\033[00m")"
+PROMPT_COLOR_TIME="$(echo -e "\033[38;2;75;80;86m")"
+PROMPT_COLOR_USERNAME="$(echo -e "\033[38;2;82;124;119m")"
+PROMPT_COLOR_DIR="$(echo -e "\033[38;2;102;137;157m")"
+PROMPT_COLOR_SHELL="$(echo -e "\033[38;2;102;137;157m")"
+PS1='${PROMPT_COLOR_SHELL}╭─${PROMPT_COLOR_END}${PROMPT_COLOR_TIME}[\D{%F}]${PROMPT_COLOR_END} \
+${PROMPT_COLOR_USERNAME}\u${PROMPT_COLOR_END} \
+in ${PROMPT_COLOR_DIR}\W${PROMPT_COLOR_END}\n\
+${PROMPT_COLOR_SHELL}╰─>${PROMPT_COLOR_END} '
+
+#alias cd='`__fzf_cd__`'
+alias ls='ls --color=always'
+alias ei3='vim ~/.config/i3/config'
+alias epb='vim ~/.config/polybar/'
+
+[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
