@@ -23,7 +23,6 @@ ${PROMPT_COLOR_SHELL}╰─>${PROMPT_COLOR_END} '
 #alias cd='`__fzf_cd__`'
 alias ls='ls --color=always'
 alias df='cd ~/.config/dotfiles/'
-alias ei3='vim ~/.config/i3/config'
-alias epb='vim ~/.config/polybar/'
+alias xeph='Xephyr -screen 1280x720 :5 & sleep 1;'
 
 [[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
