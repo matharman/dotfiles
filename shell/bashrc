@@ -8,17 +8,16 @@ export HISTFILE=$HOME/.config/bash_history
 
 export EDITOR=vim
 export BROWSER=firefox
-export FZF_DEFAULT_COMMAND='find /'
+export FZF_DEFAULT_COMMAND='find .'
 export FZF_DEFAULT_OPTS='--layout=reverse'
 
-PROMPT_COLOR_END="$(echo -e "\033[00m")"
-PROMPT_COLOR_SHELL="$(echo -e "\033[38;2;75;80;86m")"
-PROMPT_COLOR_USERNAME="$(echo -e "\033[38;2;82;124;119m")"
-PROMPT_COLOR_DIR="$(echo -e "\033[38;2;102;137;157m")"
-PS1='${PROMPT_COLOR_SHELL}╭─${PROMPT_COLOR_END}${PROMPT_COLOR_SHELL}[\D{%F}]${PROMPT_COLOR_END} \
-${PROMPT_COLOR_USERNAME}\u${PROMPT_COLOR_END} \
-in ${PROMPT_COLOR_DIR}\w${PROMPT_COLOR_END}\n\
-${PROMPT_COLOR_SHELL}╰─>${PROMPT_COLOR_END} '
+RGB_END='\[\033[00m\]'
+RGB_SHELL='\[\033[38;2;75;80;86m\]'
+RGB_USERNAME='\[\033[38;2;82;124;119m\]'
+RGB_DIR='\[\033[38;2;102;137;157m\]'
+PS1="${RGB_SHELL}╭─[\D{%F}]${RGB_END}\
+ ${RGB_USERNAME}\u${RGB_END} in ${RGB_DIR}\w${RGB_END}\
+ \n${RGB_SHELL}╰─> ${RGB_END}"
 
 #alias cd='`__fzf_cd__`'
 alias ls='ls --color=always'
