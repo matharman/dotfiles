@@ -6,42 +6,33 @@ local beautiful = require("beautiful")  -- Theming API
 local hotkeys_popup = require("awful.hotkeys_popup")
 
 --=============================
---          ENVIRONMENT
+--     ENVIRONMENT VARIABLES
 --=============================
-my_modkey = "Mod1"
+my_modkey = "Mod4"
 my_term = "st"
 
 global_keybinds = gears.table.join(
-    awful.key({ my_modkey,           }, "s",      hotkeys_popup.show_help,
+    awful.key({ my_modkey }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
-    awful.key({ my_modkey,           }, "Left",   awful.tag.viewprev,
-              {description = "view previous", group = "tag"}),
-    awful.key({ my_modkey,           }, "Right",  awful.tag.viewnext,
-              {description = "view next", group = "tag"}),
-    awful.key({ my_modkey,           }, "Escape", awful.tag.history.restore,
+    awful.key({ my_modkey }, "h",   awful.tag.viewprev,
+              {description = "view previous tag", group = "tag"}),
+    awful.key({ my_modkey }, "l",  awful.tag.viewnext,
+              {description = "view next tag", group = "tag"}),
+    awful.key({ my_modkey }, "Escape", awful.tag.history.restore,
               {description = "go back", group = "tag"}),
 
-    awful.key({ my_modkey,           }, "j",
-        function ()
-            awful.client.focus.byidx( 1)
-        end,
-        {description = "focus next by index", group = "client"}
-    ),
-    awful.key({ my_modkey,           }, "k",
-        function ()
-            awful.client.focus.byidx(-1)
-        end,
-        {description = "focus previous by index", group = "client"}
-    ),
-    awful.key({ my_modkey,           }, "w", function () mymainmenu:show() end,
-              {description = "show main menu", group = "awesome"}),
+    -- awful.key({ my_modkey }, "j", function () awful.client.focus.byidx(1) end,
+    --           {description = "focus next by index", group = "client"}),
+
+    -- awful.key({ my_modkey }, "k", function () awful.client.focus.byidx(-1) end,
+    --           {description = "focus previous by index", group = "client"}),
 
     -- Layout manipulation
-    awful.key({ my_modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
+    awful.key({ my_modkey, "Shift" }, "j", function () awful.client.swap.byidx(1)    end,
               {description = "swap with next client by index", group = "client"}),
     awful.key({ my_modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
-    awful.key({ my_modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
+    awful.key({ my_modkey, "Control" }, "j", function () awful.screen.focus_relative(1) end,
               {description = "focus the next screen", group = "screen"}),
     awful.key({ my_modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
               {description = "focus the previous screen", group = "screen"}),
@@ -57,7 +48,7 @@ global_keybinds = gears.table.join(
         {description = "go back", group = "client"}),
 
     -- Standard program
-    awful.key({ my_modkey,           }, "Return", function () awful.spawn(my_term) end,
+    awful.key({ my_modkey }, "Return", function () awful.spawn(my_term) end,
               {description = "open a terminal", group = "launcher"}),
     awful.key({ my_modkey, "Control" }, "r", awesome.restart,
               {description = "reload awesome", group = "awesome"}),
@@ -208,4 +199,4 @@ clientbuttons = gears.table.join(
     end)
 )
 
--- }}}
+root.keys(global_keybinds)

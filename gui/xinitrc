@@ -4,21 +4,8 @@ compton &               # Compositor
 udiskie &               # USB automounter
 start-pulseaudio-x11    # Better pulse
 
-HDMI_STATUS=`xrandr --query | grep " connected" | grep HDMI1`
-DP_STATUS=`xrandr --query | grep " connected" | grep DP1`
-
-if [ HDMI_STATUS ] && [ DP_STATUS ]; then
-    xrandr --output HDMI1 --auto --primary --output DP1 --auto --right-of HDMI1
-    xrandr --output eDP1 --off
-elif [ HDMI_STATUS ] && [ -z DP_STATUS ]; then
-    xrandr --output HDMI1 --auto --primary
-    xrandr --output eDP1 --off
-elif [ -z HDMI_STATUS ] && [ DP_STATUS ]; then
-    xrandr --output DP1 --auto --primary
-    xrandr --output eDP1 --off
-else
-    xrandr --output eDP1 --auto --primary
-fi
+xinput disable 'pointer:ELAN Touchscreen'
+xrdb -merge -I$HOME ~/.Xresources
 
 #exec /usr/bin/i3 >> /dev/null
 exec awesome

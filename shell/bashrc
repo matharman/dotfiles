@@ -17,7 +17,7 @@ RGB_USERNAME='\[\033[38;2;82;124;119m\]'
 RGB_DIR='\[\033[38;2;102;137;157m\]'
 PS1="${RGB_SHELL}╭─[\D{%F}]${RGB_END}\
  ${RGB_USERNAME}\u${RGB_END} in ${RGB_DIR}\w${RGB_END}\
- \n${RGB_SHELL}╰─> ${RGB_END}"
+\n${RGB_SHELL}╰─> ${RGB_END}"
 
 #alias cd='`__fzf_cd__`'
 alias ls='ls --color=always'
