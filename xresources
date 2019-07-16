@@ -1,4 +1,5 @@
 ! Xst Configuration
+st.termname: xterm-256color
 st.font: Source Code Pro:pixelsize=20:antialias=true:autohint=true;
 st.blinktimeout: 0
 st.bellvolume: 0
