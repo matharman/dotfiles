@@ -11,7 +11,7 @@ export EDITOR=vim
 export BROWSER=firefox
 
 # FZF environment
-export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
+export FZF_DEFAULT_COMMAND='rg --ignore-case --no-ignore-vcs --hidden --files'
 export FZF_DEFAULT_OPTS='--layout=reverse'
 source ~/.fzf.bash
 
