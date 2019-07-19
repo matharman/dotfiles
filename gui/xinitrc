@@ -7,5 +7,4 @@ start-pulseaudio-x11    # Better pulse
 xinput disable 'pointer:ELAN Touchscreen'
 xrdb -merge -I$HOME ~/.Xresources
 
-#exec /usr/bin/i3 >> /dev/null
-exec awesome
+exec /usr/bin/i3 >> /dev/null
