@@ -5,26 +5,18 @@ call plug#begin()
     Plug 'junegunn/fzf.vim'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'romainl/vim-cool'
-    Plug 'ajh17/VimCompletesMe'
     Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-obsession'
+    
     Plug 'ludovicchabant/vim-gutentags'
-    "Plug 'w0rp/ale'
-    "let g:ale_set_loclist = 0
-    "let g:ale_set_quickfix = 1
-    "let g:ale_fix_on_save = 1
-    "let g:ale_fixers = {
-    "\   '*' : ['remove_trailing_lines', 'trim_whitespace'],
-    "\}
-
-    "let g:ale_linters_explicit = 1
-    "let g:ale_c_parse_makefile = 1
-    "let g:ale_linters = {
-    "\   'c': ['gcc'],
-    "\   'vim': ['vint'],
-    "\   'python': ['flake8'],
-    "\}
+    let g:gutentags_add_default_project_roots = 0
+    let g:gutentags_project_root = ['.gtag_root']
+    let g:gutentags_ctags_exclude = ['**/build', '**/binaries', '**/tools/linaro/*']
 call plug#end()
+
+"---------------------------------
+"          APPEARANCE
+"---------------------------------
 
 if has('termguicolors')
     " set Vim-specific sequences for RGB colors
@@ -35,24 +27,60 @@ if has('termguicolors')
 endif
 
 colorscheme spacegray
-set relativenumber
 
 function! StatusLine() abort
-    let l:status_line = ' %f %m%r %= %y %l/%L '
+    let l:branch_name = ''
+    let l:gtags_status = ''
 
     if exists('g:loaded_gitbranch')
         let l:branch_name = gitbranch#name()
 
         if !empty(l:branch_name)
-            let l:status_line = ' %f [' . l:branch_name . '] %m%r %= %y %l/%L '
+            let l:branch_name = '[' . l:branch_name . ']'
         endif
     endif
 
-    return l:status_line
+    if exists('g:loaded_gutentags')
+        let l:gtags_status = gutentags#statusline('[', ']')
+    endif
+
+    return ' %f [%l/%L] ' . l:branch_name . ' %m%r %=' . l:gtags_status  . ' %y '
 endfunction
 
 set statusline=%!StatusLine()
 set laststatus=2
+
+"---------------------------------
+"          AUTOCOMMANDS
+"---------------------------------
+
+augroup VimrcGeneral
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+    autocmd VimLeavePre * set nopaste | silent! Obsession
+augroup end
+
+augroup PerFiletype
+    autocmd!
+    autocmd BufEnter *.h set filetype=c
+    autocmd FileType make setlocal noexpandtab
+    autocmd FileType gitcommit setlocal nofoldenable
+augroup end
+
+augroup AutoTemplates
+    autocmd!
+    autocmd BufNewFile makefile,Makefile 0r ~/.vim/templates/skeleton.make
+augroup end
+
+"---------------------------------
+"            OPTIONS
+"---------------------------------
+
+if (!exists('g:loaded_custom_path'))
+    let g:loaded_custom_path = 1
+    let b:header_dirs = system('find $HOME/code/m2md-repo/ -type f -name "*.h" | sed -r "s|/[^/]+$||" |sort -u | grep -v linaro | grep -v binaries | grep -v m2md-repo/build | tr "\n" ","')
+    let &path = &path . b:header_dirs
+endif
 
 " Speed up terminal code timeout
 set timeout
@@ -64,6 +92,38 @@ set foldnestmax=1
 
 " Backspace handles whitespace
 set backspace=indent,eol,start
+
+" Tabs -> 4 spaces
+set softtabstop=4
+set shiftwidth=4
+set expandtab
+
+" Search settings
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+
+" Folding
+set foldmethod=syntax
+
+" Centralize swapfiles
+set directory=$HOME/.vim/.swap//
+
+" Show cmdline completion above the cmdline
+set wildignore+=*.s
+set wildignorecase
+set wildmenu
+
+" Allow switching from buffers with unwritten changes
+set hidden
+
+" Enable vim builtin man viewer
+runtime ftplugin/man.vim
+
+"---------------------------------
+"            BINDINGS
+"---------------------------------
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
@@ -77,47 +137,3 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " Easy set paste
 nnoremap <leader>ip :set paste<CR>
-
-" No completion from standard libraries
-" DO add completion from macros
-set complete-=i
-set complete+=d
-
-" Tabs -> 4 spaces
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-
-" Search settings
-set hlsearch
-set incsearch
-set ignorecase
-set smartcase
-
-" Centralize swapfiles
-set directory=$HOME/.vim/.swap//
-
-" Show cmdline completion above the cmdline
-set wildignorecase
-set wildmenu
-
-" Allow switching from buffers with unwritten changes
-set hidden
-
-augroup VimrcGeneral
-    autocmd!
-    autocmd BufWritePost $MYVIMRC source $MYVIMRC
-    autocmd InsertLeave * set nopaste
-augroup end
-
-augroup PerFiletype
-    autocmd!
-    autocmd BufEnter *.h set filetype=c
-    autocmd FileType make setlocal noexpandtab
-    autocmd FileType python,c setlocal foldmethod=syntax
-augroup end
-
-augroup AutoTemplates
-    autocmd!
-    autocmd BufNewFile makefile,Makefile 0r ~/.vim/templates/skeleton.make
-augroup end

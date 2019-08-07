@@ -1,7 +1,4 @@
-# https://i3wm.org/docs/userguide.html for a complete reference!
-
-# Set modifier to alt -- super key is Mod4
-# set $mod Mod1
+# Set modifier to Super
 set $mod Mod4
 
 # Wrapper for vim nav
@@ -11,13 +8,13 @@ set $up k
 set $right l
 
 # Font for window titles
-font pango:Inconsalata 11
+font pango:SourceCodePro 14
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # Start a terminal
-bindsym $mod+Return exec st
+bindsym $mod+Return exec xst
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -106,8 +103,8 @@ bindsym $mod+r mode "resize"
 for_window [class=".*"] border pixel 0
 
 # Gaps settings
-gaps inner 5
-gaps outer 5
+#gaps inner 5
+#gaps outer 5
 
 # Polybar startup
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+#exec_always --no-startup-id $HOME/.config/polybar/launch.sh

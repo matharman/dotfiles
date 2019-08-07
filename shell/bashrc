@@ -1,14 +1,13 @@
-# bashrc -- runs for interactive non-login shells
-
 export HISTIGNORE=clear:ls:"ls -al"
 export HISTCONTROL=ignorespace:erasedups
 export HISTFILESIZE=10000
 export HISTSIZE=10000
 export HISTFILE=$HOME/.config/bash_history
 
+export MANPAGER="vim -M +MANPAGER -"
 export EDITOR=/usr/bin/vim
 export BROWSER=firefox
-export FZF_DEFAULT_COMMAND='find .'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export FZF_DEFAULT_OPTS='--layout=reverse'
 
 RGB_END='\[\033[00m\]'
@@ -19,12 +18,10 @@ PS1="${RGB_SHELL}╭─[\D{%F}]${RGB_END}\
  ${RGB_USERNAME}\u${RGB_END} in ${RGB_DIR}\w${RGB_END}\
 \n${RGB_SHELL}╰─> ${RGB_END}"
 
-alias grep='grep --color=auto'
+#alias grep='grep --color=auto'
+#alias ash='adb shell'
 alias ls='ls --color=auto'
-alias df='cd ~/.config/dotfiles/'
-alias xeph='Xephyr -screen 1280x720 :5 & sleep 1;'
+alias m2md='cd ~/code/m2md-repo/'
 
 source /etc/bash_completion
-[[ -f ~/.fzf.bash ]] && source ~/.fzf.bash
-
-[[ $TERM != "screen-256color" ]] && exec tmux
+source ~/.fzf.bash

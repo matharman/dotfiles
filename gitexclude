@@ -1,3 +1,6 @@
 .gitignore
-tags
+Session.vim
+.gtag_root
+tags*
 **/obj/*
+*.orig
