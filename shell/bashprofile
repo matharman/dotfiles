@@ -7,7 +7,3 @@
 #if [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] ; then
 #    exec startx --vt1 &>> /dev/null
 #fi
-
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/code/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH

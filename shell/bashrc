@@ -10,6 +10,10 @@ export BROWSER=firefox
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export FZF_DEFAULT_OPTS='--layout=reverse'
 
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/code/go
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
 RGB_END='\[\033[00m\]'
 RGB_SHELL='\[\033[38;2;75;80;86m\]'
 RGB_USERNAME='\[\033[38;2;82;124;119m\]'
