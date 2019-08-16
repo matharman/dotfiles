@@ -13,6 +13,7 @@ LINK_SRC_TG["editor/vimtemplates"]=".vim/templates"
 LINK_SRC_TG["gui/i3config"]=".config/i3/config"
 #LINK_SRC_TG["gui/xinitrc"]=".xinitrc"
 LINK_SRC_TG["gitexclude"]=".gitexclude"
+LINK_SRC_TG["gitconfig"]=".gitconfig"
 LINK_SRC_TG["xresources"]=".Xresources"
 
 # Create directory dependencies
