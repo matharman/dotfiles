@@ -1,4 +1,5 @@
 .gitignore
+compile_commands.json
 Session.vim
 .gtag_root
 tags*

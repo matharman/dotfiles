@@ -13,8 +13,6 @@ call plug#begin()
     let g:gutentags_add_default_project_roots = 0
     let g:gutentags_project_root = ['.gtag_root']
     let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
-
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 "---------------------------------
@@ -68,11 +66,6 @@ augroup PerFiletype
     autocmd BufEnter *.h set filetype=c
     autocmd FileType make setlocal noexpandtab
     autocmd FileType gitcommit setlocal nofoldenable
-augroup end
-
-augroup AutoTemplates
-    autocmd!
-    autocmd BufNewFile makefile,Makefile 0r ~/.vim/templates/skeleton.make
 augroup end
 
 "---------------------------------
