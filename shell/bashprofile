@@ -1,9 +1,9 @@
 # bash_profile -- runs for login shells
 
 ## Gather env and aliases for login shells (ie tmux)
-[[ -f $HOME/.bashrc ]] && source $HOME/.bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    source $HOME/.bashrc
+fi
 
-## Start x server
-#if [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] ; then
-#    exec startx --vt1 &>> /dev/null
-#fi
+## set PATH so it includes user's private bin directories
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"

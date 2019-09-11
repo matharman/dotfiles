@@ -8,4 +8,4 @@ xinput disable 'pointer:ELAN Touchscreen'
 xrdb -merge -I$HOME ~/.Xresources
 
 #exec /usr/bin/i3 >> /dev/null
-exec awesome
+#exec awesome

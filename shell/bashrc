@@ -1,31 +1,37 @@
+# History
 export HISTIGNORE=clear:ls:"ls -al"
 export HISTCONTROL=ignorespace:erasedups
 export HISTFILESIZE=10000
 export HISTSIZE=10000
 export HISTFILE=$HOME/.config/bash_history
 
+# XDG Utilities
 export MANPAGER="vim -M +MANPAGER -"
-export EDITOR=/usr/bin/vim
+export EDITOR=vim
 export BROWSER=firefox
+
+# FZF environment
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore-vcs --hidden'
 export FZF_DEFAULT_OPTS='--layout=reverse'
+source ~/.fzf.bash
 
+# Golang environment
 export GOROOT=/usr/local/go
-export GOPATH=$HOME/code/go
+export GOPATH=$HOME/dev/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
+# Prompt with coloration setup
 RGB_END='\[\033[00m\]'
 RGB_SHELL='\[\033[38;2;75;80;86m\]'
 RGB_USERNAME='\[\033[38;2;82;124;119m\]'
 RGB_DIR='\[\033[38;2;102;137;157m\]'
-PS1="${RGB_SHELL}╭─[\D{%F}]${RGB_END}\
- ${RGB_USERNAME}\u${RGB_END} in ${RGB_DIR}\w${RGB_END}\
-\n${RGB_SHELL}╰─> ${RGB_END}"
+PS1="${RGB_SHELL}╭─[${RGB_END}\
+${RGB_USERNAME}\u${RGB_END} in \
+${RGB_DIR}\w${RGB_END}\
+${RGB_SHELL}]\n╰─> ${RGB_END}"
 
-#alias grep='grep --color=auto'
-#alias ash='adb shell'
 alias ls='ls --color=auto'
-alias m2md='cd ~/code/m2md-repo/'
+alias m2md='cd ~/dev/m2md-repo/'
+alias wfd='adb wait-for-device'
 
-source /etc/bash_completion
-source ~/.fzf.bash
+source ~/dev/ncs/zephyr/zephyr-env.sh

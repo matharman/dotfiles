@@ -1,12 +1,11 @@
 call plug#begin()
     Plug 'ajh17/Spacegray.vim'
-    Plug 'tyrannicaltoucan/vim-quantum'
     Plug 'sheerun/vim-polyglot'
     "Plug 'itchyny/vim-gitbranch'
     Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
     Plug 'junegunn/fzf.vim'
+    Plug 'junegunn/vim-slash'
     Plug 'christoomey/vim-tmux-navigator'
-    Plug 'romainl/vim-cool'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-obsession'
     Plug 'ludovicchabant/vim-gutentags'
@@ -20,7 +19,6 @@ call plug#end()
 "---------------------------------
 
 if has('termguicolors')
-    " set Vim-specific sequences for RGB colors
     " DO NOT change these to single quote strings
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
@@ -77,11 +75,6 @@ if (!exists('g:loaded_custom_path'))
     let b:header_dirs = system('find $HOME/code/m2md-repo/ -type f -name "*.h" | sed -r "s|/[^/]+$||" |sort -u | grep -v linaro | grep -v binaries | grep -v m2md-repo/build | tr "\n" ","')
     let &path = &path . b:header_dirs
 endif
-
-" Speed up terminal code timeout
-set timeout
-set timeoutlen=5000
-set ttimeoutlen=100
 
 " Limit fold depth
 set foldnestmax=1

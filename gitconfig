@@ -1,0 +1,24 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+    name = Mathew Harman
+    email = Mathew.Harman@m2mdtech.com
+[color]
+    ui = auto
+[core]
+    excludesfile = /home/matharman/.gitexclude
+[diff]
+    tool = vimdiff
+[difftool]
+    trustExitCode = true
+[alias]
+    mt = mergetool
+    dt = difftool -y
+    lg = log --color --graph --oneline --decorate
+    hist = !git lg --all && exit
+[merge]
+    tool = vimdiff
+[push]
+    default = simple
+[mergetool]
+    keepBackup = false
