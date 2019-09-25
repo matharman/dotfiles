@@ -12,7 +12,7 @@
 [difftool]
     trustExitCode = true
 [alias]
-    mt = mergetool
+    mt = mergetool -y
     dt = difftool -y
     lg = log --color --graph --oneline --decorate
     hist = !git lg --all && exit
@@ -20,5 +20,3 @@
     tool = vimdiff
 [push]
     default = simple
-[mergetool]
-    keepBackup = false
