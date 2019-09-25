@@ -1,5 +1,5 @@
 # History
-export HISTIGNORE=clear:ls:"ls -al"
+export HISTIGNORE=clear:ls
 export HISTCONTROL=ignorespace:erasedups
 export HISTFILESIZE=10000
 export HISTSIZE=10000
@@ -20,18 +20,19 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-# Prompt with coloration setup
-RGB_END='\[\033[00m\]'
+# Nordic environment
+source ~/dev/ncs/zephyr/zephyr-env.sh
+
+# Coloration & Format for prompt
+RGB_ESC='\[\033[00m\]'
 RGB_SHELL='\[\033[38;2;75;80;86m\]'
 RGB_USERNAME='\[\033[38;2;82;124;119m\]'
 RGB_DIR='\[\033[38;2;102;137;157m\]'
-PS1="${RGB_SHELL}╭─[${RGB_END}\
-${RGB_USERNAME}\u${RGB_END} in \
-${RGB_DIR}\w${RGB_END}\
-${RGB_SHELL}]\n╰─> ${RGB_END}"
 
-alias ls='ls --color=auto'
-alias m2md='cd ~/dev/m2md-repo/'
-alias wfd='adb wait-for-device'
+PS1="${RGB_SHELL}╭─[ ${RGB_ESC}\
+${RGB_USERNAME}\u${RGB_ESC} in \
+${RGB_DIR}\w${RGB_ESC}\
+${RGB_SHELL} ]\n╰─>${RGB_ESC} "
 
-source ~/dev/ncs/zephyr/zephyr-env.sh
+source $HOME/.dircolors
+source ~/.aliases
