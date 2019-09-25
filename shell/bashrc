@@ -23,6 +23,9 @@ export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 # Nordic environment
 source ~/dev/ncs/zephyr/zephyr-env.sh
 
+# Enable quick project switching
+CDPATH=".:$HOME/dev:$HOME/dev/m2md-repo:$HOME/dev/ncs"
+
 # Coloration & Format for prompt
 RGB_ESC='\[\033[00m\]'
 RGB_SHELL='\[\033[38;2;75;80;86m\]'
