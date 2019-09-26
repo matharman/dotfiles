@@ -1,18 +1,18 @@
 #!/bin/bash
 
-DOT_DIR=$HOME/.config/dotfiles
+DOT_DIR=$HOME/.config/repos/dotfiles
 
 declare -A LINK_SRC_TG
-LINK_SRC_TG["shell/bashprofile"]=".bash_profile"
+LINK_SRC_TG["shell/bash_profile"]=".bash_profile"
 LINK_SRC_TG["shell/bashrc"]=".bashrc"
 LINK_SRC_TG["shell/tmux_conf"]=".tmux.conf"
 LINK_SRC_TG["editor/vimrc"]=".vim/vimrc"
-LINK_SRC_TG["editor/vimtemplates"]=".vim/templates"
 LINK_SRC_TG["gui/polybar/polyconfig"]=".config/polybar/config"
 LINK_SRC_TG["gui/polybar/polylaunch"]=".config/polybar/launch.sh"
 LINK_SRC_TG["gui/i3config"]=".config/i3/config"
-LINK_SRC_TG["gui/xinitrc"]=".xinitrc"
+#LINK_SRC_TG["gui/xinitrc"]=".xinitrc"
 LINK_SRC_TG["gitexclude"]=".gitexclude"
+LINK_SRC_TG["gitconfig"]=".gitconfig"
 LINK_SRC_TG["xresources"]=".Xresources"
 
 # Create directory dependencies

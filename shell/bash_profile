@@ -1,0 +1,9 @@
+# bash_profile -- runs for login shells
+
+## Gather env and aliases for login shells (ie tmux)
+if [ -f "$HOME/.bashrc" ]; then
+    source $HOME/.bashrc
+fi
+
+## set PATH so it includes user's private bin directories
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"

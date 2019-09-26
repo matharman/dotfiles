@@ -1,7 +1,4 @@
-# https://i3wm.org/docs/userguide.html for a complete reference!
-
-# Set modifier to alt -- super key is Mod4
-# set $mod Mod1
+# Set modifier to Super
 set $mod Mod4
 
 # Wrapper for vim nav
@@ -11,13 +8,13 @@ set $up k
 set $right l
 
 # Font for window titles
-font pango:Inconsalata 11
+font pango:SourceCodePro 14
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # Start a terminal
-bindsym $mod+Return exec st
+bindsym $mod+Return exec xst
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -60,16 +57,20 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1:dev"
-set $ws2 "2:web"
-set $ws3 "3:msg"
-set $ws4 "4:etc"
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
 bindsym $mod+3 workspace $ws3
 bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
