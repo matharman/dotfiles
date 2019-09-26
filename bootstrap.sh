@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOT_DIR=$HOME/.config/repos/dotfiles
+DOT_DIR=$HOME/.config/dotfiles
 
 declare -A LINK_SRC_TG
 LINK_SRC_TG["shell/bash_profile"]=".bash_profile"

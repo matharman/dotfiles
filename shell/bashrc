@@ -15,13 +15,16 @@ export FZF_DEFAULT_COMMAND='rg --ignore-case --no-ignore-vcs --hidden --files'
 export FZF_DEFAULT_OPTS='--layout=reverse'
 source ~/.fzf.bash
 
+# Nordic environment
+source ~/dev/ncs/zephyr/zephyr-env.sh
+
 # Golang environment
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 # Enable quick project switching
-CDPATH=".:$HOME/dev:$HOME/.config/repos"
+CDPATH=".:$HOME/dev:$HOME/.config:$HOME/dev/m2md-repo:$HOME/dev/ncs"
 
 # Coloration & Format for prompt
 RGB_ESC='\[\033[00m\]'

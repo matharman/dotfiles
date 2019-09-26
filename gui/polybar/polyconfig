@@ -196,7 +196,6 @@ time = %I:%M %p
 
 label = %date%   %time%
 
-<<<<<<< HEAD
 [module/pulseaudio]
 type = internal/pulseaudio
 
