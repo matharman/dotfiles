@@ -1,0 +1,10 @@
+function ls() {
+    # If no arguments are provided, assume the current directory
+    [ "$#" -eq 0 ] && set .
+
+    case "$(realpath "$1")" in
+        (~/.dotfiles*)
+            set -- -a "$1" ;;
+    esac
+    command ls --color=auto "$@"
+}

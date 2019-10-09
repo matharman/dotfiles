@@ -1,0 +1,35 @@
+common-label-token = %name%
+common-label-padding = 2
+common-label-background = ${colors.background}
+common-label-foreground = ${colors.foreground}
+common-label-underline = ${colors.transparent}
+
+;pin-workspaces = true
+strip-wsnumbers = true
+index-sort = true
+
+label-mode-padding = ${self.common-label-padding}
+label-mode-background = ${self.common-label-background}
+label-mode-foreground = ${self.common-label-foreground}
+
+label-focused = ${self.common-label-token}
+label-focused-padding = ${self.common-label-padding}
+label-focused-background = ${colors.background-alt}
+label-focused-underline = ${self.common-label-underline}
+
+label-unfocused = ${self.common-label-token}
+label-unfocused-padding = ${self.common-label-padding}
+label-unfocused-background = ${self.common-label-background}
+label-unfocused-underline = ${self.common-label-underline}
+
+label-visible = ${self.common-label-token}
+label-visible-padding = ${self.common-label-padding}
+label-visible-background = ${self.common-label-background}
+label-visible-underline = ${self.common-label-underline}
+
+label-urgent = ${self.common-label-token}
+label-urgent-padding = ${self.common-label-padding}
+label-urgent-background = ${colors.primary}
+label-urgent-foreground = ${self.common-label-foreground}
+
+; vim:ft=dosini

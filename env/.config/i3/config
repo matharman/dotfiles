@@ -11,10 +11,10 @@ set $right l
 font pango:SourceCodePro 14
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+floating_modifier Mod1
 
 # Start a terminal
-bindsym $mod+Return exec xst
+bindsym $mod+Return exec alacritty
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -35,10 +35,10 @@ bindsym $mod+Shift+$up move up
 bindsym $mod+Shift+$right move right
 
 # Split in horizontal orientation
-bindsym $mod+Shift+' split h
+bindsym $mod+Shift+apostrophe splith
 
 # Split in vertical orientation
-bindsym $mod+Shift+% split v
+bindsym $mod+Shift+5 splitv
 
 # Enter fullscreen mode for the focused container
 bindsym $mod+z fullscreen toggle
@@ -110,5 +110,7 @@ for_window [class=".*"] border pixel 0
 gaps inner 5
 gaps outer 5
 
-# Polybar startup
+# Process startup
+exec --no-startup-id "redshift -l 34:-85 -t 6500k:3500k -b 0.85:0.65 &"
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec_always --no-startup-id $HOME/.fehbg

@@ -6,7 +6,7 @@
 [color]
     ui = auto
 [core]
-    excludesfile = /home/matharman/.gitexclude
+    excludesfile = ~/.gitignore.global
 [diff]
     tool = vimdiff
 [difftool]

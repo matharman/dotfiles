@@ -17,102 +17,60 @@
 ;==========================================================
 
 [colors]
-;background = ${xrdb:color0:#222}
-background = #222
-background-alt = #444
-;foreground = ${xrdb:color7:#222}
-foreground = #dfdfdf
-foreground-alt = #555
-primary = #ffb52a
-secondary = #e60053
-alert = #bd2c40
+background = ${xrdb:background:#222}
+background-alt = ${xrdb:color0:#444}
+foreground = ${xrdb:foreground:#dfdfdf}
+foreground-alt = ${xrdb:color7:#555}
+primary = ${xrdb:color1:#ffb52a}
+secondary = ${xrdb:color9:#e60053}
+alert = ${xrdb:color4:#bd2c40}
+transparent = #00FFFFFF
 
 [bar/primary]
 monitor = ${env:MONITOR:}
 width = 100%
-height = 27
+height = 25
 radius = 6.0
 fixed-center = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
 
-line-size = 3
-line-color = #f00
+line-size = 0
 
-border-size = 4
+border-size = 0
 border-color = #00000000
 
-padding-left = 0
-padding-right = 2
+padding-left = 10
+padding-right = 10
 
 module-margin-left = 1
 module-margin-right = 1
 
-font-0 = fixed:pixelsize=10;1
-font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-2 = siji:pixelsize=10;1
+font-0 = fixed:pixelsize=12;1
+font-1 = unifont:fontformat=truetype:size=12:antialias=false;0
+font-2 = Noto Sans Mono:pixelsize=12;1
 
 modules-left = i3
 modules-center = clock
-modules-right = xbacklight pulseaudio wlan eth battery temperature powermenu
+modules-right = backlight pulseaudio eth wlan cpu memory battery powermenu
 
-tray-position = right
+tray-position = none
 tray-padding = 2
-;tray-background = #0063ff
+tray-background = ${colors.background-alt}
 
 cursor-click = pointer
 cursor-scroll = ns-resize
 
-[module/xwindow]
-type = internal/xwindow
-label = %title:0:30:...%
-
-[wm_settings]
-label-focused-background = ${colors.background-alt}
-label-focused-underline= ${colors.primary}
-label-focused-padding = 2
-
-label-occupied-padding = 2
-
-label-urgent-background = ${colors.alert}
-label-urgent-padding = 2
-
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
-index-sort = true
-wrapping-scroll = false
+include-file = /home/mharman/.config/polybar/modules/wm_config
 
-strip-wsnumbers = true
-
-label-mode-padding = 2
-label-mode-foreground = #000
-label-mode-background = ${colors.primary}
-
-; focused = Active workspace on focused monitor
-label-focused = %name%
-label-focused-background = ${wm_settings.label-focused-background}
-label-focused-underline = ${wm_settings.label-focused-underline}
-label-focused-padding = ${wm_settings.label-focused-padding}
-
-; unfocused = Inactive workspace on any monitor
-label-unfocused = %name%
-label-unfocused-padding = ${wm_settings.label-occupied-padding}
-
-; visible = Active workspace on unfocused monitor
-label-visible = %name%
-label-visible-background = ${self.label-focused-background}
-label-visible-underline = ${self.label-focused-underline}
-label-visible-padding = ${self.label-focused-padding}
-
-; urgent = Workspace with urgency hint set
-label-urgent = %name%
-label-urgent-background = ${wm_settings.label-urgent-background}
-label-urgent-padding = ${wm_settings.label-urgent-padding}
-
-[module/xbacklight]
+[module/backlight]
 type = internal/xbacklight
+output = eDP-1
+enable-scroll = true
 
 format = <label> <bar>
 label = light:
@@ -128,64 +86,43 @@ bar-empty = ─
 bar-empty-font = 2
 bar-empty-foreground = ${colors.foreground-alt}
 
-[module/backlight-acpi]
-inherit = module/xbacklight
-type = internal/backlight
-card = intel_backlight
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "cpu: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #f90000
+label = %percentage:2%%
 
-;[module/cpu]
-;type = internal/cpu
-;interval = 1
-;format-prefix = "cpu: "
-;format-prefix-foreground = ${colors.foreground-alt}
-;format-underline = #f90000
-;label = %percentage:2%%
-;
-;[module/memory]
-;type = internal/memory
-;interval = 1
-;format-prefix = "ram: "
-;format-prefix-foreground = ${colors.foreground-alt}
-;format-underline = #4bffdc
-;label = %percentage_used%%
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "ram: "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #4bffdc
+label = %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = wlp1s0
+interface = wlan0
 interval = 5.0
 
-format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
-label-connected = %essid%
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
 
-format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
-
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
-ramp-signal-foreground = ${colors.foreground-alt}
+label-connected = %ifname%
+label-disconnected = 
 
 [module/eth]
 type = internal/network
-interface = net0
+interface = eth0
 interval = 5.0
 
-format-connected-underline = #55aa55
-format-connected-prefix = " "
-format-connected-prefix-foreground = ${colors.foreground-alt}
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
 label-connected = %local_ip%
+label-disconnected = %ifname% disconnected
 
-format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
 
 [module/clock]
 type = internal/date
@@ -196,7 +133,6 @@ time = %I:%M %p
 
 label = %date%   %time%
 
-<<<<<<< HEAD
 [module/pulseaudio]
 type = internal/pulseaudio
 
@@ -230,52 +166,6 @@ type = internal/battery
 battery = BAT0
 adapter = AC
 full-at = 98
-;
-;format-charging = <animation-charging> <label-charging>
-;format-charging-underline = #ffb52a
-;
-;format-discharging = <animation-discharging> <label-discharging>
-;format-discharging-underline = ${self.format-charging-underline}
-;
-;format-full-prefix = " "
-;format-full-prefix-foreground = ${colors.foreground-alt}
-;format-full-underline = ${self.format-charging-underline}
-;
-;ramp-capacity-0 = 
-;ramp-capacity-1 = 
-;ramp-capacity-2 = 
-;ramp-capacity-foreground = ${colors.foreground-alt}
-;
-;animation-charging-0 = 
-;animation-charging-1 = 
-;animation-charging-2 = 
-;animation-charging-foreground = ${colors.foreground-alt}
-;animation-charging-framerate = 750
-;
-;animation-discharging-0 = 
-;animation-discharging-1 = 
-;animation-discharging-2 = 
-;animation-discharging-foreground = ${colors.foreground-alt}
-;animation-discharging-framerate = 750
-;
-;[module/temperature]
-;type = internal/temperature
-;thermal-zone = 0
-;warn-temperature = 60
-;
-;format = <ramp> <label>
-;format-underline = #f50a4d
-;format-warn = <ramp> <label-warn>
-;format-warn-underline = ${self.format-underline}
-;
-;label = %temperature-c%
-;label-warn = %temperature-c%
-;label-warn-foreground = ${colors.secondary}
-;
-;ramp-0 = 
-;ramp-1 = 
-;ramp-2 = 
-;ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]
 type = custom/menu
@@ -290,10 +180,12 @@ label-close-foreground = ${colors.secondary}
 label-separator = " | "
 label-separator-foreground = ${colors.foreground-alt}
 
-menu-0-0 = reboot
-menu-0-0-exec = reboot
-menu-0-1 = shutdown
-menu-0-1-exec = poweroff
+menu-0-0 = logout
+menu-0-0-exec = i3-msg exit
+menu-0-1 = reboot
+menu-0-1-exec = reboot
+menu-0-2 = shutdown
+menu-0-2-exec = poweroff
 
 [settings]
 screenchange-reload = true

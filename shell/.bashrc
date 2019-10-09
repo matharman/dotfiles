@@ -13,15 +13,18 @@ export BROWSER=firefox
 # FZF environment
 export FZF_DEFAULT_COMMAND='rg --ignore-case --no-ignore-vcs --hidden --files'
 export FZF_DEFAULT_OPTS='--layout=reverse'
-source ~/.fzf.bash
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Golang environment
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
+# C environment
+export CC=/usr/bin/clang
+
 # Enable quick project switching
-CDPATH=".:$HOME/dev:$HOME/.config/repos"
+CDPATH=".:$HOME/Dev:$HOME:$HOME/.config/"
 
 # Coloration & Format for prompt
 RGB_ESC='\[\033[00m\]'
@@ -35,3 +38,5 @@ ${RGB_DIR}\w${RGB_ESC}\
 ${RGB_SHELL} ]\n╰─>${RGB_ESC} "
 
 [ -f ~/.aliases ] && source ~/.aliases
+[ -f ~/.functions ] && source ~/.functions
+[ -r /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion

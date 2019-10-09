@@ -1,10 +1,15 @@
 call plug#begin()
     Plug 'ajh17/Spacegray.vim'
+    Plug 'arzg/vim-substrata'
+
+    Plug 'sainnhe/gruvbox-material'
+    let g:gruvbox_material_background = 'soft'
+    let g:gruvbox_material_disable_italic_comment = 1
+
     Plug 'sheerun/vim-polyglot'
     Plug 'itchyny/vim-gitbranch'
     Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
     Plug 'junegunn/fzf.vim'
-    Plug 'junegunn/vim-slash'
     Plug 'christoomey/vim-tmux-navigator'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-obsession'
@@ -20,24 +25,25 @@ call plug#begin()
     let g:ale_echo_msg_warning_str = 'W'
     let g:ale_echo_msg_info_str = 'I'
     let g:ale_echo_msg_format = '[%linter%] [%severity%] %s'
+    let g:ale_c_parse_makefile = 1
     let g:ale_c_parse_compile_commands = 1
 
     Plug 'neoclide/coc.nvim', { 'branch' : 'release' }
     " Coc sources
     Plug 'Shougo/neco-vim'
     Plug 'neoclide/coc-neco'
+
+    Plug 'vim-scripts/DoxygenToolkit.vim'
 call plug#end()
 
 "---------------------------------
 "          APPEARANCE
 "---------------------------------
 
-if has('termguicolors')
-    " DO NOT change these to single quote strings
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-    set termguicolors
-endif
+" DO NOT change these to single quote strings
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
 
 colorscheme spacegray
 syntax enable
@@ -72,7 +78,12 @@ augroup VimrcGeneral
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
     autocmd InsertLeave * set nopaste
+    autocmd BufReadPost *
+      \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+      \ |   exe "normal! g`\""
+      \ | endif
 augroup end
+
 
 "---------------------------------
 "          OPTIONS
@@ -96,7 +107,7 @@ set foldmethod=syntax
 set foldnestmax=1
 
 " Centralize swapfiles
-set directory=$HOME/.vim/.swap//
+set directory=$HOME/.vim/.swap/
 
 " Show cmdline completion above the cmdline
 set wildignore+=*.s,Makefile
@@ -124,4 +135,8 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " Easy set paste
-nnoremap <leader>p :set paste<CR>
+nnoremap <leader>ip :set paste<CR>
+
+" ALE navigation
+nmap <leader>p <Plug>(ale_previous_wrap)
+nmap <leader>n <Plug>(ale_next_wrap)
