@@ -65,7 +65,7 @@ cursor-scroll = ns-resize
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
-include-file = /home/mharman/.config/polybar/modules/wm_config
+include-file = /home/matharman/.config/polybar/modules/wm_config
 
 [module/backlight]
 type = internal/xbacklight

@@ -30,6 +30,8 @@ call plug#begin()
     " VimL source
     Plug 'Shougo/neco-vim'
     Plug 'neoclide/coc-neco'
+
+    Plug 'vim-scripts/DoxygenToolkit.vim'
 call plug#end()
 
 "---------------------------------
@@ -75,6 +77,7 @@ augroup VimrcGeneral
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
     autocmd InsertLeave * set nopaste
+    " Go to previous position in a file
     autocmd BufReadPost *
       \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
       \ |   exe "normal! g`\""
@@ -91,6 +94,7 @@ augroup end
 "          OPTIONS
 "---------------------------------
 
+set exrc
 set encoding=utf-8
 
 " Tabs -> 4 spaces
@@ -144,5 +148,8 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " Easy set paste
-nnoremap <leader>ip :set paste<CR>
+nnoremap <leader>v :set paste<CR>
 
+" Navigate ALE errors
+nmap <leader>p <Plug>(ale_previous_wrap)
+nmap <leader>n <Plug>(ale_next_wrap)
