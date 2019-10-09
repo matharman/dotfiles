@@ -1,0 +1,89 @@
+* {
+    bg:         #111314;
+    fg:         #b7bbb7;
+
+    black:      #2c2f33;
+    black-alt:  #4b5056;
+    red:        #b04c50;
+    green:      #919652;
+    green-alt:  #94985b;
+    yellow:     #e2995c;
+    blue:       #66899d;
+    magenta:    #8d6494;
+    cyan:       #527c77;
+    white:      #606360;
+    white-alt:  #dde3dc;
+
+    spacing: 0;
+    background-color: @bg;
+    border-color: @fg;
+
+    font: "Source Code Pro 14";
+    text-color: @white;
+}
+
+window {
+    border: 1;
+    padding: 5;
+}
+
+mainbox {
+    border: 0;
+    padding: 0;
+}
+
+inputbar {
+    margin: 0px 0px 20px 0px;
+    children: [prompt, textbox-prompt-colon, entry, case-indicator];
+}
+
+prompt {
+    text-color: @cyan;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: ":";
+    text-color: @white-alt;
+}
+
+entry {
+    margin: 0px 10px;
+}
+
+listview {
+    spacing: 5px;
+    dynamic: true;
+    scrollbar: false;
+}
+
+element {
+    padding: 5px;
+    text-color: @white;
+    highlight: bold #527c77;
+    border-radius: 3px;
+}
+
+element selected {
+    background-color: @black-alt;
+    text-color: @white-alt;
+}
+
+element urgent, element selected urgent {
+    text-color: @red;
+}
+
+element active, element selected active {
+    text-color: @magenta;
+}
+
+message {
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px;
+}
+
+button selected {
+    padding: 5px;
+    border-radius: 3px;
+}
