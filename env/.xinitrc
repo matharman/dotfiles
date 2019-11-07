@@ -1,7 +1,6 @@
 #!/bin/sh
 
-redshift -l 34:-85 -t 6500k:3500k -b 0.85:0.65 &
-compton -b               # Compositor
+#compton -b               # Compositor
 start-pulseaudio-x11     # Better pulse
 
 MONITORS=`xrandr -q | grep -e " connected" | awk '{ print $1 }'`
@@ -16,5 +15,5 @@ case $N_MONITORS in
         ;;
 esac
 
-xrdb -load -I$HOME ~/.Xresources
-exec /usr/bin/i3 >> /dev/null
+xrdb -merge -I$HOME ~/.Xresources
+#exec /usr/bin/i3 >> /dev/null

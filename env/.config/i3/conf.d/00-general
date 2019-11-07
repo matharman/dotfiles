@@ -1,0 +1,27 @@
+### WORKSPACE ENUMERATION ###
+set $WS1 "1"
+set $WS2 "2"
+set $WS3 "3"
+set $WS4 "4"
+set $WS5 "5"
+set $WS6 "6"
+
+### WORKSPACE SCREENS ###
+workspace $WS1 output DP1
+workspace $WS2 output DP1
+workspace $WS3 output DP1
+
+workspace $WS4 output HDMI1
+workspace $WS5 output HDMI1
+workspace $WS6 output HDMI1
+
+### GAPS ###
+gaps inner 5
+gaps outer 2
+
+# Disable titlebars but allow borders
+for_window [class="^.*"] border pixel 1
+
+# Except the focused one
+#client.focused border 
+

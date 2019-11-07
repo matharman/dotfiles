@@ -1,0 +1,100 @@
+### MODIFIER ###
+set $MOD Mod4
+floating_modifier Mod1
+
+### NAVIGATION WRAPPER ###
+set $LEFT h
+set $DOWN j
+set $UP k
+set $RIGHT l
+
+### EXEC KEYS ###
+bindsym $MOD+Return exec alacritty
+bindsym $mod+d exec \
+    "rofi -modi \\"run,window\\" -show run"
+
+### FOCUS ###
+bindsym $MOD+$LEFT  focus left
+bindsym $MOD+$DOWN  focus down
+bindsym $MOD+$UP    focus up
+bindsym $MOD+$RIGHT focus right
+bindsym $MOD+a      focus parent
+bindsym $MOD+space  focus mode_toggle
+
+# Move focused directionally
+bindsym $MOD+Shift+$LEFT  move left
+bindsym $MOD+Shift+$DOWN  move down
+bindsym $MOD+Shift+$UP    move up
+bindsym $MOD+Shift+$RIGHT move right
+
+# Mutate focused
+bindsym $MOD+z fullscreen toggle
+bindsym $MOD+Shift+q kill
+bindsym $MOD+Shift+space floating toggle
+
+### LAYOUT CONTROL ###
+bindsym $MOD+e split toggle
+
+### WORKSPACES ###
+
+# Switch to workspace
+bindsym $MOD+1 workspace $WS1
+bindsym $MOD+2 workspace $WS2
+bindsym $MOD+3 workspace $WS3
+bindsym $MOD+4 workspace $WS4
+bindsym $MOD+5 workspace $WS5
+bindsym $MOD+6 workspace $WS6
+
+# Move to workspace
+bindsym $MOD+Shift+1 move container to workspace $WS1
+bindsym $MOD+Shift+2 move container to workspace $WS2
+bindsym $MOD+Shift+3 move container to workspace $WS3
+bindsym $MOD+Shift+4 move container to workspace $WS4
+bindsym $MOD+Shift+5 move container to workspace $WS5
+bindsym $MOD+Shift+6 move container to workspace $WS6
+
+# Move to workspace and follow
+bindsym Control+$MOD+Shift+1  \
+    move container to workspace $WS1; workspace $WS1
+bindsym Control+$MOD+Shift+2  \
+    move container to workspace $WS2; workspace $WS2
+bindsym Control+$MOD+Shift+3  \
+    move container to workspace $WS3; workspace $WS3
+bindsym Control+$MOD+Shift+4  \
+    move container to workspace $WS4; workspace $WS4
+bindsym Control+$MOD+Shift+5  \
+    move container to workspace $WS5; workspace $WS5
+bindsym Control+$MOD+Shift+6  \
+    move container to workspace $WS6; workspace $WS6
+
+### MULTI-MONITOR ###
+bindsym Control+$MOD+$LEFT \
+    move container to output left
+bindsym Control+$MOD+$RIGHT \
+    move container to output right
+
+### MISCELLANEOUS ###
+# Reload configuration
+bindsym $MOD+Shift+c exec --no-startup-id \
+    cat ~/.config/i3/conf.d/* > ~/.config/i3/config; reload
+
+# Restart i3 in place
+bindsym $MOD+Shift+r restart
+
+mode "resize" {
+        # Pressing LEFT will shrink the window’s width.
+        # Pressing RIGHT will grow the window’s width.
+        # Pressing UP will shrink the window’s height.
+        # Pressing DOWN will grow the window’s height.
+        bindsym $LEFT resize shrink width 10 px or 10 ppt
+        bindsym $DOWN resize grow height 10 px or 10 ppt
+        bindsym $UP resize shrink height 10 px or 10 ppt
+        bindsym $RIGHT resize grow width 10 px or 10 ppt
+
+        # Back to normal
+        bindsym Escape mode "default"
+}
+
+# Resize container
+bindsym $MOD+r mode "resize" 
+
