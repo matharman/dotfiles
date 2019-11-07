@@ -3,6 +3,8 @@
 #compton -b               # Compositor
 start-pulseaudio-x11     # Better pulse
 
+touch ~/RAN_XINITRC
+
 MONITORS=`xrandr -q | grep -e " connected" | awk '{ print $1 }'`
 N_MONITORS=`wc -w <<< $MONITORS`
 
