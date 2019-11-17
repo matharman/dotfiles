@@ -16,12 +16,8 @@ export FZF_DEFAULT_OPTS='--layout=reverse'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Golang environment
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/dev/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-
-# C environment
-export CC=/usr/bin/clang
+export GOPATH=$HOME/Dev/golang
+export PATH=$GOPATH/bin:$PATH
 
 # Enable quick project switching
 CDPATH=".:$HOME/Dev:$HOME:$HOME/.config/"

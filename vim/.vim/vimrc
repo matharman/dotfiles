@@ -1,18 +1,15 @@
 call plug#begin()
     Plug 'ajh17/Spacegray.vim'
     Plug 'arzg/vim-substrata'
+    let g:substrata_italic_comments = 0
 
-    Plug 'sainnhe/gruvbox-material'
-    let g:gruvbox_material_background = 'soft'
-    let g:gruvbox_material_disable_italic_comment = 1
-
-    Plug 'sheerun/vim-polyglot'
+    Plug 'vimwiki/vimwiki'
+    " Plug 'sheerun/vim-polyglot'
     Plug 'itchyny/vim-gitbranch'
-    Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
+    "Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
     Plug 'junegunn/fzf.vim'
-    Plug 'christoomey/vim-tmux-navigator'
+    "Plug 'christoomey/vim-tmux-navigator'
     Plug 'tpope/vim-commentary'
-    Plug 'tpope/vim-obsession'
     Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_add_default_project_roots = 0
     let g:gutentags_project_root = ['.gtag_root']
@@ -29,11 +26,10 @@ call plug#begin()
     let g:ale_c_parse_compile_commands = 1
 
     Plug 'neoclide/coc.nvim', { 'branch' : 'release' }
-    " Coc sources
+
+    " VimL source
     Plug 'Shougo/neco-vim'
     Plug 'neoclide/coc-neco'
-
-    Plug 'vim-scripts/DoxygenToolkit.vim'
 call plug#end()
 
 "---------------------------------
@@ -41,11 +37,12 @@ call plug#end()
 "---------------------------------
 
 " DO NOT change these to single quote strings
-let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+if !has('nvim')
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
 set termguicolors
-
-colorscheme spacegray
+colorscheme substrata
 syntax enable
 
 function! StatusLine() abort
@@ -83,7 +80,6 @@ augroup VimrcGeneral
       \ |   exe "normal! g`\""
       \ | endif
 augroup end
-
 
 "---------------------------------
 "          OPTIONS
