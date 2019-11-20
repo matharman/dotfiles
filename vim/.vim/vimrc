@@ -8,22 +8,22 @@ call plug#begin()
     Plug 'itchyny/vim-gitbranch'
     "Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
     Plug 'junegunn/fzf.vim'
-    "Plug 'christoomey/vim-tmux-navigator'
+    Plug 'christoomey/vim-tmux-navigator'
     Plug 'tpope/vim-commentary'
     Plug 'ludovicchabant/vim-gutentags'
     let g:gutentags_add_default_project_roots = 0
-    let g:gutentags_project_root = ['.gtag_root']
+    let g:gutentags_project_root = ['compile_commands.json']
     let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
-    Plug 'dense-analysis/ale'
-    let g:ale_set_highlights = 0
-    let g:ale_disable_lsp = 1
-    let g:ale_echo_msg_error_str = 'E'
-    let g:ale_echo_msg_warning_str = 'W'
-    let g:ale_echo_msg_info_str = 'I'
-    let g:ale_echo_msg_format = '[%linter%] [%severity%] %s'
-    let g:ale_c_parse_makefile = 1
-    let g:ale_c_parse_compile_commands = 1
+    "Plug 'dense-analysis/ale'
+    " let g:ale_set_highlights = 0
+    " let g:ale_disable_lsp = 1
+    " let g:ale_echo_msg_error_str = 'E'
+    " let g:ale_echo_msg_warning_str = 'W'
+    " let g:ale_echo_msg_info_str = 'I'
+    " let g:ale_echo_msg_format = '[%linter%] [%severity%] %s'
+    " let g:ale_c_parse_makefile = 1
+    " let g:ale_c_parse_compile_commands = 1
 
     Plug 'neoclide/coc.nvim', { 'branch' : 'release' }
 
@@ -81,6 +81,12 @@ augroup VimrcGeneral
       \ | endif
 augroup end
 
+augroup FiletypeSpecific
+    autocmd!
+    autocmd BufRead *.h set filetype=c
+augroup end
+
+
 "---------------------------------
 "          OPTIONS
 "---------------------------------
@@ -123,8 +129,15 @@ runtime ftplugin/man.vim
 " Leader = Spacebar
 let mapleader = "\<Space>"
 
+" Jump to def with coc
+nmap <silent><C-]> <Plug>(coc-definition)
+
+" Error navigation
+nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
+nmap <silent><leader>n <Plug>(coc-diagnostic-next)
+
 " Open vimrc
-nnoremap <leader><Space>v :e $MYVIMRC<CR>
+nnoremap <silent><leader><Space>v :e $MYVIMRC<CR>
 
 " Movement by visual lines
 nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
@@ -133,6 +146,3 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 " Easy set paste
 nnoremap <leader>ip :set paste<CR>
 
-" ALE navigation
-nmap <leader>p <Plug>(ale_previous_wrap)
-nmap <leader>n <Plug>(ale_next_wrap)
