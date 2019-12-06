@@ -52,3 +52,4 @@ ${RGB_SHELL} ]\n╰─>${RGB_ESC} "
 
 [ -f ~/.aliases ] && source ~/.aliases
 [ -f ~/.functions ] && source ~/.functions
+[ -f ~/.bash_local ] && source ~/.bash_local
