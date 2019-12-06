@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Install node for CoC if not on Arch
 #curl -sL install-node.now.sh | sudo sh
@@ -12,6 +12,9 @@ for pkg in */; do
     echo "Installing $pkg..."
     stow $pkg
 done
+
+# Concatenate the i3 config
+$HOME/scripts/i3_conf_gen.sh
 
 # Setup symlinks for vanilla vim
 ln -s ~/.config/nvim/init.vim ~/.vim/vimrc
