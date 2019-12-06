@@ -16,6 +16,10 @@
     dt = difftool -y
     lg = log --color --graph --oneline --decorate
     hist = !git lg --all && exit
+[diff]
+    tool = vimdiff
+[difftool]
+    trustExitCode = true
 [merge]
     tool = vimdiff3
 [push]
@@ -23,6 +27,6 @@
 
 # Use nvim as vimdiff
 [mergetool "vimdiff3"]
-    path = nvim
+    cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [difftool "vimdiff3"]
     path = nvim
