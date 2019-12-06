@@ -2,7 +2,7 @@
 [user]
 # Please adapt and uncomment the following lines:
     name = Mathew Harman
-    email = Mathew.Harman@m2mdtech.com
+    email = mathew.harman@gmail.com
 [color]
     ui = auto
 [core]
@@ -16,7 +16,7 @@
 [merge]
     tool = vimdiff3
 [mergetool "vimdiff3"]
-    path =
+    path = nvim
 [alias]
     mt = mergetool -y
     dt = difftool -y
@@ -24,3 +24,7 @@
     hist = !git lg --all && exit
 [push]
     default = simple
+
+# Use nvim as vimdiff
+# [mergetool "vimdiff3"]
+#     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
