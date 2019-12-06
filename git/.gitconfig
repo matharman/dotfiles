@@ -2,13 +2,13 @@
 [user]
 # Please adapt and uncomment the following lines:
     name = Mathew Harman
-    email = Mathew.Harman@m2mdtech.com
+    email = mathew.harman@gmail.com
 [color]
     ui = auto
 [core]
     excludesfile = ~/.gitignore.global
 [diff]
-    tool = vimdiff
+    tool = vimdiff3
 [difftool]
     trustExitCode = true
 [alias]
@@ -17,6 +17,12 @@
     lg = log --color --graph --oneline --decorate
     hist = !git lg --all && exit
 [merge]
-    tool = vimdiff
+    tool = vimdiff3
 [push]
     default = simple
+
+# Use nvim as vimdiff
+[mergetool "vimdiff3"]
+    path = nvim
+[difftool "vimdiff3"]
+    path = nvim

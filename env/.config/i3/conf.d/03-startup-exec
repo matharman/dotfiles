@@ -1,5 +1,4 @@
 ### STARTUP PROCESSES ###
-exec --no-startup-id ~/scripts/redshift_singleton.sh
+exec --no-startup-id $HOME/scripts/redshift_singleton.sh
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id $HOME/.fehbg
-
