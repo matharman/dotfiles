@@ -6,3 +6,6 @@ tags*
 *.orig
 build/*
 .clangd/*
+.exrc
+.vim/*
+!~/.dotfiles/**/.vim/*

@@ -28,6 +28,8 @@ Plug 'arzg/vim-substrata'
 let g:substrata_italic_comments = 0
 "let g:substrata_italic_functions = 0
 
+Plug 'vim-scripts/DoxygenToolkit.vim'
+
 "Plug 'sheerun/vim-polyglot'
 Plug 'itchyny/vim-gitbranch'
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
@@ -180,7 +182,8 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <leader>v :set paste<CR>
 
 " Use language server definitions instead of tags
-nmap <silent><C-]> <Plug>(coc-definition)
+"nmap <silent><C-]> <Plug>(coc-definition) 
+"nmap <silent><leader><C-]> <Plug>(coc-declaration) 
 
 " Navigate errors
 nmap <silent><leader>p <Plug>(coc-diagnostic-prev)

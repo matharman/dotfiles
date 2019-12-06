@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 M2MD_REPO=$1
 MY_PREFIX=`pwd`
 echo $MY_PREFIX
