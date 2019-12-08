@@ -41,11 +41,39 @@ let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
 let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
-Plug 'neoclide/coc.nvim', { 'branch' : 'release' }
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-tags.vim'
 
-" CoC completion for vimscript
-Plug 'Shougo/neco-vim'
-Plug 'neoclide/coc-neco'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+let g:asyncomplete_popup_delay = 10
+
+let g:lsp_virtual_text_enabled = 0
+let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_signs_error = {'text': 'XX'}
+let g:lsp_signs_warning = {'text': '!!'}
+let g:lsp_signs_information = {'text': '>>'}
+let g:lsp_signs_hint = {'text': '--'}
+
+" TODO conditionally add query background
+if executable('clangd')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd', '-background-index']},
+        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ })
+endif
+
+if executable('rls')
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'rls',
+                \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+                \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+                \ 'whitelist': ['rust'],
+                \ })
+endif
 
 call plug#end()
 
@@ -167,6 +195,9 @@ runtime ftplugin/man.vim
 "---------------------------------
 "            BINDINGS
 "---------------------------------
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
@@ -181,10 +212,8 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 " Easy set paste
 nnoremap <leader>v :set paste<CR>
 
-" Use language server definitions instead of tags
-"nmap <silent><C-]> <Plug>(coc-definition) 
-"nmap <silent><leader><C-]> <Plug>(coc-declaration) 
+nmap <silent><leader><C-]> <Plug>(lsp-definition) 
 
 " Navigate errors
-nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
-nmap <silent><leader>n <Plug>(coc-diagnostic-next)
+nmap <silent><leader>p <Plug>(lsp-previous-error)
+nmap <silent><leader>n <Plug>(lsp-next-error)
