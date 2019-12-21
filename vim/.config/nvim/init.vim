@@ -42,21 +42,24 @@ let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
 let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
 Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-tags.vim'
-
 Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-let g:asyncomplete_popup_delay = 10
-
 let g:lsp_virtual_text_enabled = 0
 let g:lsp_diagnostics_echo_cursor = 1
 let g:lsp_signs_error = {'text': 'XX'}
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
+
+" When enabled, this feature does completion twice, overwriting characters in the buffer
+" Also pastes the header file containing the definition on occasion
 let g:lsp_text_edit_enabled = 0
+
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-tags.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+
+let g:asyncomplete_popup_delay = 2
 
 " TODO conditionally add query background
 if executable('clangd')
