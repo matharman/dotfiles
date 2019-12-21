@@ -70,6 +70,7 @@ if executable('rls')
     autocmd User lsp_setup call lsp#register_server({
                 \ 'name': 'rls',
                 \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+                \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
                 \ 'whitelist': ['rust'],
                 \ })
 endif
@@ -174,7 +175,7 @@ set ignorecase
 set smartcase
 
 " Folding
-set foldmethod=syntax
+set foldmethod=manual
 set foldnestmax=1
 
 " Centralize swapfiles
@@ -197,6 +198,7 @@ runtime ftplugin/man.vim
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
 
 " Leader = Spacebar
 let mapleader = "\<Space>"

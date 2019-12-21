@@ -14,7 +14,7 @@ export HISTFILE=$HOME/.config/bash_history
 set -o vi
 
 # XDG Utilities
-export MANPAGER="vim -M +MANPAGER -"
+#export MANPAGER="nvim -M +MANPAGER -"
 export EDITOR=nvim
 export BROWSER=firefox
 
