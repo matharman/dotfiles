@@ -56,12 +56,13 @@ let g:lsp_signs_error = {'text': 'XX'}
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
+let g:lsp_text_edit_enabled = 0
 
 " TODO conditionally add query background
 if executable('clangd')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '-background-index']},
+        \ 'cmd': {server_info->['clangd', '--background-index']},
         \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
         \ })
 endif
@@ -197,8 +198,7 @@ runtime ftplugin/man.vim
 "---------------------------------
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
