@@ -53,7 +53,7 @@ font-2 = Noto Sans Mono:pixelsize=12;1
 
 modules-left = i3
 modules-center = clock
-modules-right = backlight pulseaudio eth wlan cpu memory battery powermenu
+modules-right = backlight eth wlan pulseaudio cpu memory battery powermenu
 
 tray-position = none
 tray-padding = 2
@@ -104,13 +104,14 @@ label = %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = wlan0
-interval = 5.0
+interface = wlp1s0
+interval = 20.0
 
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
 
-label-connected = %ifname%
+label-connected = %essid%
+label-connected-foreground = ${colors.foreground-alt}
 label-disconnected = 
 
 [module/eth]
@@ -120,8 +121,10 @@ interval = 5.0
 
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
-label-connected = %local_ip%
-label-disconnected = %ifname% disconnected
+
+label-connected = %downspeed%
+label-connected-foreground = ${colors.foreground-alt}
+label-disconnected = 
 
 
 [module/clock]

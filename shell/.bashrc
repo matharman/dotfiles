@@ -24,7 +24,6 @@ export FZF_DEFAULT_OPTS='--layout=reverse'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Golang environment
-export GOROOT=/usr/local/go
 export GOPATH=$HOME/dev/go
 export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
