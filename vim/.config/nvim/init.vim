@@ -18,66 +18,51 @@ else
             autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
         augroup end
     endif
-
 endif
 
 call plug#begin()
 
+" APPEARANCE CUSTOMIZATIONS
 Plug 'ajh17/Spacegray.vim'
 Plug 'arzg/vim-substrata'
 let g:substrata_italic_comments = 0
-"let g:substrata_italic_functions = 0
 
-Plug 'vim-scripts/DoxygenToolkit.vim'
-
-"Plug 'sheerun/vim-polyglot'
 Plug 'itchyny/vim-gitbranch'
+
+" COMMENTS/DOCS
+Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'tpope/vim-commentary'
+
+" SYNTAX
+"Plug 'sheerun/vim-polyglot'
+Plug 'rust-lang/rust.vim'
+
+" FILESYSTEM/UTILITIES
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'tpope/vim-commentary'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
 let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
+" LSP/COMPLETION
 Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+let g:asyncomplete_popup_delay = 2
+
 Plug 'prabirshrestha/vim-lsp'
+" When enabled, this feature does completion twice, overwriting characters in the buffer
+" Also pastes the header file containing the definition on occasion
+let g:lsp_text_edit_enabled = 0
 let g:lsp_virtual_text_enabled = 0
+let g:lsp_highlights_enabled = 0
 let g:lsp_diagnostics_echo_cursor = 1
 let g:lsp_signs_error = {'text': 'XX'}
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
-
-" When enabled, this feature does completion twice, overwriting characters in the buffer
-" Also pastes the header file containing the definition on occasion
-let g:lsp_text_edit_enabled = 0
-
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-tags.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-
-let g:asyncomplete_popup_delay = 2
-
-" TODO conditionally add query background
-if executable('clangd')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '--background-index']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-        \ })
-endif
-
-if executable('rls')
-    autocmd User lsp_setup call lsp#register_server({
-                \ 'name': 'rls',
-                \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-                \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-                \ 'whitelist': ['rust'],
-                \ })
-endif
 
 call plug#end()
 
@@ -92,47 +77,28 @@ if !has('nvim')
 endif
 
 set termguicolors
-colorscheme substrata
+colorscheme spacegray
 syntax enable
 
-function! StatusLineMode() abort
-    let l:mode_legend = {
-                \ 'n': 'NORMAL',
-                \ 'v': 'VISUAL',
-                \ 'V': 'VISUAL-LINE',
-                \ '\<C-v>': 'VISUAL-BLOCK',
-                \ 'i': 'INSERT',
-                \ 'R': 'REPLACE',
-                \ 'c': 'COMMAND',
-                \ 't': 'TERMINAL',
-                \}
-
-    return get(l:mode_legend, mode())
-endfunction
-
 function! StatusLine() abort
-    let l:file_path = '[ %f ]'
+    let l:line_cnt = ' [ %l/%L ]'
+    let l:file_path = ' [ %f ]'
     let l:branch_name = ''
-    let l:gtags_status = ''
+    let l:rw_status = ' %m%r'
 
     if exists('g:loaded_gitbranch')
-        let l:branch_name = ' ' . gitbranch#name()
+        let l:branch_name = gitbranch#name()
 
         if !empty(l:branch_name)
-            let l:branch_name = '[' . l:branch_name . ']'
+            let l:branch_name = ' [  ' . l:branch_name . ' ]'
         endif
     endif
 
-    if exists('g:loaded_gutentags')
-        let l:gtags_status = gutentags#statusline('[', ']')
-    endif
-
-    return ' [' . StatusLineMode() . '] [%l/%L] '. l:file_path . ' ' . l:branch_name . ' %m%r %=' . l:gtags_status  . ' %y '
+    return l:line_cnt . l:file_path . l:branch_name . l:rw_status . '%= %y '
 endfunction
 
 set statusline=%!StatusLine()
 set laststatus=2
-set noshowmode
 
 "---------------------------------
 "          AUTOCOMMANDS
@@ -140,6 +106,7 @@ set noshowmode
 
 augroup VimrcGeneral
     autocmd!
+
     " Auto-source config after writing
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
@@ -148,9 +115,9 @@ augroup VimrcGeneral
 
     " Go to previous position in a file
     autocmd BufReadPost *
-                \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
-                \ |   exe "normal! g`\""
-                \ | endif
+            \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+            \ |   exe "normal! g`\""
+            \ | endif
 augroup end
 
 augroup FiletypeControls
@@ -160,12 +127,33 @@ augroup FiletypeControls
     autocmd BufRead *.h set filetype=c
 augroup end
 
+" Clang (overwritten in exrc when cross compiling)
+if executable('clangd')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'clangd',
+        \ 'cmd': {server_info->['clangd', '--background-index']},
+        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ })
+endif
+
+" Rust
+if executable('rls')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'rls',
+        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
+        \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+        \ 'whitelist': ['rust'],
+        \ })
+endif
+
 "---------------------------------
 "          OPTIONS
 "---------------------------------
 
-set exrc
 set encoding=utf-8
+
+" Per-project settings
+set exrc
 
 " Tabs -> 4 spaces
 set softtabstop=4
@@ -178,10 +166,6 @@ set incsearch
 set ignorecase
 set smartcase
 
-" Folding
-set foldmethod=manual
-set foldnestmax=1
-
 " Centralize swapfiles
 set directory=$HOME/.vim/.swap/
 
@@ -193,14 +177,13 @@ set wildmenu
 " Allow switching from buffers with unwritten changes
 set hidden
 
-" Enable vim builtin man viewer
-runtime ftplugin/man.vim
-
 "---------------------------------
 "            BINDINGS
 "---------------------------------
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Completion bindings
+" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
 
 " Leader = Spacebar
@@ -216,8 +199,10 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 " Easy set paste
 nnoremap <leader>v :set paste<CR>
 
-nmap <silent><leader><C-]> <Plug>(lsp-definition) 
+" LSP jumplist
+nmap <silent><leader><C-]> <Plug>(lsp-definition)
+nmap <silent><leader><Shift><C-]> <Plug>(lsp-declaration) 
 
 " Navigate errors
-nmap <silent><leader>p <Plug>(lsp-previous-error)
-nmap <silent><leader>n <Plug>(lsp-next-error)
+nmap <silent><leader>p <Plug>(lsp-previous-diagnostic)
+nmap <silent><leader>n <Plug>(lsp-next-diagnostic)

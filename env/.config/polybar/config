@@ -168,7 +168,13 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 type = internal/battery
 battery = BAT0
 adapter = AC
-full-at = 98
+poll-interval = 10
+
+format-charging-prefix = "batt: "
+format-charging-prefix-foreground = ${colors.foreground-alt}
+
+format-discharging-prefix = "batt: "
+format-discharging-prefix-foreground = ${colors.foreground-alt}
 
 [module/powermenu]
 type = custom/menu

@@ -9,7 +9,7 @@ set $UP k
 set $RIGHT l
 
 ### EXEC KEYS ###
-bindsym $MOD+Return exec $TERMINAL
+bindsym $MOD+Return exec $I3_TERMINAL
 bindsym $mod+d exec \
     "rofi -modi \\"run,window\\" -show run"
 
