@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+[ -f ~/.bash_local ] && source ~/.bash_local
+
+~/.fehbg
+start-pulseaudio-x11 &

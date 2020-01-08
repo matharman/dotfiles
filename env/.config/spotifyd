@@ -1,0 +1,5 @@
+[global]
+username = chronomancer
+password_cmd = cat ~/.config/spotifyd_passwd
+backend = alsa
+bitrate = 320
