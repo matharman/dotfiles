@@ -14,9 +14,9 @@
 [difftool "vimdiff3"]
     path = nvim
 [merge]
-    tool = vimdiff3
-[mergetool "vimdiff3"]
-    path = nvim
+    tool = nvimdiff3
+[mergetool "nvimdiff3"]
+    cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [alias]
     mt = mergetool -y
     dt = difftool -y

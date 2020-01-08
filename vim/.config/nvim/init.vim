@@ -18,7 +18,6 @@ else
             autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
         augroup end
     endif
-
 endif
 
 call plug#begin()
@@ -26,7 +25,6 @@ call plug#begin()
 Plug 'ajh17/Spacegray.vim'
 Plug 'arzg/vim-substrata'
 let g:substrata_italic_comments = 0
-"let g:substrata_italic_functions = 0
 
 Plug 'vim-scripts/DoxygenToolkit.vim'
 
@@ -50,6 +48,8 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 let g:asyncomplete_popup_delay = 10
 
+let g:lsp_highlights_enabled = 0
+let g:lsp_text_edit_enabled = 0
 let g:lsp_virtual_text_enabled = 0
 let g:lsp_diagnostics_echo_cursor = 1
 let g:lsp_signs_error = {'text': 'XX'}
@@ -57,15 +57,17 @@ let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
 
-" TODO conditionally add query background
-if executable('clangd')
+" Using clangd also, but set by .exrc
+if executable('gopls')
     autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '-background-index']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls']},
+        \ 'whitelist': ['go'],
         \ })
+    autocmd BufWritePre *.go LspDocumentFormatSync
 endif
 
+" Rust set up is the same everywhere
 if executable('rls')
     autocmd User lsp_setup call lsp#register_server({
                 \ 'name': 'rls',
@@ -88,7 +90,7 @@ if !has('nvim')
 endif
 
 set termguicolors
-colorscheme substrata
+colorscheme spacegray
 syntax enable
 
 function! StatusLineMode() abort
@@ -175,7 +177,7 @@ set ignorecase
 set smartcase
 
 " Folding
-set foldmethod=syntax
+set foldmethod=manual
 set foldnestmax=1
 
 " Centralize swapfiles
@@ -198,6 +200,7 @@ runtime ftplugin/man.vim
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>" : "\<cr>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
@@ -215,5 +218,5 @@ nnoremap <leader>v :set paste<CR>
 nmap <silent><leader><C-]> <Plug>(lsp-definition) 
 
 " Navigate errors
-nmap <silent><leader>p <Plug>(lsp-previous-error)
-nmap <silent><leader>n <Plug>(lsp-next-error)
+nmap <silent><leader>p <Plug>(lsp-previous-diagnostic)
+nmap <silent><leader>n <Plug>(lsp-next-diagnostic)

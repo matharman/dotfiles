@@ -7,7 +7,7 @@ safe_source ~/.bash_local
 export HISTIGNORE=clear:ls
 export HISTCONTROL=ignorespace:erasedups
 export HISTFILESIZE=10000
-export HISTSIZE=10000
+export HISTSIZE=60000
 export HISTFILE=$HOME/.config/bash_history
 
 # Bash Vi-mode
