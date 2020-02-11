@@ -38,6 +38,7 @@ Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
 
 " FILESYSTEM/UTILITIES
+Plug 'junegunn/vim-slash'
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -55,16 +56,28 @@ let g:asyncomplete_popup_delay = 2
 Plug 'prabirshrestha/vim-lsp'
 " When enabled, this feature does completion twice, overwriting characters in the buffer
 " Also pastes the header file containing the definition on occasion
+let g:lsp_highlights_enabled = 0
 let g:lsp_text_edit_enabled = 0
 let g:lsp_virtual_text_enabled = 0
-let g:lsp_highlights_enabled = 0
 let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_float_cursor = 1
 let g:lsp_signs_error = {'text': 'XX'}
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
 
-" Using clangd also, but set by .exrc
+" Can specify toolchain in exrc like so: 
+" 'cmd': {server_info->['ccls', '-init={"clang":{"extraArgs":["--target=arm-none-eabi"]}}']},
+if executable('ccls')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache'}},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+
 if executable('gopls')
     autocmd User lsp_setup call lsp#register_server({
         \ 'name': 'gopls',
@@ -74,12 +87,10 @@ if executable('gopls')
     autocmd BufWritePre *.go LspDocumentFormatSync
 endif
 
-" Rust set up is the same everywhere
-if executable('rls')
+if executable('ra_lsp_server')
     autocmd User lsp_setup call lsp#register_server({
-                \ 'name': 'rls',
-                \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-                \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
+                \ 'name': 'rust-analyzer',
+                \ 'cmd': {server_info->['ra_lsp_server']},
                 \ 'whitelist': ['rust'],
                 \ })
 endif
@@ -144,27 +155,11 @@ augroup FiletypeControls
     autocmd!
 
     " Header files in my projects are NOT cpp
-    autocmd BufRead *.h set filetype=c
+    autocmd BufReadPre *.h setlocal filetype=c
+
+    " Golang prefers tabs to spaces
+    autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
 augroup end
-
-" Clang (overwritten in exrc when cross compiling)
-if executable('clangd')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '--background-index']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-        \ })
-endif
-
-" Rust
-if executable('rls')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-        \ 'whitelist': ['rust'],
-        \ })
-endif
 
 "---------------------------------
 "          OPTIONS
@@ -201,8 +196,8 @@ set hidden
 "            BINDINGS
 "---------------------------------
 " Completion bindings
-" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
 
 " Leader = Spacebar

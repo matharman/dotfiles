@@ -7,20 +7,21 @@ set $WS5 "5"
 set $WS6 "6"
 
 ### WORKSPACE SCREENS ###
-workspace $WS1 output DP1
-workspace $WS2 output DP1
-workspace $WS3 output DP1
+workspace $WS1 output Virtual1
+workspace $WS2 output Virtual1
+workspace $WS3 output Virtual1
 
-workspace $WS4 output HDMI1
-workspace $WS5 output HDMI1
-workspace $WS6 output HDMI1
-
-### GAPS ###
-gaps inner 5
-gaps outer 2
+workspace $WS4 output Virtual1
+workspace $WS5 output Virtual1
+workspace $WS6 output Virtual1
 
 # Disable titlebars but allow borders
+font pango:Source Code Pro 8
 for_window [class="^.*"] border pixel 1
+
+### GAPS ###
+gaps inner all set 5
+gaps outer all set 2
 
 # Except the focused one
 #client.focused border 
