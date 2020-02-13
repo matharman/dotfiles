@@ -45,7 +45,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
-let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
+let g:gutentags_ctags_exclude = ['**ccls-cache/*', '**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
 " LSP/COMPLETION
 Plug 'prabirshrestha/async.vim'

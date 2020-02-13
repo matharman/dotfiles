@@ -1,4 +1,5 @@
 i3/config
+.ccls-cache/*
 compile_commands.json
 Session.vim
 .gtag_root
