@@ -42,13 +42,14 @@ Plug 'rust-lang/rust.vim'
 Plug 'pboettch/vim-cmake-syntax'
 
 " FILESYSTEM/UTILITIES
+Plug 'junegunn/vim-slash'
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
-let g:gutentags_ctags_exclude = ['**/build/*', '**/binaries/*', '**/tools/linaro/*']
+let g:gutentags_ctags_exclude = ['**ccls-cache/*', '**/build/*', '**/binaries/*', '**/tools/linaro/*']
 
 " LSP/COMPLETION
 Plug 'prabirshrestha/async.vim'
@@ -59,14 +60,44 @@ let g:asyncomplete_popup_delay = 2
 Plug 'prabirshrestha/vim-lsp'
 " When enabled, this feature does completion twice, overwriting characters in the buffer
 " Also pastes the header file containing the definition on occasion
+let g:lsp_highlights_enabled = 0
 let g:lsp_text_edit_enabled = 0
 let g:lsp_virtual_text_enabled = 0
-let g:lsp_highlights_enabled = 0
 let g:lsp_diagnostics_echo_cursor = 1
+let g:lsp_diagnostics_float_cursor = 1
 let g:lsp_signs_error = {'text': 'XX'}
 let g:lsp_signs_warning = {'text': '!!'}
 let g:lsp_signs_information = {'text': '>>'}
 let g:lsp_signs_hint = {'text': '--'}
+
+" Can specify toolchain in exrc like so: 
+" 'cmd': {server_info->['ccls', '-init={"clang":{"extraArgs":["--target=arm-none-eabi"]}}']},
+if executable('ccls')
+   au User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache'}},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+
+if executable('gopls')
+    autocmd User lsp_setup call lsp#register_server({
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls']},
+        \ 'whitelist': ['go'],
+        \ })
+    autocmd BufWritePre *.go LspDocumentFormatSync
+endif
+
+if executable('ra_lsp_server')
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'rust-analyzer',
+                \ 'cmd': {server_info->['ra_lsp_server']},
+                \ 'whitelist': ['rust'],
+                \ })
+endif
 
 call plug#end()
 
@@ -130,41 +161,9 @@ augroup FiletypeControls
     " Header files in my projects are NOT cpp
     autocmd BufReadPre *.h setlocal filetype=c
 
-    " Go likes tabs not spaces
-    autocmd FileType go setlocal noexpandtab shiftwidth=8
+    " Golang prefers tabs to spaces
+    autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
 augroup end
-
-if executable('ccls')
-   autocmd User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'initialization_options': {},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-      \ })
-endif
-
-" Golang
-if executable('gopls')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'gopls',
-        \ 'cmd': {server_info->['gopls']},
-        \ 'whitelist': ['go'],
-        \ })
-    autocmd FiletypeControls BufWritePre *.go LspDocumentFormatSync
-endif
-
-" Rust
-if executable('rls')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'rls',
-        \ 'cmd': {server_info->['rustup', 'run', 'stable', 'rls']},
-        \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
-        \ 'whitelist': ['rust'],
-        \ })
-
-    autocmd FiletypeControls BufWritePre *.rs LspDocumentFormatSync
-endif
 
 "---------------------------------
 "          OPTIONS
@@ -198,12 +197,11 @@ set hidden
 "---------------------------------
 "            BINDINGS
 "---------------------------------
-
 " Completion bindings
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
-" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
