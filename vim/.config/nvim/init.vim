@@ -33,9 +33,13 @@ Plug 'itchyny/vim-gitbranch'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'tpope/vim-commentary'
 
+" AUTOMATED BINDINGS
+Plug 'junegunn/vim-slash'
+
 " SYNTAX
 "Plug 'sheerun/vim-polyglot'
 Plug 'rust-lang/rust.vim'
+Plug 'pboettch/vim-cmake-syntax'
 
 " FILESYSTEM/UTILITIES
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
@@ -77,7 +81,7 @@ if !has('nvim')
 endif
 
 set termguicolors
-colorscheme spacegray
+colorscheme substrata
 syntax enable
 
 function! StatusLine() abort
@@ -124,16 +128,30 @@ augroup FiletypeControls
     autocmd!
 
     " Header files in my projects are NOT cpp
-    autocmd BufRead *.h set filetype=c
+    autocmd BufReadPre *.h setlocal filetype=c
+
+    " Go likes tabs not spaces
+    autocmd FileType go setlocal noexpandtab shiftwidth=8
 augroup end
 
-" Clang (overwritten in exrc when cross compiling)
-if executable('clangd')
+if executable('ccls')
+   autocmd User lsp_setup call lsp#register_server({
+      \ 'name': 'ccls',
+      \ 'cmd': {server_info->['ccls']},
+      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+      \ 'initialization_options': {},
+      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+      \ })
+endif
+
+" Golang
+if executable('gopls')
     autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'clangd',
-        \ 'cmd': {server_info->['clangd', '--background-index']},
-        \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+        \ 'name': 'gopls',
+        \ 'cmd': {server_info->['gopls']},
+        \ 'whitelist': ['go'],
         \ })
+    autocmd FiletypeControls BufWritePre *.go LspDocumentFormatSync
 endif
 
 " Rust
@@ -144,13 +162,13 @@ if executable('rls')
         \ 'workspace_config': {'rust': {'clippy_preference': 'on'}},
         \ 'whitelist': ['rust'],
         \ })
+
+    autocmd FiletypeControls BufWritePre *.rs LspDocumentFormatSync
 endif
 
 "---------------------------------
 "          OPTIONS
 "---------------------------------
-
-set encoding=utf-8
 
 " Per-project settings
 set exrc
@@ -182,9 +200,10 @@ set hidden
 "---------------------------------
 
 " Completion bindings
-" inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-" inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>\<cr>" : "\<cr>"
+" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Leader = Spacebar
 let mapleader = "\<Space>"

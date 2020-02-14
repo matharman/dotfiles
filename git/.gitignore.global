@@ -4,7 +4,6 @@ Session.vim
 .gtag_root
 tags*
 *.orig
-build/*
 .clangd/*
 .exrc
 .vim/*
