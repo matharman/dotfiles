@@ -26,16 +26,18 @@ call plug#begin()
 Plug 'ajh17/Spacegray.vim'
 Plug 'arzg/vim-substrata'
 let g:substrata_italic_comments = 0
+Plug 'chriskempson/base16-vim'
+let base16colorspace=256
 
 Plug 'itchyny/vim-gitbranch'
+Plug 'romainl/vim-cool'
 
 " COMMENTS/DOCS
 Plug 'vim-scripts/DoxygenToolkit.vim'
 Plug 'tpope/vim-commentary'
 
 " SYNTAX
-"Plug 'sheerun/vim-polyglot'
-Plug 'rust-lang/rust.vim'
+Plug 'pboettch/vim-cmake-syntax'
 
 " FILESYSTEM/UTILITIES
 Plug 'junegunn/vim-slash'
@@ -46,25 +48,13 @@ Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_add_default_project_roots = 0
 let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
 let g:gutentags_ctags_exclude = ['**ccls-cache/*', '**/build/*', '**/binaries/*', '**/tools/linaro/*']
+Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-let g:asyncomplete_popup_delay = 2
-
-Plug 'prabirshrestha/vim-lsp'
-" When enabled, this feature does completion twice, overwriting characters in the buffer
-" Also pastes the header file containing the definition on occasion
-let g:lsp_highlights_enabled = 0
-let g:lsp_text_edit_enabled = 0
-let g:lsp_virtual_text_enabled = 0
-let g:lsp_diagnostics_echo_cursor = 1
-let g:lsp_diagnostics_float_cursor = 1
-let g:lsp_signs_error = {'text': 'XX'}
-let g:lsp_signs_warning = {'text': '!!'}
-let g:lsp_signs_information = {'text': '>>'}
-let g:lsp_signs_hint = {'text': '--'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+set cmdheight=2
+set signcolumn=yes
+set updatetime=300
 
 " Can specify toolchain in exrc like so: 
 " 'cmd': {server_info->['ccls', '-init={"clang":{"extraArgs":["--target=arm-none-eabi"]}}']},
@@ -106,8 +96,9 @@ if !has('nvim')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
+set cursorline
 set termguicolors
-colorscheme spacegray
+colorscheme base16-phd
 syntax enable
 
 function! StatusLine() abort
@@ -164,8 +155,6 @@ augroup end
 "          OPTIONS
 "---------------------------------
 
-set encoding=utf-8
-
 " Per-project settings
 set exrc
 
@@ -198,6 +187,7 @@ set hidden
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr>    pumvisible() ? "\<C-y>\<Esc>" : "\<cr>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Leader = Spacebar
 let mapleader = "\<Space>"
@@ -213,9 +203,9 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <leader>v :set paste<CR>
 
 " LSP jumplist
-nmap <silent><leader><C-]> <Plug>(lsp-definition)
-nmap <silent><leader><Shift><C-]> <Plug>(lsp-declaration) 
+nmap <silent>gd <Plug>(coc-definition) 
+nmap <silent><leader>gd <Plug>(coc-declaration)
 
 " Navigate errors
-nmap <silent><leader>p <Plug>(lsp-previous-diagnostic)
-nmap <silent><leader>n <Plug>(lsp-next-diagnostic)
+nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
+nmap <silent><leader>n <Plug>(coc-diagnostic-next)
