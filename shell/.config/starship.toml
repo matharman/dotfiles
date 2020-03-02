@@ -1,0 +1,10 @@
+[cmd_duration]
+disabled = true
+
+[character]
+symbol = ">"
+style_success = "white"
+style_failure = "dim red"
+
+[git_branch]
+style = "white"

@@ -98,7 +98,8 @@ endif
 
 set cursorline
 set termguicolors
-colorscheme base16-phd
+"colorscheme base16-phd
+colorscheme spacegray
 syntax enable
 
 function! StatusLine() abort
@@ -203,8 +204,8 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <leader>v :set paste<CR>
 
 " LSP jumplist
-nmap <silent>gd <Plug>(coc-definition) 
-nmap <silent><leader>gd <Plug>(coc-declaration)
+nmap <silent><leader><gd> <Plug>(coc-declaration) 
+nmap <silent><leader><C-]> <Plug>(coc-definition) 
 
 " Navigate errors
 nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
