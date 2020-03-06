@@ -69,7 +69,7 @@ endif
 
 set cursorline
 set termguicolors
-colorscheme base16-phd
+colorscheme spacegray
 syntax enable
 
 function! StatusLine() abort
