@@ -40,7 +40,6 @@ Plug 'tpope/vim-commentary'
 Plug 'pboettch/vim-cmake-syntax'
 
 " FILESYSTEM/UTILITIES
-Plug 'junegunn/vim-slash'
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
@@ -56,34 +55,6 @@ set cmdheight=2
 set signcolumn=yes
 set updatetime=300
 
-" Can specify toolchain in exrc like so: 
-" 'cmd': {server_info->['ccls', '-init={"clang":{"extraArgs":["--target=arm-none-eabi"]}}']},
-if executable('ccls')
-   au User lsp_setup call lsp#register_server({
-      \ 'name': 'ccls',
-      \ 'cmd': {server_info->['ccls']},
-      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-      \ })
-endif
-
-if executable('gopls')
-    autocmd User lsp_setup call lsp#register_server({
-        \ 'name': 'gopls',
-        \ 'cmd': {server_info->['gopls']},
-        \ 'whitelist': ['go'],
-        \ })
-    autocmd BufWritePre *.go LspDocumentFormatSync
-endif
-
-if executable('ra_lsp_server')
-    autocmd User lsp_setup call lsp#register_server({
-                \ 'name': 'rust-analyzer',
-                \ 'cmd': {server_info->['ra_lsp_server']},
-                \ 'whitelist': ['rust'],
-                \ })
-endif
-
 call plug#end()
 
 "---------------------------------
@@ -98,8 +69,7 @@ endif
 
 set cursorline
 set termguicolors
-"colorscheme base16-phd
-colorscheme spacegray
+colorscheme base16-phd
 syntax enable
 
 function! StatusLine() abort
@@ -149,7 +119,20 @@ augroup FiletypeControls
     autocmd BufReadPre *.h setlocal filetype=c
 
     " Golang prefers tabs to spaces
-    autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
+    "autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
+    autocmd FileType go setlocal noexpandtab shiftwidth=8
+
+    " Formatters
+    autocmd BufWritePost *.go 
+                \ if executable('goimports') | 
+                \     silent execute '!goimports -w %' | 
+                \     edit! | 
+                \ endif
+    autocmd BufWritePost *.rs 
+                \ if executable('rustfmt') | 
+                \     silent execute '!rustfmt %' | 
+                \     edit! | 
+                \ endif
 augroup end
 
 "---------------------------------
@@ -204,7 +187,6 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <leader>v :set paste<CR>
 
 " LSP jumplist
-nmap <silent><leader><gd> <Plug>(coc-declaration) 
 nmap <silent><leader><C-]> <Plug>(coc-definition) 
 
 " Navigate errors

@@ -1,4 +1,4 @@
 ### STARTUP PROCESSES ###
-exec_always --no-startup-id ~/.config/polybar/launch.sh
-exec --no-startup-id compton -b
-exec --no-startup-id redshift
+exec compton -b
+exec_always ~/.config/polybar/launch.sh &
+exec ~/scripts/redshift_singleton.sh &
