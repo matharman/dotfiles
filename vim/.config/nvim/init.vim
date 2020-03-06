@@ -119,7 +119,20 @@ augroup FiletypeControls
     autocmd BufReadPre *.h setlocal filetype=c
 
     " Golang prefers tabs to spaces
-    autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
+    "autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
+    autocmd FileType go setlocal noexpandtab shiftwidth=8
+
+    " Formatters
+    autocmd BufWritePost *.go 
+                \ if executable('goimports') | 
+                \     silent execute '!goimports -w %' | 
+                \     edit! | 
+                \ endif
+    autocmd BufWritePost *.rs 
+                \ if executable('rustfmt') | 
+                \     silent execute '!rustfmt %' | 
+                \     edit! | 
+                \ endif
 augroup end
 
 "---------------------------------
