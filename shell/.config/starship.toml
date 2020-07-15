@@ -8,3 +8,10 @@ style_failure = "dim red"
 
 [git_branch]
 style = "white"
+
+[git_status]
+disabled = "false"
+
+[aws]
+symbol = "aws:"
+displayed_items = "profile"

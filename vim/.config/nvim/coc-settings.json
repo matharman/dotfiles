@@ -4,9 +4,7 @@
         "ccls": {
             "command": "ccls",
             "filetypes": ["c", "cpp", "objc", "objcpp"],
-            "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
-            "initializationOptions": {
-            }
+            "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"]
         },
         "rust-analyzer": {
             "command": "rust-analyzer",

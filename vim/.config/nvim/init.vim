@@ -24,11 +24,6 @@ call plug#begin()
 
 " APPEARANCE CUSTOMIZATIONS
 Plug 'ajh17/Spacegray.vim'
-Plug 'arzg/vim-substrata'
-let g:substrata_italic_comments = 0
-Plug 'chriskempson/base16-vim'
-let base16colorspace=256
-
 Plug 'itchyny/vim-gitbranch'
 Plug 'romainl/vim-cool'
 
@@ -43,11 +38,11 @@ Plug 'pboettch/vim-cmake-syntax'
 Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'tpope/vim-fugitive'
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_add_default_project_roots = 0
-let g:gutentags_project_root = ['compile_commands.json', '.gtag_root', '.exrc']
-let g:gutentags_ctags_exclude = ['**ccls-cache/*', '**/build/*', '**/binaries/*', '**/tools/linaro/*']
-Plug 'tpope/vim-fugitive'
+let g:gutentags_project_root = ['.gtag_root']
+let g:gutentags_ctags_exclude = ['**ccls-cache/*', '**/_install/usr/**/*.h', '**/binaries/*', '**/tools/linaro/*']
 
 " LSP/COMPLETION
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -120,7 +115,7 @@ augroup FiletypeControls
 
     " Golang prefers tabs to spaces
     "autocmd BufNewFile,BufReadPre *.go setlocal noexpandtab shiftwidth=8
-    autocmd FileType go setlocal noexpandtab shiftwidth=8
+    autocmd FileType go,make setlocal noexpandtab shiftwidth=8
 
     " Formatters
     autocmd BufWritePost *.go 
@@ -187,7 +182,10 @@ nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 nnoremap <leader>v :set paste<CR>
 
 " LSP jumplist
-nmap <silent><leader><C-]> <Plug>(coc-definition) 
+nmap <silent> <leader>gd <Plug>(coc-definition)
+nmap <silent> <leader>gy <Plug>(coc-type-definition)
+nmap <silent> <leader>gr <Plug>(coc-references)
+nmap <silent> <leader><leader>gr <Plug>(coc-rename)
 
 " Navigate errors
 nmap <silent><leader>p <Plug>(coc-diagnostic-prev)

@@ -31,6 +31,8 @@ bindsym $MOD+Shift+$RIGHT move right
 bindsym $MOD+z fullscreen toggle
 bindsym $MOD+Shift+q kill
 bindsym $MOD+Shift+space floating toggle
+bindsym $MOD+x move scratchpad
+bindsym $MOD+Shift+x scratchpad show
 
 ### LAYOUT CONTROL ###
 bindsym $MOD+e split toggle
