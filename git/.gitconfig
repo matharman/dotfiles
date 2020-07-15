@@ -24,7 +24,3 @@
     hist = !git lg --all && exit
 [push]
     default = simple
-
-# Use nvim as vimdiff
-# [mergetool "vimdiff3"]
-#     cmd = nvim -d $BASE $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
