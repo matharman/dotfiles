@@ -7,4 +7,4 @@ style_success = "white"
 style_failure = "dim red"
 
 [git_branch]
-style = "white"
+style = "blue"
