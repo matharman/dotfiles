@@ -52,6 +52,30 @@ nmap <silent><leader>gR <Plug>(coc-rename)
 "---------------------------------
 "          OPTIONS
 "---------------------------------
+function! StatusLine() abort
+    let l:line_cnt = ' [ %l/%L ]'
+    let l:file_path = ' [ %f ]'
+    let l:branch_name = ''
+    let l:rw_status = ' %m%r'
+
+    if exists('g:loaded_gitbranch')
+        let l:branch_name = gitbranch#name()
+
+        if !empty(l:branch_name)
+            let l:branch_name = ' [  ' . l:branch_name . ' ]'
+        endif
+    endif
+
+    return l:line_cnt . 
+           \ l:file_path . 
+           \ l:branch_name . 
+           \ l:rw_status . 
+           \ '%= %y '
+endfunction
+
+set statusline=%!StatusLine()
+set laststatus=2
+
 set termguicolors
 colorscheme spacegray
 syntax enable
