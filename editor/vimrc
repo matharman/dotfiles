@@ -1,7 +1,7 @@
 call plug#begin()
     Plug 'ajh17/Spacegray.vim'
     Plug 'sheerun/vim-polyglot'
-    "Plug 'itchyny/vim-gitbranch'
+    Plug 'itchyny/vim-gitbranch'
     Plug 'junegunn/fzf', { 'dir' : '~/.fzf', 'do' : './install --all' }
     Plug 'junegunn/fzf.vim'
     Plug 'junegunn/vim-slash'
@@ -59,7 +59,15 @@ set laststatus=2
 augroup VimrcGeneral
     autocmd!
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+    autocmd InsertLeave * set nopaste
 augroup end
+
+"---------------------------------
+"          GENERAL OPTS
+"---------------------------------
+
+" Allow comments to exec vim commands
+set modeline
 
 " Tabs -> 4 spaces
 set softtabstop=4
@@ -74,6 +82,7 @@ set smartcase
 
 " Folding
 set foldmethod=syntax
+set foldnestmax=1
 
 " Centralize swapfiles
 set directory=$HOME/.vim/.swap//
@@ -104,4 +113,4 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " Easy set paste
-nnoremap <leader>ip :set paste<CR>
+nnoremap <leader>p :set paste<CR>
