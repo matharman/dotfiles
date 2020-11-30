@@ -1,0 +1,14 @@
+{
+    "languageserver": {
+        "ccls": {
+            "initializationOptions": {
+                "clang": {
+                    "extraArgs": [
+                        "--target=arm-none-eabi", 
+                        "--gcc-toolchain=$GNUARMEMB_TOOLCHAIN_PATH/arm-none-eabi/"
+                    ]
+                }
+            }
+        }
+    }
+}
