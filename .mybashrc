@@ -1,0 +1,8 @@
+alias vim='nvim'
+alias vi='vim'
+
+source $HOME/.cargo/env
+[ -f ~/.bash_local ] && source .bash_local
+
+eval "$(starship init bash)"
+eval "$(direnv hook bash)"

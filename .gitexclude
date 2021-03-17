@@ -1,0 +1,8 @@
+compile_commands.json
+Session.vim
+.gtag_root
+tags*
+*.orig
+.envrc
+.vim
+.ccls-cache
