@@ -1,1 +1,32 @@
-.config/dotfiles/git/.gitconfig
+[user]
+        name = Mathew Harman
+        email = mathew.harman@gmail.com
+[core]
+        editor = nvim
+        excludesfile = $HOME/.gitexclude
+[color]
+        ui = auto
+[init]
+        templatedir = $HOME/.git-templates/
+[diff]
+        tool = nvimdiff
+[merge]
+        tool = fugitive
+[difftool "nvimdiff"]
+        cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+        trustExitCode = true
+[mergetool "fugitive"]
+        cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+[alias]
+        mt = mergetool -y
+        dt = difftool -y
+        lg = log --color --graph --oneline --decorate
+        hist = !git lg --all && exit
+[push]
+        default = simple
+[pull]
+        rebase = true
+[apply]
+        whitespace = nowarn
+
+# vim: set ft=gitconfig:
