@@ -6,3 +6,4 @@ tags*
 .envrc
 .vim
 .ccls-cache
+.dotfiles
