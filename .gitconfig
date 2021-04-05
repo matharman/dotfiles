@@ -3,20 +3,21 @@
         email = mathew.harman@gmail.com
 [core]
         editor = nvim
-        excludesfile = $HOME/.gitexclude
+        excludesfile = ~/.gitexclude
 [color]
         ui = auto
 [init]
-        templatedir = $HOME/.git-templates/
+        templatedir = ~/.git-templates/
 [diff]
-        tool = nvimdiff
+        tool = dtnvim
 [merge]
-        tool = fugitive
-[difftool "nvimdiff"]
-        cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
+        tool = mtnvim
+[difftool "dtnvim"]
+        cmd = nvim -d $LOCAL $REMOTE -c 'wincmd l'
         trustExitCode = true
-[mergetool "fugitive"]
-        cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
+[mergetool "mtnvim"]
+        cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+        trustExitCode = true
 [alias]
         mt = mergetool -y
         dt = difftool -y

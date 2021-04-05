@@ -21,7 +21,8 @@ else
 endif
 
 call plug#begin()
-if has('nvim-0.5.0')
+" APPEARANCE CUSTOMIZATIONS
+if has('nvim-0.5.0') && !&diff
     Plug 'nvim-treesitter/nvim-treesitter'
     Plug 'rktjmp/lush.nvim'
     " Gruvbox variant with treesitter highlight support
@@ -33,7 +34,6 @@ else
     let g:gruvbox_dark=1
 endif
 
-" APPEARANCE CUSTOMIZATIONS
 Plug 'romainl/vim-cool'
 
 " COMMENTS/DOCS
@@ -46,6 +46,7 @@ Plug 'pboettch/vim-cmake-syntax'
 Plug 'ziglang/zig.vim'
 
 " FILESYSTEM/UTILITIES
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
