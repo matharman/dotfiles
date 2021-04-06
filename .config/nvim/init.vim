@@ -27,8 +27,6 @@ if has('nvim-0.5.0') && !&diff
     Plug 'rktjmp/lush.nvim'
     " Gruvbox variant with treesitter highlight support
     Plug 'npxbr/gruvbox.nvim'
-    set background=dark
-    let g:gruvbox_italicize_comments=0
 else
     Plug 'morhetz/gruvbox'
     let g:gruvbox_dark=1
@@ -62,20 +60,9 @@ set shortmess+=c
 
 call plug#end()
 
-if has('nvim-0.5.0')
-lua << EOF
-    require'nvim-treesitter.configs'.setup {
-      highlight = {
-        enable = true,
-      },
-    }
-EOF
-endif
-
 "---------------------------------
 "          APPEARANCE
 "---------------------------------
-
 if !has('nvim')
     " DO NOT change these to single quote strings
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
@@ -84,7 +71,30 @@ endif
 
 set cursorline
 set termguicolors
+
+set background=dark
+let g:gruvbox_italicize_comments=0
 colorscheme gruvbox
+
+if has('nvim-0.5.0') && !&diff
+lua << LUA
+    require'nvim-treesitter.configs'.setup {
+      highlight = {
+        enable = true,
+      },
+    }
+
+    local lush = require'lush'
+    local gruvbox = require'gruvbox'
+    lush.apply(lush.compile(lush.extends({gruvbox}).with(
+        function()
+            return {
+                Function {gruvbox.GruvboxOrangeBold}
+            }
+        end
+    )))
+LUA
+endif
 
 function! StatusLine() abort
     let l:line_cnt = ' [ %l/%L ]'
