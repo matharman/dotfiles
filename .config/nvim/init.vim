@@ -22,14 +22,11 @@ endif
 
 call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
-if has('nvim-0.5.0') && !&diff
+if has('nvim-0.5.0')
     Plug 'nvim-treesitter/nvim-treesitter'
     Plug 'rktjmp/lush.nvim'
     " Gruvbox variant with treesitter highlight support
     Plug 'npxbr/gruvbox.nvim'
-else
-    Plug 'morhetz/gruvbox'
-    let g:gruvbox_dark=1
 endif
 
 Plug 'romainl/vim-cool'
@@ -53,7 +50,9 @@ let g:clang_format#auto_format=1
 let g:clang_format#enable_fallback_style=0
 
 " LSP/COMPLETION
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+if !&diff
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
@@ -76,7 +75,7 @@ set background=dark
 let g:gruvbox_italicize_comments=0
 colorscheme gruvbox
 
-if has('nvim-0.5.0') && !&diff
+if has('nvim-0.5.0')
 lua << LUA
     require'nvim-treesitter.configs'.setup {
       highlight = {
@@ -84,15 +83,30 @@ lua << LUA
       },
     }
 
+    local function highlight_invert_bg(bg)
+        return { bg = bg, fg = bg.rotate(135).darken(55) }
+    end
+
     local lush = require'lush'
     local gruvbox = require'gruvbox'
-    lush.apply(lush.compile(lush.extends({gruvbox}).with(
+
+    local diffadd = highlight_invert_bg(gruvbox.GruvboxGreen.fg)
+    local diffchange = highlight_invert_bg(gruvbox.GruvboxAqua.fg)
+    local diffdelete = highlight_invert_bg(gruvbox.GruvboxRed.fg)
+    local difftext = highlight_invert_bg(gruvbox.GruvboxYellow.fg)
+
+    colors_ext = lush.extends({gruvbox}).with(
         function()
             return {
+                DiffAdd {fg = diffadd.fg, bg = diffadd.bg},
+                DiffChange {fg = diffchange.fg, bg = diffchange.bg},
+                DiffDelete {fg = diffdelete.fg, bg = diffdelete.bg},
+                DiffText {fg = difftext.fg, bg = difftext.bg},
                 Function {gruvbox.GruvboxOrangeBold}
             }
         end
-    )))
+    )
+    lush.apply(lush.compile(colors_ext))
 LUA
 endif
 
@@ -135,6 +149,8 @@ augroup end
 
 augroup FiletypeControls
     autocmd!
+
+    autocmd FileType yaml setlocal softtabstop=2 | setlocal shiftwidth=2
 
     " Golang prefers tabs to spaces
     autocmd FileType go,make setlocal noexpandtab shiftwidth=8

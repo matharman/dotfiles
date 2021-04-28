@@ -12,12 +12,14 @@
         tool = dtnvim
 [merge]
         tool = mtnvim
+[difftool]
+        trustExitCode = true
 [difftool "dtnvim"]
         cmd = nvim -d $LOCAL $REMOTE -c 'wincmd l'
+[mergetool]
         trustExitCode = true
 [mergetool "mtnvim"]
         cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
-        trustExitCode = true
 [alias]
         mt = mergetool -y
         dt = difftool -y
