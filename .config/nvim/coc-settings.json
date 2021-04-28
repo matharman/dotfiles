@@ -1,5 +1,4 @@
 {
-  "rust-analyzer.serverPath": "/home/mharman/.local/bin/rust_analyzer_old",
   "languageserver": {
     "ccls": {
       "command": "ccls",
