@@ -1,4 +1,5 @@
 {
+  "snippets.ultisnips.directories": [ "~/Templates/UltiSnips/" ],
   "languageserver": {
     "ccls": {
       "command": "ccls",

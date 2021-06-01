@@ -36,6 +36,11 @@ Plug 'vim-scripts/DoxygenToolkit.vim'
 let g:DoxygenToolkit_commentType = 'C++'
 Plug 'tpope/vim-commentary'
 
+" Snippets
+Plug 'SirVer/ultisnips'
+" let g:UltiSnipsSnippetDirectories=["~/Templates/UltiSnips"]
+let g:UltiSnipsExpandTrigger=""
+
 " SYNTAX
 Plug 'pboettch/vim-cmake-syntax'
 Plug 'ziglang/zig.vim'
@@ -230,3 +235,6 @@ nmap <silent> <leader><leader>gr <Plug>(coc-rename)
 " Navigate errors
 nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
 nmap <silent><leader>n <Plug>(coc-diagnostic-next)
+
+" Snippets
+imap <C-l> <Plug>(coc-snippets-expand-jump)
