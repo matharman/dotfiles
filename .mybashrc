@@ -1,8 +1,9 @@
 alias vi='vim'
+alias vim='nvim'
 alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 
 source $HOME/.cargo/env
-[ -f ~/.bash_local ] && source .bash_local
+[ -f ~/.bash_local ] && source ~.bash_local
 
 eval "$(starship init bash)"
 eval "$(direnv hook bash)"
