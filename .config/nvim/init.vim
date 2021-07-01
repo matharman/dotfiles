@@ -24,9 +24,11 @@ call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
 if has('nvim-0.5.0')
     Plug 'nvim-treesitter/nvim-treesitter'
-    Plug 'rktjmp/lush.nvim'
+    " Plug 'rktjmp/lush.nvim'
     " Gruvbox variant with treesitter highlight support
-    Plug 'npxbr/gruvbox.nvim'
+    " Plug 'npxbr/gruvbox.nvim'
+
+    Plug 'folke/tokyonight.nvim'
 endif
 
 Plug 'romainl/vim-cool'
@@ -77,41 +79,43 @@ set cursorline
 set termguicolors
 
 set background=dark
-let g:gruvbox_italicize_comments=0
-colorscheme gruvbox
+" let g:gruvbox_italicize_comments=0
+" colorscheme gruvbox
+let g:tokyonight_style='night'
+colorscheme tokyonight
 
 if has('nvim-0.5.0')
 lua << LUA
-    require'nvim-treesitter.configs'.setup {
-      highlight = {
-        enable = true,
-      },
-    }
-
-    local function highlight_invert_bg(bg)
-        return { bg = bg, fg = bg.rotate(135).darken(55) }
-    end
-
-    local lush = require'lush'
-    local gruvbox = require'gruvbox'
-
-    local diffadd = highlight_invert_bg(gruvbox.GruvboxGreen.fg)
-    local diffchange = highlight_invert_bg(gruvbox.GruvboxAqua.fg)
-    local diffdelete = highlight_invert_bg(gruvbox.GruvboxRed.fg)
-    local difftext = highlight_invert_bg(gruvbox.GruvboxYellow.fg)
-
-    colors_ext = lush.extends({gruvbox}).with(
-        function()
-            return {
-                DiffAdd {fg = diffadd.fg, bg = diffadd.bg},
-                DiffChange {fg = diffchange.fg, bg = diffchange.bg},
-                DiffDelete {fg = diffdelete.fg, bg = diffdelete.bg},
-                DiffText {fg = difftext.fg, bg = difftext.bg},
-                Function {gruvbox.GruvboxOrangeBold}
-            }
-        end
-    )
-    lush.apply(lush.compile(colors_ext))
+--    require'nvim-treesitter.configs'.setup {
+--      highlight = {
+--        enable = true,
+--      },
+--    }
+--
+--    local function highlight_invert_bg(bg)
+--        return { bg = bg, fg = bg.rotate(135).darken(55) }
+--    end
+--
+--    local lush = require'lush'
+--    local gruvbox = require'gruvbox'
+--
+--    local diffadd = highlight_invert_bg(gruvbox.GruvboxGreen.fg)
+--    local diffchange = highlight_invert_bg(gruvbox.GruvboxAqua.fg)
+--    local diffdelete = highlight_invert_bg(gruvbox.GruvboxRed.fg)
+--    local difftext = highlight_invert_bg(gruvbox.GruvboxYellow.fg)
+--
+--    colors_ext = lush.extends({gruvbox}).with(
+--        function()
+--            return {
+--                DiffAdd {fg = diffadd.fg, bg = diffadd.bg},
+--                DiffChange {fg = diffchange.fg, bg = diffchange.bg},
+--                DiffDelete {fg = diffdelete.fg, bg = diffdelete.bg},
+--                DiffText {fg = difftext.fg, bg = difftext.bg},
+--                Function {gruvbox.GruvboxOrangeBold}
+--            }
+--        end
+--    )
+--    lush.apply(lush.compile(colors_ext))
 LUA
 endif
 
