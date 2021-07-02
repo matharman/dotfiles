@@ -57,9 +57,7 @@ let g:clang_format#auto_format=1
 let g:clang_format#enable_fallback_style=0
 
 " LSP/COMPLETION
-if !&diff
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-endif
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
@@ -142,6 +140,18 @@ set laststatus=2
 
 augroup VimrcGeneral
     autocmd!
+
+    " Disable COC in git difftool
+    autocmd DiffUpdated,BufReadPost * if &diff | let b:coc_enabled = 0 | endif
+
+    " Disable COC when calling Gdiff
+    autocmd OptionSet diff 
+                \ if v:option_new
+                \ |    silent execute 'CocDisable'
+                \ | else
+                \ |    if exists('b:coc_enabled') | unlet b:coc_enabled | endif
+                \ |    silent execute 'CocEnable'
+                \ | endif
 
     " Auto-source config after writing
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
