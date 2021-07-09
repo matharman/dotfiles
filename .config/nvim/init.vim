@@ -24,10 +24,6 @@ call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
 if has('nvim-0.5.0')
     Plug 'nvim-treesitter/nvim-treesitter'
-    " Plug 'rktjmp/lush.nvim'
-    " Gruvbox variant with treesitter highlight support
-    " Plug 'npxbr/gruvbox.nvim'
-
     Plug 'folke/tokyonight.nvim'
 endif
 
@@ -40,7 +36,6 @@ Plug 'tpope/vim-commentary'
 
 " Snippets
 Plug 'SirVer/ultisnips'
-" let g:UltiSnipsSnippetDirectories=["~/Templates/UltiSnips"]
 let g:UltiSnipsExpandTrigger=""
 
 " SYNTAX
@@ -57,10 +52,16 @@ let g:clang_format#auto_format=1
 let g:clang_format#enable_fallback_style=0
 
 " LSP/COMPLETION
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
+Plug 'kabouzeid/nvim-lspinstall'
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim'
 
 call plug#end()
 
@@ -77,43 +78,12 @@ set cursorline
 set termguicolors
 
 set background=dark
-" let g:gruvbox_italicize_comments=0
-" colorscheme gruvbox
 let g:tokyonight_style='night'
 colorscheme tokyonight
 
 if has('nvim-0.5.0')
 lua << LUA
---    require'nvim-treesitter.configs'.setup {
---      highlight = {
---        enable = true,
---      },
---    }
---
---    local function highlight_invert_bg(bg)
---        return { bg = bg, fg = bg.rotate(135).darken(55) }
---    end
---
---    local lush = require'lush'
---    local gruvbox = require'gruvbox'
---
---    local diffadd = highlight_invert_bg(gruvbox.GruvboxGreen.fg)
---    local diffchange = highlight_invert_bg(gruvbox.GruvboxAqua.fg)
---    local diffdelete = highlight_invert_bg(gruvbox.GruvboxRed.fg)
---    local difftext = highlight_invert_bg(gruvbox.GruvboxYellow.fg)
---
---    colors_ext = lush.extends({gruvbox}).with(
---        function()
---            return {
---                DiffAdd {fg = diffadd.fg, bg = diffadd.bg},
---                DiffChange {fg = diffchange.fg, bg = diffchange.bg},
---                DiffDelete {fg = diffdelete.fg, bg = diffdelete.bg},
---                DiffText {fg = difftext.fg, bg = difftext.bg},
---                Function {gruvbox.GruvboxOrangeBold}
---            }
---        end
---    )
---    lush.apply(lush.compile(colors_ext))
+    require'mylsp'
 LUA
 endif
 
@@ -145,13 +115,13 @@ augroup VimrcGeneral
     autocmd DiffUpdated,BufReadPost * if &diff | let b:coc_enabled = 0 | endif
 
     " Disable COC when calling Gdiff
-    autocmd OptionSet diff 
-                \ if v:option_new
-                \ |    silent execute 'CocDisable'
-                \ | else
-                \ |    if exists('b:coc_enabled') | unlet b:coc_enabled | endif
-                \ |    silent execute 'CocEnable'
-                \ | endif
+    " autocmd OptionSet diff 
+    "             \ if v:option_new
+    "             \ |    silent execute 'CocDisable'
+    "             \ | else
+    "             \ |    if exists('b:coc_enabled') | unlet b:coc_enabled | endif
+    "             \ |    silent execute 'CocEnable'
+    "             \ | endif
 
     " Auto-source config after writing
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -196,6 +166,7 @@ augroup end
 "---------------------------------
 "          OPTIONS
 "---------------------------------
+set completeopt=menuone,noselect
 
 " Per-project settings
 set exrc
@@ -240,15 +211,15 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " LSP jumplist
-nmap <silent> <leader>gd <Plug>(coc-definition)
-nmap <silent> <leader><leader>gd <Plug>(coc-declaration)
-nmap <silent> <leader>gy <Plug>(coc-type-definition)
-nmap <silent> <leader>gr <Plug>(coc-references)
-nmap <silent> <leader><leader>gr <Plug>(coc-rename)
+" nmap <silent> <leader>gd <Plug>(coc-definition)
+" nmap <silent> <leader><leader>gd <Plug>(coc-declaration)
+" nmap <silent> <leader>gy <Plug>(coc-type-definition)
+" nmap <silent> <leader>gr <Plug>(coc-references)
+" nmap <silent> <leader><leader>gr <Plug>(coc-rename)
 
 " Navigate errors
-nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
-nmap <silent><leader>n <Plug>(coc-diagnostic-next)
+" nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
+" nmap <silent><leader>n <Plug>(coc-diagnostic-next)
 
 " Snippets
-imap <C-l> <Plug>(coc-snippets-expand-jump)
+" imap <C-l> <Plug>(coc-snippets-expand-jump)
