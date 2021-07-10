@@ -101,4 +101,16 @@ for _, server in pairs(servers) do
     }
 end
 
+nvim_lsp.ccls.setup {
+    init_options = {
+        compilationDatabaseDirectory = "build";
+        index = {
+            threads = 0;
+        };
+        clang = {
+            excludeArgs = { "-frounding-math"} ;
+        };
+    }
+}
+
 return {}
