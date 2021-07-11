@@ -35,8 +35,7 @@ let g:DoxygenToolkit_commentType = 'C++'
 Plug 'tpope/vim-commentary'
 
 " Snippets
-Plug 'SirVer/ultisnips'
-let g:UltiSnipsExpandTrigger=""
+Plug 'norcalli/snippets.nvim'
 
 " SYNTAX
 Plug 'pboettch/vim-cmake-syntax'
@@ -52,16 +51,14 @@ let g:clang_format#auto_format=1
 let g:clang_format#enable_fallback_style=0
 
 " LSP/COMPLETION
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-set cmdheight=2
-set updatetime=300
-set shortmess+=c
-
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-compe'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
+set cmdheight=2
+set updatetime=300
+set shortmess+=c
 
 call plug#end()
 
@@ -77,13 +74,13 @@ endif
 set cursorline
 set termguicolors
 
-set background=dark
 let g:tokyonight_style='night'
 colorscheme tokyonight
 
 if has('nvim-0.5.0')
 lua << LUA
     require'mylsp'
+    require'mysnippets'
 LUA
 endif
 
@@ -204,22 +201,12 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 let mapleader = "\<Space>"
 
 " Open vimrc
-nnoremap <silent><leader><Space>v :e $MYVIMRC<CR>
+nnoremap <silent><leader><leader>v :e $MYVIMRC<CR>
+nnoremap <silent><leader><leader>lua :e $HOME/.config/nvim/lua<CR>
 
 " Movement by visual lines
 nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
-" LSP jumplist
-" nmap <silent> <leader>gd <Plug>(coc-definition)
-" nmap <silent> <leader><leader>gd <Plug>(coc-declaration)
-" nmap <silent> <leader>gy <Plug>(coc-type-definition)
-" nmap <silent> <leader>gr <Plug>(coc-references)
-" nmap <silent> <leader><leader>gr <Plug>(coc-rename)
-
-" Navigate errors
-" nmap <silent><leader>p <Plug>(coc-diagnostic-prev)
-" nmap <silent><leader>n <Plug>(coc-diagnostic-next)
-
-" Snippets
-" imap <C-l> <Plug>(coc-snippets-expand-jump)
+" Expand snippets when completing them
+inoremap <silent><expr> <CR> compe#confirm('<CR>')
