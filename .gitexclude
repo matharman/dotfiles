@@ -4,6 +4,7 @@ Session.vim
 tags*
 *.orig
 .envrc
+.exrc
 .vim
 .ccls-cache
 .dotfiles

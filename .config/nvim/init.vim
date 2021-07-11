@@ -79,8 +79,9 @@ colorscheme tokyonight
 
 if has('nvim-0.5.0')
 lua << LUA
-    require'mylsp'
-    require'mysnippets'
+    require'my/lsp'
+    require'my/snippets'
+    require'my/compe'.setup({})
 LUA
 endif
 
