@@ -2,6 +2,7 @@ local M = {}
 M.setup_params = {
     enabled = true;
     autocomplete = true;
+    autoselect = true;
     debug = false;
     min_length = 2;
     preselect = 'enable';
@@ -15,10 +16,10 @@ M.setup_params = {
 
     source = {
         path = true;
+        buffer = true;
         nvim_lsp = true;
         nvim_lua = true;
         snippets_nvim = true;
-        ultisnips = true;
     };
 }
 

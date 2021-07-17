@@ -106,20 +106,32 @@ set laststatus=2
 "          AUTOCOMMANDS
 "---------------------------------
 
+function! ManageExrc() abort
+    if !exists('g:exrc_loaded') || g:exrc_loaded == 0
+        lua require'tools'
+        let g:exrc_path = luaeval('require("tools").find_project_root(".exrc")') . '/.exrc'
+        if filereadable(g:exrc_path)
+            exec 'source ' . g:exrc_path
+            let g:exrc_loaded = 1
+        else
+            let g:exrc_loaded = 0
+        endif
+    endif
+endfunction
+
 augroup VimrcGeneral
     autocmd!
 
-    " Disable COC in git difftool
-    autocmd DiffUpdated,BufReadPost * if &diff | let b:coc_enabled = 0 | endif
+    " Disable LSP when calling Gdiff
+    autocmd OptionSet diff 
+                \ if v:option_new
+                \ |    silent execute 'LspStop'
+                \ | else
+                \ |    silent execute 'LspStart'
+                \ | endif
 
-    " Disable COC when calling Gdiff
-    " autocmd OptionSet diff 
-    "             \ if v:option_new
-    "             \ |    silent execute 'CocDisable'
-    "             \ | else
-    "             \ |    if exists('b:coc_enabled') | unlet b:coc_enabled | endif
-    "             \ |    silent execute 'CocEnable'
-    "             \ | endif
+    " Search upwards for project-local config
+    autocmd BufEnter * call ManageExrc()
 
     " Auto-source config after writing
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -168,6 +180,7 @@ set completeopt=menuone,noselect
 
 " Per-project settings
 set exrc
+set secure
 
 " Tabs -> 4 spaces
 set softtabstop=4
