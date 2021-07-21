@@ -19,7 +19,7 @@ function M.on_attach(client, bufnr)
     buf_set_keymap('n', '<leader>gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     buf_set_keymap('n', '<leader>gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_set_keymap('n', '<leader>k', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
     buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<leader><leader>gr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
@@ -46,6 +46,9 @@ end
 
 M.server_configs.ccls = default_config
 nvim_lsp.ccls.setup(default_config)
+
+nvim_lsp.gopls.setup(default_config)
+nvim_lsp.gopls.setup(default_config)
 
 function M.extend_config(server, config)
     local old_config = M.server_configs[server]

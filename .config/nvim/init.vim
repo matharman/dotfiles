@@ -22,10 +22,8 @@ endif
 
 call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
-if has('nvim-0.5.0')
-    Plug 'nvim-treesitter/nvim-treesitter'
-    Plug 'folke/tokyonight.nvim'
-endif
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'folke/tokyonight.nvim'
 
 Plug 'romainl/vim-cool'
 
@@ -39,7 +37,6 @@ Plug 'norcalli/snippets.nvim'
 
 " SYNTAX
 Plug 'pboettch/vim-cmake-syntax'
-Plug 'ziglang/zig.vim'
 
 " FILESYSTEM/UTILITIES
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -65,25 +62,17 @@ call plug#end()
 "---------------------------------
 "          APPEARANCE
 "---------------------------------
-if !has('nvim')
-    " DO NOT change these to single quote strings
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-endif
-
 set cursorline
 set termguicolors
 
 let g:tokyonight_style='night'
 colorscheme tokyonight
 
-if has('nvim-0.5.0')
 lua << LUA
     require'my/lsp'
     require'my/snippets'
     require'my/compe'.setup({})
 LUA
-endif
 
 function! StatusLine() abort
     let l:line_cnt = ' [ %l/%L ]'
