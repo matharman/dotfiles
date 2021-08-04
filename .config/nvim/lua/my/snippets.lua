@@ -8,10 +8,8 @@ $0
 #endif // ${|S[1]:upper():gsub("%s+", "_")}_H
         ]]
 
-require'snippets'.snippets = {
-    c = {
-        guard = cxx_guard,
-        extern = [[
+local cxx_extern_c =
+        [[
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,9 +19,15 @@ $0
 #ifdef __cplusplus
 }
 #endif
-        ]];
+        ]]
+
+require'snippets'.snippets = {
+    c = {
+        guard = cxx_guard,
+        extern = cxx_extern_c,
     },
     cpp = {
         guard = cxx_guard,
+        extern = cxx_extern_c,
     }
 }

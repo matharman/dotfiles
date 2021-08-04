@@ -22,7 +22,7 @@ endif
 
 call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter', { 'branch': '0.5-compat' }
 Plug 'folke/tokyonight.nvim'
 
 Plug 'romainl/vim-cool'
@@ -69,7 +69,9 @@ let g:tokyonight_style='night'
 colorscheme tokyonight
 
 lua << LUA
-    require'my/lsp'
+    if not vim.o.diff then
+        require'my/lsp'
+    end
     require'my/snippets'
     require'my/compe'.setup({})
 LUA
