@@ -53,6 +53,7 @@ Plug 'hrsh7th/nvim-compe'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 set cmdheight=2
 set updatetime=300
 set shortmess+=c
@@ -74,6 +75,7 @@ lua << LUA
     end
     require'my/snippets'
     require'my/compe'.setup({})
+    require'lsp_signature'.setup()
 LUA
 
 function! StatusLine() abort
