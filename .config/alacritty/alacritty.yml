@@ -291,7 +291,7 @@ shell:
   args:
     - --login
     - -c
-    - "tmux attach || tmux"
+    - "(tmux attach || tmux);bash"
 
 # Startup directory
 #

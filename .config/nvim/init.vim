@@ -43,16 +43,14 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
-Plug 'rhysd/vim-clang-format'
-let g:clang_format#auto_format=1
-let g:clang_format#enable_fallback_style=0
 
 " LSP/COMPLETION
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+let g:coq_settings = { 'auto_start': v:true }
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
+" Plug 'hrsh7th/nvim-compe'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'folke/trouble.nvim'
 Plug 'ray-x/lsp_signature.nvim'
 set cmdheight=2
 set updatetime=300
@@ -74,7 +72,7 @@ lua << LUA
         require'my/lsp'
     end
     require'my/snippets'
-    require'my/compe'.setup({})
+--    require'my/compe'.setup({})
     require'lsp_signature'.setup()
 LUA
 

@@ -29,6 +29,8 @@ function M.on_attach(client, bufnr)
     buf_set_keymap('n', '<leader>n', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
     buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+    vim.api.nvim_command[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
 end
 
 local default_config = {
@@ -47,8 +49,11 @@ end
 M.server_configs.ccls = default_config
 nvim_lsp.ccls.setup(default_config)
 
+M.server_configs.gopls = default_config
 nvim_lsp.gopls.setup(default_config)
-nvim_lsp.gopls.setup(default_config)
+
+M.server_configs.rust_analyzer = default_config
+nvim_lsp.rust_analyzer.setup(default_config)
 
 function M.extend_config(server, config)
     local old_config = M.server_configs[server]
