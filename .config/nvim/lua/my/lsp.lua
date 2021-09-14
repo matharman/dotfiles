@@ -5,6 +5,12 @@ local nvim_lsp = require'lspconfig'
 local lspinstall = require'lspinstall'
 lspinstall.setup()
 
+function M.maybe_format()
+    if not vim.b.no_format then
+        vim.lsp.buf.formatting_sync()
+    end
+end
+
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 function M.on_attach(client, bufnr)
@@ -30,7 +36,9 @@ function M.on_attach(client, bufnr)
     buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
     buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
 
-    vim.api.nvim_command[[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
+    if client.name ~= "cmake" and not client.config.no_format then
+        vim.api.nvim_command[[ autocmd BufWritePre <buffer> lua require'my/lsp'.maybe_format() ]]
+    end
 end
 
 local default_config = {
@@ -54,6 +62,17 @@ nvim_lsp.gopls.setup(default_config)
 
 M.server_configs.rust_analyzer = default_config
 nvim_lsp.rust_analyzer.setup(default_config)
+
+require'rust-tools'.setup({
+    tools = {
+        autoSetHints = true,
+        inlay_hints = {
+            show_parameter_hints = false,
+            -- highlight = "Constant",
+        },
+    },
+    server = default_config,
+})
 
 function M.extend_config(server, config)
     local old_config = M.server_configs[server]

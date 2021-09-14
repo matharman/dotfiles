@@ -45,10 +45,15 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-let g:coq_settings = { 'auto_start': v:true }
+" Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+" let g:coq_settings = { 'auto_start': v:true, 
+"             \ 'keymap.bigger_preview': '<C-S-Tab>', 
+"             \ 'keymap.jump_to_mark': '<C-S-Tab>',
+"             \ 'limits.completion_auto_timeout': 0.99,
+"             \ }
+Plug 'simrat39/rust-tools.nvim'
 Plug 'neovim/nvim-lspconfig'
-" Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/nvim-compe'
 Plug 'kabouzeid/nvim-lspinstall'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ray-x/lsp_signature.nvim'
@@ -72,7 +77,7 @@ lua << LUA
         require'my/lsp'
     end
     require'my/snippets'
---    require'my/compe'.setup({})
+    require'my/compe'.setup({})
     require'lsp_signature'.setup()
 LUA
 
@@ -150,18 +155,18 @@ augroup FiletypeControls
     " No block-style comments in C/Cpp
     autocmd FileType c,cpp setlocal commentstring=//\ %s
 
-    " Formatters
-    autocmd BufWritePost *.go 
-                \ if executable('goimports') | 
-                \     silent execute '!goimports -w' shellescape(expand('%'), 1) | 
-                \     edit! | 
-                \ endif
+    " Formatters, when LSP is not enabled
+    " autocmd BufWritePost *.go 
+    "             \ if executable('goimports') | 
+    "             \     silent execute '!goimports -w' shellescape(expand('%'), 1) | 
+    "             \     edit! | 
+    "             \ endif
 
-    autocmd BufWritePost *.rs 
-                \ if executable('rustfmt') | 
-                \     silent execute '!rustfmt' shellescape(expand('%'), 1) | 
-                \     edit! | 
-                \ endif
+    " autocmd BufWritePost *.rs 
+    "             \ if executable('rustfmt') | 
+    "             \     silent execute '!rustfmt' shellescape(expand('%'), 1) | 
+    "             \     edit! | 
+    "             \ endif
 augroup end
 
 "---------------------------------
