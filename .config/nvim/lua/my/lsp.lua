@@ -2,8 +2,6 @@ local M = {}
 M.server_configs = {}
 
 local nvim_lsp = require'lspconfig'
-local lspinstall = require'lspinstall'
-lspinstall.setup()
 
 function M.maybe_format()
     if not vim.b.no_format then
@@ -43,16 +41,7 @@ end
 
 local default_config = {
     on_attach = M.on_attach,
-    flags = {
-        debounce_text_changes = 150,
-    },
 }
-
-local servers = lspinstall.installed_servers()
-for _, server in pairs(servers) do
-    M.server_configs[server] = default_config
-    nvim_lsp[server].setup(default_config)
-end
 
 M.server_configs.ccls = default_config
 nvim_lsp.ccls.setup(default_config)
@@ -68,11 +57,13 @@ require'rust-tools'.setup({
         autoSetHints = true,
         inlay_hints = {
             show_parameter_hints = false,
-            -- highlight = "Constant",
         },
     },
     server = default_config,
 })
+
+M.server_configs.cmake = default_config
+nvim_lsp.cmake.setup(default_config)
 
 function M.extend_config(server, config)
     local old_config = M.server_configs[server]

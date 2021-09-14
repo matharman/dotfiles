@@ -1,61 +1,41 @@
 " Ensure vim-plug is always installed
-if has('nvim')
-    if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
-        silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
-                    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        augroup AutoPlug
-            autocmd!
-            autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-        augroup end
-    endif
-
-else
-    if empty(glob('~/.vim/autoload/plug.vim'))
-        silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-                    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-        augroup AutoPlug
-            autocmd!
-            autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-        augroup end
-    endif
-endif
+" Get vim-plug: https://github.com/junegunn/vim-plug
 
 call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
 Plug 'nvim-treesitter/nvim-treesitter', { 'branch': '0.5-compat' }
 Plug 'folke/tokyonight.nvim'
 
-Plug 'romainl/vim-cool'
-
 " COMMENTS/DOCS
+" TODO maybe vim-doge?
 Plug 'vim-scripts/DoxygenToolkit.vim'
 let g:DoxygenToolkit_commentType = 'C++'
 Plug 'tpope/vim-commentary'
 
-" Snippets
+" SNIPPETS
 Plug 'norcalli/snippets.nvim'
 
-" SYNTAX
-Plug 'pboettch/vim-cmake-syntax'
-
 " FILESYSTEM/UTILITIES
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-" Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-" let g:coq_settings = { 'auto_start': v:true, 
-"             \ 'keymap.bigger_preview': '<C-S-Tab>', 
-"             \ 'keymap.jump_to_mark': '<C-S-Tab>',
-"             \ 'limits.completion_auto_timeout': 0.99,
-"             \ }
+if exists('g:use_coq') && g:use_coq == 1
+    Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+    Plug 'kyazdani42/nvim-web-devicons'
+    let g:coq_settings = { 'auto_start': v:true, 
+                \ 'keymap.bigger_preview': '<C-S-Tab>', 
+                \ 'keymap.jump_to_mark': '<C-S-Tab>',
+                \ 'limits.completion_auto_timeout': 0.99,
+                \ }
+else
+    Plug 'hrsh7th/nvim-compe'
+endif
+
 Plug 'simrat39/rust-tools.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-compe'
-Plug 'kabouzeid/nvim-lspinstall'
-Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ray-x/lsp_signature.nvim'
 set cmdheight=2
 set updatetime=300
@@ -73,11 +53,14 @@ let g:tokyonight_style='night'
 colorscheme tokyonight
 
 lua << LUA
+    -- TODO better detection of diffmode
     if not vim.o.diff then
         require'my/lsp'
     end
+    if not vim.g.use_coq or vim.g.use_coq == 1 then
+        require'my/compe'.setup({})
+    end
     require'my/snippets'
-    require'my/compe'.setup({})
     require'lsp_signature'.setup()
 LUA
 
@@ -104,7 +87,6 @@ set laststatus=2
 
 function! ManageExrc() abort
     if !exists('g:exrc_loaded') || g:exrc_loaded == 0
-        lua require'tools'
         let g:exrc_path = luaeval('require("tools").find_project_root(".exrc")') . '/.exrc'
         if filereadable(g:exrc_path)
             exec 'source ' . g:exrc_path
@@ -148,9 +130,7 @@ augroup FiletypeControls
     autocmd FileType yaml setlocal softtabstop=2 | setlocal shiftwidth=2
 
     " Golang prefers tabs to spaces
-    autocmd FileType go,make setlocal noexpandtab shiftwidth=8
-
-    autocmd FileType dts setlocal softtabstop=8 | setlocal shiftwidth=8
+    autocmd FileType go,make,dts,kconfig setlocal noexpandtab | setlocal shiftwidth=8
 
     " No block-style comments in C/Cpp
     autocmd FileType c,cpp setlocal commentstring=//\ %s

@@ -1,9 +1,16 @@
+# vim :set ft=bash:
 alias vi='vim'
 alias vim='nvim'
 alias dots='/usr/bin/git --git-dir=$HOME/.dots --work-tree=$HOME'
 
-source $HOME/.cargo/env
-[ -f ~/.bash_local ] && source ~/.bash_local
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:/usr/local/bin"
+export EDITOR=nvim
 
+[ -f "$HOME/.bash_local" ] && source "$HOME/.bash_local"
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+[ -f "$HOME/.fzf.bash" ] && source "$HOME/.fzf.bash"
+
+## Uncomment to use starship and direnv
 eval "$(starship init bash)"
 eval "$(direnv hook bash)"
