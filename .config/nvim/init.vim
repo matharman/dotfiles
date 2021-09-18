@@ -12,6 +12,9 @@ Plug 'vim-scripts/DoxygenToolkit.vim'
 let g:DoxygenToolkit_commentType = 'C++'
 Plug 'tpope/vim-commentary'
 
+" SEARCHING
+Plug 'haya14busa/is.vim'
+
 " SNIPPETS
 Plug 'norcalli/snippets.nvim'
 
@@ -61,7 +64,11 @@ lua << LUA
         require'my/compe'.setup({})
     end
     require'my/snippets'
-    require'lsp_signature'.setup()
+    require'lsp_signature'.setup({
+        fix_pos = true,
+        hint_enable = false,
+        hint_prefix = "",
+    })
 LUA
 
 function! StatusLine() abort
@@ -173,7 +180,6 @@ set smartcase
 set directory=$HOME/.vim/.swap/
 
 " Show cmdline completion above the cmdline
-set wildignore+=*.s,Makefile
 set wildignorecase
 set wildmenu
 
