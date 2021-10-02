@@ -19,15 +19,18 @@ Plug 'haya14busa/is.vim'
 Plug 'norcalli/snippets.nvim'
 
 " FILESYSTEM/UTILITIES
+Plug 'airblade/vim-rooter'
+let g:rooter_cd_cmd = 'lcd'
+
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'kyazdani42/nvim-web-devicons'
 if exists('g:use_coq') && g:use_coq == 1
-    Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-    Plug 'kyazdani42/nvim-web-devicons'
     let g:coq_settings = { 'auto_start': v:true, 
                 \ 'keymap.bigger_preview': '<C-S-Tab>', 
                 \ 'keymap.jump_to_mark': '<C-S-Tab>',
@@ -35,6 +38,7 @@ if exists('g:use_coq') && g:use_coq == 1
                 \ }
 else
     Plug 'hrsh7th/nvim-compe'
+    Plug 'andersevenrud/compe-tmux'
 endif
 
 Plug 'simrat39/rust-tools.nvim'
@@ -51,6 +55,7 @@ call plug#end()
 "---------------------------------
 set cursorline
 set termguicolors
+set diffopt+=vertical
 
 let g:tokyonight_style='night'
 colorscheme tokyonight
@@ -189,12 +194,17 @@ set hidden
 "---------------------------------
 "            BINDINGS
 "---------------------------------
+" Leader = Spacebar
+let mapleader = "\<Space>"
+
+" FZF bindings
+nnoremap <silent> <leader>b :Buffers<CR>
+nnoremap <silent> <leader>f :Files<CR>
+
 " Completion bindings
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
-" Leader = Spacebar
-let mapleader = "\<Space>"
 
 " Open vimrc
 nnoremap <silent><leader><leader>v :e $MYVIMRC<CR>
