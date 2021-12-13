@@ -137,12 +137,11 @@ augroup FiletypeControls
     " No block-style comments in C/Cpp
     autocmd FileType c,cpp setlocal commentstring=//\ %s
 
-    " Formatters, when LSP is not enabled
-    " autocmd BufWritePost *.go 
-    "             \ if executable('goimports') | 
-    "             \     silent execute '!goimports -w' shellescape(expand('%'), 1) | 
-    "             \     edit! | 
-    "             \ endif
+    autocmd BufWritePost *.go 
+                \ if executable('goimports') | 
+                \     silent execute '!goimports -w' shellescape(expand('%'), 1) | 
+                \     edit! | 
+                \ endif
 
     " autocmd BufWritePost *.rs 
     "             \ if executable('rustfmt') | 
