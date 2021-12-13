@@ -1,9 +1,10 @@
 local M = {}
 local cmp = require'cmp'
+
 M.setup_params = {
     snippet = {
         expand = function(args)
-            require'luasnip'.lsp_expand(args)
+            vim.fn['vsnip#anonymous'](args.body)
         end,
     },
     mapping = {
@@ -13,7 +14,7 @@ M.setup_params = {
     },
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'luasnip' },
+        { name = 'vsnip' },
         { name = 'buffer' },
         { name = 'path' },
         { name = 'tmux' },
