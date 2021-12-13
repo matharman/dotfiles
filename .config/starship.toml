@@ -21,7 +21,7 @@ symbol = "aws:"
 displayed_items = "profile"
 
 [cmake]
-format = "[$symbol$version]($style)"
+disabled = true
 
 [cmd_duration]
 disabled = true
