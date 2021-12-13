@@ -28,8 +28,12 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-Plug 'hrsh7th/nvim-compe'
-Plug 'andersevenrud/cmp-tmux', {'branch': 'compe'}
+Plug 'andersevenrud/cmp-tmux'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/nvim-cmp'
 
 Plug 'simrat39/rust-tools.nvim'
 Plug 'neovim/nvim-lspconfig'
@@ -55,9 +59,7 @@ lua << LUA
     if not vim.o.diff then
         require'my/lsp'
     end
-    if not vim.g.use_coq or vim.g.use_coq == 1 then
-        require'my/compe'.setup({})
-    end
+    require'my/cmp'.setup({})
     require'my/snippets'
     require'lsp_signature'.setup({
         fix_pos = true,
@@ -204,4 +206,4 @@ nnoremap <expr> j (v:count == 0 ? 'gj' : 'j')
 nnoremap <expr> k (v:count == 0 ? 'gk' : 'k')
 
 " Expand snippets when completing them
-inoremap <silent><expr> <CR> compe#confirm('<CR>')
+" inoremap <silent><expr> <CR> compe#confirm('<CR>')
