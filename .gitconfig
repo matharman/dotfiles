@@ -8,6 +8,7 @@
         ui = auto
 [init]
         templatedir = ~/.git-templates/
+	defaultBranch = main
 [diff]
         tool = dtnvim
 [merge]

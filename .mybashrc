@@ -5,9 +5,14 @@ alias dots='git --git-dir=$HOME/.dots --work-tree=$HOME'
 _completion_loader git
 complete -o bashdefault -o default -o nospace -F __git_wrap__git_main dots
 
+export CMAKE_EXPORT_COMPILE_COMMANDS=1
 export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:/usr/local/bin"
 export EDITOR=nvim
+
+if [ ! command -v rg &> /dev/null ]; then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden'
+fi
 
 [ -f "$HOME/.bash_local" ] && source "$HOME/.bash_local"
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
