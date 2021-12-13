@@ -36,6 +36,9 @@ local default_config = {
     on_attach = M.on_attach,
 }
 
+M.server_configs.pylsp = default_config
+nvim_lsp.pylsp.setup(default_config)
+
 M.server_configs.ccls = default_config
 nvim_lsp.ccls.setup(default_config)
 

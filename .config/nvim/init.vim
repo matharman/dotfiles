@@ -19,8 +19,8 @@ Plug 'haya14busa/is.vim'
 Plug 'norcalli/snippets.nvim'
 
 " FILESYSTEM/UTILITIES
-Plug 'airblade/vim-rooter'
-let g:rooter_cd_cmd = 'lcd'
+"Plug 'airblade/vim-rooter'
+"let g:rooter_cd_cmd = 'lcd'
 
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
@@ -28,18 +28,8 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-Plug 'kyazdani42/nvim-web-devicons'
-if exists('g:use_coq') && g:use_coq == 1
-    let g:coq_settings = { 'auto_start': v:true, 
-                \ 'keymap.bigger_preview': '<C-S-Tab>', 
-                \ 'keymap.jump_to_mark': '<C-S-Tab>',
-                \ 'limits.completion_auto_timeout': 0.99,
-                \ }
-else
-    Plug 'hrsh7th/nvim-compe'
-    Plug 'andersevenrud/compe-tmux'
-endif
+Plug 'hrsh7th/nvim-compe'
+Plug 'andersevenrud/cmp-tmux', {'branch': 'compe'}
 
 Plug 'simrat39/rust-tools.nvim'
 Plug 'neovim/nvim-lspconfig'
