@@ -68,4 +68,12 @@ function M.extend_config(server, config)
     nvim_lsp[server].setup(new_config)
 end
 
+M.extend_config('ccls', {
+    init_options = {
+        cache = {
+            directory = "/tmp/ccls-cache",
+        },
+    },
+})
+
 return M
