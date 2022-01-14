@@ -16,7 +16,7 @@ Plug 'tpope/vim-commentary'
 Plug 'haya14busa/is.vim'
 
 " SNIPPETS
-Plug 'norcalli/snippets.nvim'
+Plug 'dcampos/nvim-snippy'
 
 " FILESYSTEM/UTILITIES
 "Plug 'airblade/vim-rooter'
@@ -28,13 +28,12 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'tpope/vim-fugitive'
 
 " LSP/COMPLETION
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/cmp-vsnip'
 Plug 'andersevenrud/cmp-tmux'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
+Plug 'dcampos/cmp-snippy'
 Plug 'hrsh7th/nvim-cmp'
 
 Plug 'simrat39/rust-tools.nvim'
@@ -62,7 +61,6 @@ lua << LUA
         require'my/lsp'
     end
     require'my/cmp'.setup({})
-    require'my/snippets'
     require'lsp_signature'.setup({
         fix_pos = true,
         hint_enable = false,
