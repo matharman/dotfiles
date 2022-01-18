@@ -3,7 +3,7 @@
 
 call plug#begin()
 " APPEARANCE CUSTOMIZATIONS
-Plug 'nvim-treesitter/nvim-treesitter', { 'branch': '0.5-compat' }
+Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'folke/tokyonight.nvim'
 
 " COMMENTS/DOCS
