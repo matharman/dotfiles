@@ -1,8 +1,8 @@
 snippet once
     #ifndef ${1}_H
-    #define ${1}_H
+    #define ${1/\(\a\+\)\( *\)/\U\1_/g}H
     ${0}
-    #endif  // ${1}_H
+    #endif  // ${1/\(\a\+\)\( *\)/\U\1_/g}H
 
 snippet nocxx
     #ifdef __cplusplus

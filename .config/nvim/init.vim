@@ -2,6 +2,8 @@
 " Get vim-plug: https://github.com/junegunn/vim-plug
 
 call plug#begin()
+Plug 'nvim-lua/plenary.nvim'
+
 " APPEARANCE CUSTOMIZATIONS
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'folke/tokyonight.nvim'
@@ -25,7 +27,8 @@ Plug 'dcampos/nvim-snippy'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'tpope/vim-fugitive'
+" Plug 'tpope/vim-fugitive'
+Plug 'TimUntersberger/neogit'
 
 " LSP/COMPLETION
 Plug 'andersevenrud/cmp-tmux'
@@ -74,7 +77,8 @@ function! StatusLine() abort
     let l:branch_name = ''
     let l:rw_status = ' %m%r'
 
-    let l:branch_name = FugitiveHead(7)
+"    let l:branch_name = FugitiveHead(7)
+    let l:branch_name = 'xxxxxxx'
     if !empty(l:branch_name)
         let l:branch_name = ' [  ' . l:branch_name . ' ]'
     endif
