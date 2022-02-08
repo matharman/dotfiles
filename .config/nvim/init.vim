@@ -27,8 +27,8 @@ Plug 'dcampos/nvim-snippy'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'christoomey/vim-tmux-navigator'
-" Plug 'tpope/vim-fugitive'
-Plug 'TimUntersberger/neogit'
+Plug 'tpope/vim-fugitive'
+" Plug 'TimUntersberger/neogit'
 
 " LSP/COMPLETION
 Plug 'andersevenrud/cmp-tmux'
