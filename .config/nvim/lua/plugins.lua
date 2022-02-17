@@ -4,7 +4,9 @@ require("packer").startup(function()
     use "wbthomason/packer.nvim"
 
     -- Colors
+    use "nvim-treesitter/nvim-treesitter"
     use "marko-cerovac/material.nvim"
+    use "EdenEast/nightfox.nvim"
 
     -- Built-in LSP
     use "neovim/nvim-lspconfig"
@@ -24,6 +26,8 @@ require("packer").startup(function()
     use "saadparwaiz1/cmp_luasnip"
 
     use "simrat39/rust-tools.nvim"
+    use "tpope/vim-fugitive"
+    use "junegunn/goyo.vim"
 end)
 
 vim.cmd([[

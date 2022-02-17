@@ -1,3 +1,6 @@
+local M = {}
+M._server_opts = {}
+
 local on_attach = function(_, bufnr)
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
  --   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -17,12 +20,20 @@ end
 
 local cmp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
+function M.extend_lsp_options(server, enhance_opts)
+    M._server_opts[server] = enhance_opts
+end
+
 local lsp_installer = require("nvim-lsp-installer")
 lsp_installer.on_server_ready(function(server)
     local opts = {
         on_attach = on_attach,
         capabilities = cmp_capabilities,
     }
+
+    if M._server_opts[server.name] then
+        M._server_opts[server.name](opts)
+    end
 
     if server.name == "rust_analyzer" then
         -- Initialize the LSP via rust-tools instead
@@ -39,7 +50,16 @@ lsp_installer.on_server_ready(function(server)
             lspconfig = opts
         })
         server:setup(luadev)
+    elseif server.name == "ccls" then
+        opts.init_options = {
+            cache = {
+                directory = "/tmp/ccls-cache"
+            }
+        }
+        server:setup(opts)
     else
         server:setup(opts)
     end
 end)
+
+return M
