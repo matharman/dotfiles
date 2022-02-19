@@ -39,3 +39,4 @@ vim.cmd([[
 
 require("mh-cmp")
 require("mh-lsp")
+require("mh-snippets")

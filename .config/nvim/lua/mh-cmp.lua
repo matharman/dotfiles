@@ -39,6 +39,7 @@ cmp.setup({
     mapping = {
         ["<Tab>"] = cmp.mapping(luasnip_on_tab, {"i", "s"}),
         ["<S-Tab>"] = cmp.mapping(luasnip_on_s_tab, {"i", "s"}),
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true, }),
     },
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
