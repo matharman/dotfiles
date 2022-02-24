@@ -44,6 +44,14 @@ require("packer").startup(function()
         },
     }
 
+    use {
+	"ruifm/gitlinker.nvim",
+	requires = "nvim-lua/plenary.nvim",
+        config = function()
+            require("gitlinker").setup()
+        end
+    }
+
     -- Focus mode (nice for RO stuff)
     use "junegunn/goyo.vim"
 
