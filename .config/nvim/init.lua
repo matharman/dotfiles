@@ -1,3 +1,6 @@
+-- Startup time optimizer
+pcall(require, "impatient")
+
 require("plugins")
 
 -- COMPLETION
