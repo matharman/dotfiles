@@ -1,6 +1,10 @@
-vim.cmd [[ packadd packer.nvim ]]
+local packer_bootstrap = false
+local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  packer_bootstrap = vim.fn.system({"git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path})
+end
 
-require("packer").startup(function()
+require("packer").startup(function(use)
     use "wbthomason/packer.nvim"
 
     use "lewis6991/impatient.nvim"
@@ -36,7 +40,7 @@ require("packer").startup(function()
 
     -- Git goodies
     use "tpope/vim-fugitive"
-    use { 
+    use {
         "TimUntersberger/neogit",
         requires = {
             "nvim-lua/plenary.nvim",
@@ -59,12 +63,16 @@ require("packer").startup(function()
     use {
         "numToStr/Comment.nvim",
         config = function()
-            require('Comment').setup()
+            require("Comment").setup()
         end
     }
 
     use { "junegunn/fzf", run = "./install --all" }
     use "junegunn/fzf.vim"
+
+    if packer_bootstrap then
+        require("packer").sync()
+    end
 end)
 
 vim.cmd([[
@@ -94,7 +102,7 @@ local custom_cxx_template = {
     }
 }
 
-require('neogen').setup {
+require("neogen").setup {
   enabled = true,
   languages = {
       c = custom_cxx_template,
