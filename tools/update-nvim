@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+CHANNEL=$1
+
+if [ -z $CHANNEL ]; then
+	CHANNEL="nightly"
+fi
+
+URL="https://github.com/neovim/neovim/releases/download/${CHANNEL}/nvim-linux64.tar.gz"
+OUTPUT=/tmp/${CHANNEL}-nvim-linux64.tar.gz
+
+set -e
+
+echo "Downloading ${CHANNEL} from ${URL}"
+curl -fL -o "${OUTPUT}" "${URL}"
+tar -C $HOME/.local/ --strip-components=1 -xzf ${OUTPUT}
+rm ${OUTPUT}
