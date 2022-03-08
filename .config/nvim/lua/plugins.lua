@@ -70,6 +70,9 @@ require("packer").startup(function(use)
     use { "junegunn/fzf", run = "./install --all" }
     use "junegunn/fzf.vim"
 
+    -- Better tmux
+    use "christoomey/vim-tmux-navigator"
+
     if packer_bootstrap then
         require("packer").sync()
     end
