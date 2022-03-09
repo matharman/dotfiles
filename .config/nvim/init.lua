@@ -17,16 +17,12 @@ vim.o.hidden = true
 require("keybinds")
 
 -- AUTOCMDS
-vim.cmd([[
-augroup Automation
-	autocmd!
-
-	" Automatically eval vimrc on save
-	autocmd BufWritePost $MYVIMRC source $MYVIMRC
-
-	autocmd FileType yaml setlocal softtabstop=2 | setlocal shiftwidth=2 | set expandtab
-augroup end
-]])
+local group = vim.api.nvim_create_augroup("autosave", {})
+vim.api.nvim_create_autocmd("BufWritePost", {
+    group = group,
+    pattern = vim.fn.expand("$MYVIMRC"),
+    command = "source $MYVIMRC",
+})
 
 local function load_project_nvimrc(path)
     path = path .. "/.nvimrc"
