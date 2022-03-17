@@ -1,7 +1,7 @@
-local packer_bootstrap = false
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({"git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path})
+local fn = vim.fn
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+if fn.empty(fn.glob(install_path)) > 0 then
+    packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 require("packer").startup(function(use)
@@ -20,6 +20,7 @@ require("packer").startup(function(use)
     -- Built-in LSP
     use "neovim/nvim-lspconfig"
     use "williamboman/nvim-lsp-installer"
+    use "ray-x/lsp_signature.nvim"
 
     -- NVIM Config Hacking
     use "folke/lua-dev.nvim"
@@ -40,32 +41,24 @@ require("packer").startup(function(use)
 
     -- Git goodies
     use "tpope/vim-fugitive"
-    use {
-        "TimUntersberger/neogit",
-        requires = {
-            "nvim-lua/plenary.nvim",
-            "sindrets/diffview.nvim",
-        },
-    }
+    -- use {
+    --     "TimUntersberger/neogit",
+    --     requires = {
+    --         "nvim-lua/plenary.nvim",
+    --         "sindrets/diffview.nvim",
+    --     },
+    -- }
 
     use {
-	"ruifm/gitlinker.nvim",
-	requires = "nvim-lua/plenary.nvim",
-        config = function()
-            require("gitlinker").setup()
-        end
+        "ruifm/gitlinker.nvim",
+        requires = "nvim-lua/plenary.nvim",
     }
 
     -- Focus mode (nice for RO stuff)
     use "junegunn/goyo.vim"
 
     -- Motion comments
-    use {
-        "numToStr/Comment.nvim",
-        config = function()
-            require("Comment").setup()
-        end
-    }
+    use "numToStr/Comment.nvim"
 
     use { "junegunn/fzf", run = "./install --all" }
     use "junegunn/fzf.vim"
@@ -73,21 +66,11 @@ require("packer").startup(function(use)
     -- Better tmux
     use "christoomey/vim-tmux-navigator"
 
+    -- Must be placed after all plugin specs
     if packer_bootstrap then
-        require("packer").sync()
+        require('packer').sync()
     end
 end)
-
-vim.cmd([[
-  augroup PackerCompile
-    autocmd!
-    autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-  augroup end
-]])
-
-require("mh-cmp")
-require("mh-lsp")
-require("mh-snippets")
 
 local custom_cxx_template = {
     template = {
@@ -106,15 +89,24 @@ local custom_cxx_template = {
 }
 
 require("neogen").setup {
-  enabled = true,
-  languages = {
-      c = custom_cxx_template,
-      cpp = custom_cxx_template,
-  }
+    enabled = true,
+    languages = {
+        c = custom_cxx_template,
+        cpp = custom_cxx_template,
+    }
 }
 
-require("neogit").setup {
-    integrations = {
-        diffview = true
-    },
-}
+require("lsp_signature").setup()
+require("gitlinker").setup()
+require("Comment").setup()
+
+vim.cmd([[
+augroup PackerCompile
+autocmd!
+autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+augroup end
+]])
+
+require("mh-cmp")
+require("mh-lsp")
+require("mh-snippets")

@@ -17,7 +17,7 @@ vim.o.hidden = true
 require("keybinds")
 
 -- AUTOCMDS
-local group = vim.api.nvim_create_augroup("autosave", {})
+local group = vim.api.nvim_create_augroup("automagic", { clear = false })
 vim.api.nvim_create_autocmd("BufWritePost", {
     group = group,
     pattern = vim.fn.expand("$MYVIMRC"),
