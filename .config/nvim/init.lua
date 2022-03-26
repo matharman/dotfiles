@@ -37,7 +37,7 @@ local function load_project_nvimrc(path)
 end
 
 local function find_project_root(max_depth, patterns)
-    patterns = patterns or { ".git", "compile_commands.json" }
+    patterns = patterns or { ".git", ".nvimrc", }
     max_depth = max_depth or 10
 
     local path = vim.fn.getcwd()
