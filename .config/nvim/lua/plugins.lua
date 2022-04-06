@@ -16,9 +16,6 @@ require("packer").startup(function(use)
     use "williamboman/nvim-lsp-installer"
     use "ray-x/lsp_signature.nvim"
 
-    -- NVIM Config Hacking
-    use "folke/lua-dev.nvim"
-
     -- Completion
     use "hrsh7th/cmp-nvim-lsp"
     use "hrsh7th/cmp-buffer"
@@ -88,6 +85,7 @@ require("neogen").setup {
 require("lsp_signature").setup()
 require("gitlinker").setup()
 require("Comment").setup()
+require("nvim-treesitter.configs").setup({ highlight = { enable = true }})
 
 vim.cmd([[
 augroup PackerCompile

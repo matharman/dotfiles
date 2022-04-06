@@ -55,7 +55,7 @@ local cmake_list_template = snip("cmakenew", {
     }
 )
 
-luasnip.snippets = {
+luasnip.add_snippets(nil, {
     c = {
         cxx_include_guard_snip,
         cxx_externc_ifdef,
@@ -67,4 +67,4 @@ luasnip.snippets = {
     cmake = {
         cmake_list_template,
     },
-}
+})

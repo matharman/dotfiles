@@ -71,6 +71,37 @@ M.extend_lsp_options("gopls", function(opts)
     return opts
 end)
 
+M.extend_lsp_options("sumneko_lua", function(opts)
+    -- Make runtime files discoverable to the server
+    local runtime_path = vim.split(package.path, ';')
+    table.insert(runtime_path, 'lua/?.lua')
+    table.insert(runtime_path, 'lua/?/init.lua')
+
+    opts.settings = vim.tbl_deep_extend("force", opts.settings or {}, {
+        Lua = {
+          runtime = {
+            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+            version = 'LuaJIT',
+            -- Setup your lua path
+            path = runtime_path,
+          },
+          diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = { 'vim' },
+          },
+          workspace = {
+            -- Make the server aware of Neovim runtime files
+            library = vim.api.nvim_get_runtime_file('', true),
+          },
+          -- Do not send telemetry data containing a randomized but unique identifier
+          telemetry = {
+            enable = false,
+          },
+      },
+    })
+    return opts
+end)
+
 local lsp_installer = require("nvim-lsp-installer")
 lsp_installer.on_server_ready(function(server)
     local opts = {
@@ -92,11 +123,6 @@ lsp_installer.on_server_ready(function(server)
             server = vim.tbl_deep_extend("force", server:get_default_options(), opts),
         }
         server:attach_buffers()
-    elseif server.name == "sumneko_lua" then
-        local luadev = require("lua-dev").setup({
-            lspconfig = opts
-        })
-        server:setup(luadev)
     else
         server:setup(opts)
     end
