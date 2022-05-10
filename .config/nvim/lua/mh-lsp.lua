@@ -102,8 +102,17 @@ M.extend_lsp_options("sumneko_lua", function(opts)
     return opts
 end)
 
-local lsp_installer = require("nvim-lsp-installer")
-lsp_installer.on_server_ready(function(server)
+local installer = require("nvim-lsp-installer")
+local lspconfig_util = require("lspconfig.util")
+
+lspconfig_util.default_config = vim.tbl_extend("force", lspconfig_util.default_config, {
+    on_attach = default_on_attach,
+    capabilities = cmp_capabilities,
+})
+
+installer.setup({})
+
+for _, server in pairs(installer.get_installed_servers() or {}) do
     local opts = {
         on_attach = default_on_attach,
         capabilities = cmp_capabilities,
@@ -120,12 +129,11 @@ lsp_installer.on_server_ready(function(server)
             -- settings rust-tools will provide to lspconfig during init.
             -- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
             -- with the user's own settings (opts).
-            server = vim.tbl_deep_extend("force", server:get_default_options(), opts),
+            server = opts,
         }
-        server:attach_buffers()
     else
-        server:setup(opts)
+        require("lspconfig")[server.name].setup(opts)
     end
-end)
+end
 
 return M
