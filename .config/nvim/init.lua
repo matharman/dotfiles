@@ -14,6 +14,10 @@ vim.cmd([[colorscheme nightfox]])
 vim.o.directory = os.getenv('HOME') .. "/.config/nvim/.swapfiles/"
 vim.o.hidden = true
 
+vim.o.shiftwidth = 4
+vim.o.softtabstop = 4
+vim.o.expandtab = true
+
 require("keybinds")
 
 -- AUTOCMDS
