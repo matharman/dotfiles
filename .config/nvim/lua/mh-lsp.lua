@@ -34,6 +34,15 @@ M.extend_lsp_options("ccls", function(opts)
     return opts
 end)
 
+M.extend_lsp_options("clangd", function(opts)
+    return vim.tbl_deep_extend("force", opts or {}, {
+        cmd = {
+            "clangd",
+            "--header-insertion=never",
+        },
+    })
+end)
+
 M.extend_lsp_options("gopls", function(opts)
 
     local organize_imports = function(wait_ms)
@@ -131,6 +140,8 @@ for _, server in pairs(installer.get_installed_servers() or {}) do
             -- with the user's own settings (opts).
             server = opts,
         }
+    elseif server.name == "ccls" then
+        -- nothing
     else
         require("lspconfig")[server.name].setup(opts)
     end
