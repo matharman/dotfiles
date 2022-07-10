@@ -132,6 +132,15 @@ for _, server in pairs(installer.get_installed_servers() or {}) do
     end
 
     if server.name == "rust_analyzer" then
+        local group = vim.api.nvim_create_augroup("automagic", { clear = false })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = group,
+            pattern = "*.rs",
+            callback = function()
+                vim.lsp.buf.formatting_sync()
+            end
+        })
+
         -- Initialize the LSP via rust-tools instead
         require("rust-tools").setup {
             -- The "server" property provided in rust-tools setup function are the
