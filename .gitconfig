@@ -19,6 +19,7 @@
         cmd = nvim -d $LOCAL $REMOTE -c 'wincmd l'
 [mergetool]
         trustExitCode = true
+	keepBackup = false
 [mergetool "mtnvim"]
         cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
 [alias]

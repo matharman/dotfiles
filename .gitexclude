@@ -5,7 +5,9 @@ tags*
 *.orig
 .envrc
 .exrc
-.nvimrc
+**/.nvimrc
 .vim
-.ccls-cache
+**/.ccls-cache
+**/.cache
+**/.clangd
 .dotfiles
