@@ -56,6 +56,9 @@ require("packer").startup(function(use)
 
     -- Better tmux
     use "christoomey/vim-tmux-navigator"
+
+    -- Case mutations
+    use "tpope/vim-abolish"
 end)
 
 local custom_cxx_template = {
