@@ -29,22 +29,19 @@ function M.extend_lsp_options(server, enhance_opts)
     end
 end
 
-M.extend_lsp_options("ccls", function(opts)
-    opts.init_options = vim.tbl_deep_extend("force", opts.init_options or {}, { cache = { directory = "/tmp/ccls-cache" } })
-    return opts
-end)
-
-M.extend_lsp_options("clangd", function(opts)
-    return vim.tbl_deep_extend("force", opts or {}, {
-        cmd = {
-            "clangd",
-            "--header-insertion=never",
+M.extend_lsp_options("ccls", function()
+    return {
+        init_options = {
+            cache = { directory = "/tmp/ccls-cache" },
         },
-    })
+    }
 end)
 
-M.extend_lsp_options("gopls", function(opts)
+M.extend_lsp_options("clangd", function()
+    return { cmd = { "clangd", "--header-insertion=never" } }
+end)
 
+M.extend_lsp_options("gopls", function()
     local organize_imports = function(wait_ms)
         local params = vim.lsp.util.make_range_params()
         params.context = { only = { "source.organizeImports" } }
@@ -61,9 +58,7 @@ M.extend_lsp_options("gopls", function(opts)
         end
     end
 
-    local group = vim.api.nvim_create_augroup("automagic", { clear = false })
-    vim.api.nvim_create_autocmd("BufWritePre", {
-        group = group,
+    require("mh").create_automagic_cmd("Format GO on save", "BufWritePre", {
         pattern = "*.go",
         callback = function()
             vim.lsp.buf.formatting_sync()
@@ -71,54 +66,48 @@ M.extend_lsp_options("gopls", function(opts)
         end
     })
 
-    local settings = {
-        analyses = {
-            staticcheck = true,
+    return {
+        settings = {
+            analyses = {
+                staticcheck = true,
+            },
         }
     }
-    opts.settings = vim.tbl_deep_extend("force", opts.settings or {}, settings)
-    return opts
 end)
 
-M.extend_lsp_options("sumneko_lua", function(opts)
+M.extend_lsp_options("sumneko_lua", function()
     -- Make runtime files discoverable to the server
     local runtime_path = vim.split(package.path, ';')
     table.insert(runtime_path, 'lua/?.lua')
     table.insert(runtime_path, 'lua/?/init.lua')
 
-    opts.settings = vim.tbl_deep_extend("force", opts.settings or {}, {
-        Lua = {
-          runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
-            -- Setup your lua path
-            path = runtime_path,
-          },
-          diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = { 'vim' },
-          },
-          workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = vim.api.nvim_get_runtime_file('', true),
-          },
-          -- Do not send telemetry data containing a randomized but unique identifier
-          telemetry = {
-            enable = false,
-          },
-      },
-    })
-    return opts
+    return {
+        settings = {
+            Lua = {
+                runtime = {
+                    -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                    version = 'LuaJIT',
+                    -- Setup your lua path
+                    path = runtime_path,
+                },
+                diagnostics = {
+                    -- Get the language server to recognize the `vim` global
+                    globals = { 'vim' },
+                },
+                workspace = {
+                    -- Make the server aware of Neovim runtime files
+                    library = vim.api.nvim_get_runtime_file('', true),
+                },
+                -- Do not send telemetry data containing a randomized but unique identifier
+                telemetry = {
+                    enable = false,
+                },
+            },
+        }
+    }
 end)
 
 local installer = require("nvim-lsp-installer")
-local lspconfig_util = require("lspconfig.util")
-
-lspconfig_util.default_config = vim.tbl_extend("force", lspconfig_util.default_config, {
-    on_attach = default_on_attach,
-    capabilities = cmp_capabilities,
-})
-
 installer.setup({})
 
 for _, server in pairs(installer.get_installed_servers() or {}) do
@@ -128,13 +117,12 @@ for _, server in pairs(installer.get_installed_servers() or {}) do
     }
 
     for _, enhancer in pairs(M._server_opts[server.name] or {}) do
-        opts = enhancer(opts)
+        local extensions = enhancer()
+        opts = vim.tbl_deep_extend("force", opts, extensions or {})
     end
 
     if server.name == "rust_analyzer" then
-        local group = vim.api.nvim_create_augroup("automagic", { clear = false })
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            group = group,
+        require("mh").create_automagic_cmd("Format RUST on save", "BufWritePre", {
             pattern = "*.rs",
             callback = function()
                 vim.lsp.buf.formatting_sync()

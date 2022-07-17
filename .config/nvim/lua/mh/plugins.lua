@@ -1,64 +1,77 @@
-require("packer").startup(function(use)
-    use "wbthomason/packer.nvim"
+-- Install packer
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+local packer_bootstrap = false;
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    packer_bootstrap = true
+    vim.fn.execute("!git clone --depth 1 https://github.com/wbthomason/packer.nvim " .. install_path)
+    vim.cmd[[packadd packer.nvim]]
+end
 
+require("packer").startup(function(use)
+    --EXPERIMENTAL
+    use "nathom/filetype.nvim"
+
+    use "wbthomason/packer.nvim"
     use "lewis6991/impatient.nvim"
+
+    -- Treesitter
+    use "nvim-treesitter/nvim-treesitter"
+    use "nvim-treesitter/nvim-treesitter-textobjects"
 
     -- Autogenerate docstrings :O
     use "danymat/neogen"
-
     -- Colors
-    use "nvim-treesitter/nvim-treesitter"
     use "marko-cerovac/material.nvim"
     use "EdenEast/nightfox.nvim"
-
-    -- Built-in LSP
+    -- LSP
     use "neovim/nvim-lspconfig"
     use "williamboman/nvim-lsp-installer"
     use "ray-x/lsp_signature.nvim"
-
     -- Completion
-    use "hrsh7th/cmp-nvim-lsp"
-    use "hrsh7th/cmp-buffer"
-    use "hrsh7th/cmp-path"
-    use "hrsh7th/cmp-cmdline"
-    use "hrsh7th/nvim-cmp"
-
+    use {
+        "hrsh7th/nvim-cmp",
+        requires = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+        }
+    }
     -- Snippets
-    use "L3MON4D3/LuaSnip"
-    use "saadparwaiz1/cmp_luasnip"
-
+    use {
+        "L3MON4D3/LuaSnip",
+        requires = { "saadparwaiz1/cmp_luasnip" },
+    }
     -- Rust goodies
     use "simrat39/rust-tools.nvim"
-
     -- Git goodies
     use "tpope/vim-fugitive"
-    -- use {
-    --     "TimUntersberger/neogit",
-    --     requires = {
-    --         "nvim-lua/plenary.nvim",
-    --         "sindrets/diffview.nvim",
-    --     },
-    -- }
-
     use {
         "ruifm/gitlinker.nvim",
         requires = "nvim-lua/plenary.nvim",
     }
-
+    use "rhysd/git-messenger.vim"
     -- Focus mode (nice for RO stuff)
-    use "junegunn/goyo.vim"
-
+    use "folke/zen-mode.nvim"
+    use "folke/twilight.nvim"
     -- Motion comments
     use "numToStr/Comment.nvim"
-
-    use { "junegunn/fzf", run = "./install --all" }
-    use "junegunn/fzf.vim"
-
+    use {
+        "junegunn/fzf",
+        run = "./install --all",
+        requires = { "junegunn/fzf.vim" },
+    }
     -- Better tmux
     use "christoomey/vim-tmux-navigator"
-
     -- Case mutations
     use "tpope/vim-abolish"
+
+    if packer_bootstrap then
+        print("Bootstrapping packer...");
+        require("packer").sync()
+        vim.fn.input("Bootstrap done. Exiting");
+        vim.cmd[[quitall]]
+    end
 end)
 
 local custom_cxx_template = {
@@ -85,18 +98,51 @@ require("neogen").setup {
     }
 }
 
+require("zen-mode").setup {}
+require("twilight").setup {}
+
 require("lsp_signature").setup()
 require("gitlinker").setup()
 require("Comment").setup()
-require("nvim-treesitter.configs").setup({ highlight = { enable = true }})
+require("nvim-treesitter.configs").setup({
+    highlight = { enable = true },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = "@class.inner",
+            },
+        },
+        move = {
+            enable = true,
+            set_jumps = true,
+            goto_next_start = {
+              [']]'] = '@function.outer',
+              -- [']]'] = '@class.outer',
+            },
+            goto_next_end = {
+              [']['] = '@function.outer',
+              -- [']['] = '@class.outer',
+            },
+            goto_previous_start = {
+              ['[['] = '@function.outer',
+              -- ['[['] = '@class.outer',
+            },
+            goto_previous_end = {
+              ['[]'] = '@function.outer',
+              -- ['[]'] = '@class.outer',
+            },
+        },
+    },
+})
 
-vim.cmd([[
-augroup PackerCompile
-autocmd!
-autocmd BufWritePost plugins.lua source <afile> | PackerCompile
-augroup end
-]])
-
-require("mh-cmp")
-require("mh-lsp")
-require("mh-snippets")
+local group = vim.api.nvim_create_augroup("automagic", { clear = false })
+vim.api.nvim_create_autocmd("BufWritePost", {
+    group = group,
+    pattern = "plugins.lua",
+    command = "source <afile> | PackerCompile",
+})
