@@ -1,7 +1,12 @@
 -- Startup time optimizer
 pcall(require, "impatient")
 
-require("plugins")
+local mh = require("mh")
+require("mh.plugins")
+require("mh.keybinds")
+require("mh.lsp")
+require("mh.snippets")
+require("mh.cmp")
 
 -- COMPLETION
 vim.o.completeopt = "menu,menuone,noselect"
@@ -18,12 +23,8 @@ vim.o.shiftwidth = 4
 vim.o.softtabstop = 4
 vim.o.expandtab = true
 
-require("keybinds")
-
 -- AUTOCMDS
-local group = vim.api.nvim_create_augroup("automagic", { clear = false })
-vim.api.nvim_create_autocmd("BufWritePost", {
-    group = group,
+mh.create_automagic_cmd("Auto-source vimrc", "BufWritePost", {
     pattern = vim.fn.expand("$MYVIMRC"),
     command = "source $MYVIMRC",
 })
@@ -36,6 +37,7 @@ local function load_project_nvimrc(path)
         local gid = vim.loop.getgid()
         if fstat.uid == uid or fstat.gid == gid then
             vim.cmd("source " .. path)
+            print("loaded local config from " .. path)
         end
     end
 end
