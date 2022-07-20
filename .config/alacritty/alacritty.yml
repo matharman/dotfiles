@@ -176,8 +176,9 @@ font:
 #draw_bold_text_with_bright_colors: false
 
 import:
+  - ~/.config/alacritty/kanagawa.yml
   # - ~/.config/alacritty/gruvbox_dark.yml
-  - ~/.config/alacritty/tokyo_night.yml
+  # - ~/.config/alacritty/tokyo_night.yml
   # - ~/.config/alacritty/nightfox_alacritty.yml
 
 # Bell
@@ -287,12 +288,12 @@ import:
 #   - (macOS) /bin/bash --login
 #   - (Linux/BSD) user login shell
 #   - (Windows) powershell
-shell:
-  program: /bin/bash
-  args:
-    - --login
-    - -c
-    - "(tmux attach || tmux)"
+#shell:
+#  program: /bin/bash
+#  args:
+#    - --login
+#    - -c
+#    - "(tmux attach || tmux)"
 
 # Startup directory
 #
