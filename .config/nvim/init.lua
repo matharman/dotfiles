@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+
 -- Startup time optimizer
 pcall(require, "impatient")
 
@@ -13,7 +15,8 @@ vim.o.completeopt = "menu,menuone,noselect"
 
 -- APPEARANCE
 vim.o.cursorline = true
-vim.cmd([[colorscheme nightfox]])
+vim.o.termguicolors = true
+vim.cmd([[colorscheme kanagawa]])
 
 -- BUFFER MANAGEMENT
 vim.o.directory = os.getenv('HOME') .. "/.config/nvim/.swapfiles/"

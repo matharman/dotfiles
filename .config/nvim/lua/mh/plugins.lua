@@ -1,3 +1,5 @@
+vim.g.use_telescope = true
+
 -- Install packer
 local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 local packer_bootstrap = false;
@@ -23,6 +25,7 @@ require("packer").startup(function(use)
     -- Colors
     use "marko-cerovac/material.nvim"
     use "EdenEast/nightfox.nvim"
+    use "rebelot/kanagawa.nvim"
     -- LSP
     use "neovim/nvim-lspconfig"
     use "williamboman/nvim-lsp-installer"
@@ -56,11 +59,22 @@ require("packer").startup(function(use)
     use "folke/twilight.nvim"
     -- Motion comments
     use "numToStr/Comment.nvim"
-    use {
-        "junegunn/fzf",
-        run = "./install --all",
-        requires = { "junegunn/fzf.vim" },
-    }
+    if vim.g.use_telescope then
+        use {
+            "nvim-telescope/telescope.nvim", tag = "0.1.0",
+            requires = {"nvim-lua/plenary.nvim"},
+        }
+        use {
+            "nvim-telescope/telescope-fzf-native.nvim",
+            run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        }
+    else
+        use {
+            "junegunn/fzf",
+            run = "./install --all",
+            requires = { "junegunn/fzf.vim" },
+        }
+    end
     -- Better tmux
     use "christoomey/vim-tmux-navigator"
     -- Case mutations
@@ -104,6 +118,36 @@ require("twilight").setup {}
 require("lsp_signature").setup()
 require("gitlinker").setup()
 require("Comment").setup()
+
+local telescope = require("telescope")
+telescope.setup({
+    defaults = {
+        mappings = {
+            i = {
+                ["<C-h>"] = "which_key",
+                ["<C-j>"] = "move_selection_next",
+                ["<C-k>"] = "move_selection_previous",
+            },
+        },
+    },
+    pickers = {
+    },
+    extensions = {
+        -- fzf = {
+        --     fuzzy = true,
+        --     override_generic_sort = true,
+        --     override_file_sort = true,
+        -- },
+    },
+})
+
+-- telescope.load_extension("fzf")
+
+-- Livegrep
+if vim.g.use_telescope then
+    vim.api.nvim_create_user_command("Rg", "Telescope live_grep", {})
+end
+
 require("nvim-treesitter.configs").setup({
     highlight = { enable = true },
     textobjects = {

@@ -1,11 +1,12 @@
-vim.g.mapleader = " "
-
--- Easy FZF git file search
-vim.keymap.set("n", "<leader>gf", "<Cmd>GFiles<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>f", "<Cmd>Files<CR>", { noremap = true, silent = true })
-
--- Easy FZF buffer switch
-vim.keymap.set("n", "<leader>b", "<Cmd>Buffers<CR>", { noremap = true, silent = true })
+if vim.g.use_telescope then
+    vim.keymap.set("n", "<leader>gf", "<Cmd>Telescope git_files<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<leader>f", "<Cmd>Telescope find_files find_command=rg,--ignore,--hidden,--files<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<leader>b", "<Cmd>Telescope buffers<CR>", { noremap = true, silent = true })
+else
+    vim.keymap.set("n", "<leader>gf", "<Cmd>GFiles<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<leader>f", "<Cmd>Files<CR>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<leader>b", "<Cmd>Buffers<CR>", { noremap = true, silent = true })
+end
 
 local nvim_config_dir = "$HOME/.config/nvim"
 
