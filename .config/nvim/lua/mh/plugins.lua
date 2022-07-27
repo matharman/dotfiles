@@ -114,7 +114,15 @@ local custom_cxx_template = {
 }
 
 require("mason").setup()
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        "clangd",
+        "rust_analyzer",
+        "gopls",
+        "sumneko_lua",
+        "cmake-language-server",
+    },
+})
 
 require("neogen").setup {
     enabled = true,

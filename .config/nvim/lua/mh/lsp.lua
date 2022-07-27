@@ -121,8 +121,7 @@ local function get_extended_options(server)
     return opts
 end
 
-local installer = require("mason-lspconfig")
-installer.setup_handlers {
+require("mason-lspconfig").setup_handlers {
     function(server)
         local options = get_extended_options(server)
         require("lspconfig")[server].setup(options)
