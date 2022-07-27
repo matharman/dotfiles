@@ -27,8 +27,9 @@ require("packer").startup(function(use)
     use "EdenEast/nightfox.nvim"
     use "rebelot/kanagawa.nvim"
     -- LSP
+    use "williamboman/mason.nvim"
+    use "williamboman/mason-lspconfig.nvim"
     use "neovim/nvim-lspconfig"
-    use "williamboman/nvim-lsp-installer"
     use "ray-x/lsp_signature.nvim"
     -- Completion
     use {
@@ -59,24 +60,32 @@ require("packer").startup(function(use)
     use "folke/twilight.nvim"
     -- Motion comments
     use "numToStr/Comment.nvim"
-    if vim.g.use_telescope then
-        use {
-            "nvim-telescope/telescope.nvim", tag = "0.1.0",
-            requires = {"nvim-lua/plenary.nvim"},
-        }
-        use {
-            "nvim-telescope/telescope-fzf-native.nvim",
-            run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-        }
-    else
-        use {
-            "junegunn/fzf",
-            run = "./install --all",
-            requires = { "junegunn/fzf.vim" },
-        }
+
+    -- TELESCOPE
+    use {
+        "nvim-telescope/telescope.nvim", tag = "0.1.0",
+        requires = {"nvim-lua/plenary.nvim"},
+        disable = not vim.g.use_telescope,
+    }
+    use {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+        disable = not vim.g.use_telescope,
+    }
+
+    -- FZF
+    use {
+        "junegunn/fzf",
+        run = "./install --all",
+    }
+
+    if not vim.g.use_telescope then
+        use "junegunn/fzf.vim"
     end
+
     -- Better tmux
     use "christoomey/vim-tmux-navigator"
+
     -- Case mutations
     use "tpope/vim-abolish"
 
@@ -103,6 +112,9 @@ local custom_cxx_template = {
         },
     }
 }
+
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 require("neogen").setup {
     enabled = true,

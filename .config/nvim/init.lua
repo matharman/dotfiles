@@ -16,7 +16,7 @@ vim.o.completeopt = "menu,menuone,noselect"
 -- APPEARANCE
 vim.o.cursorline = true
 vim.o.termguicolors = true
-vim.cmd([[colorscheme kanagawa]])
+vim.cmd[[colorscheme nightfox]]
 
 -- BUFFER MANAGEMENT
 vim.o.directory = os.getenv('HOME') .. "/.config/nvim/.swapfiles/"

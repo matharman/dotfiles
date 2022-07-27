@@ -18,8 +18,6 @@ local default_on_attach = function(_, bufnr)
     buf_set_keymap('n', '<leader>n', '<Cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 end
 
-local cmp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
-
 -- For use in project-local configs (ie cross-compiler flags for CCLS)
 function M.extend_lsp_options(server, enhance_opts)
     if M._server_opts[server] then
@@ -107,21 +105,29 @@ M.extend_lsp_options("sumneko_lua", function()
     }
 end)
 
-local installer = require("nvim-lsp-installer")
-installer.setup({})
+local function get_extended_options(server)
+    local cmp_capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-for _, server in pairs(installer.get_installed_servers() or {}) do
     local opts = {
         on_attach = default_on_attach,
         capabilities = cmp_capabilities,
     }
 
-    for _, enhancer in pairs(M._server_opts[server.name] or {}) do
+    for _, enhancer in pairs(M._server_opts[server] or {}) do
         local extensions = enhancer()
         opts = vim.tbl_deep_extend("force", opts, extensions or {})
     end
 
-    if server.name == "rust_analyzer" then
+    return opts
+end
+
+local installer = require("mason-lspconfig")
+installer.setup_handlers {
+    function(server)
+        local options = get_extended_options(server)
+        require("lspconfig")[server].setup(options)
+    end,
+    ["rust_analyzer"] = function()
         require("mh").create_automagic_cmd("Format RUST on save", "BufWritePre", {
             pattern = "*.rs",
             callback = function()
@@ -135,13 +141,9 @@ for _, server in pairs(installer.get_installed_servers() or {}) do
             -- settings rust-tools will provide to lspconfig during init.
             -- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
             -- with the user's own settings (opts).
-            server = opts,
+            server = get_extended_options("rust_analyzer"),
         }
-    elseif server.name == "ccls" then
-        -- nothing
-    else
-        require("lspconfig")[server.name].setup(opts)
-    end
-end
+    end,
+}
 
 return M
