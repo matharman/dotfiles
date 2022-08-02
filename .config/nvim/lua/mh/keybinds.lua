@@ -8,11 +8,42 @@ else
     vim.keymap.set("n", "<leader>b", "<Cmd>Buffers<CR>", { noremap = true, silent = true })
 end
 
-local nvim_config_dir = "$HOME/.config/nvim"
+local config_edit_tab_id = -1
 
--- Easy open vimrc
-local vimrc_edit_cmd = "<Cmd>tabnew | e " .. nvim_config_dir .. " | vs $MYVIMRC<CR>"
-vim.keymap.set("n", "<leader><leader>v", vimrc_edit_cmd, { noremap = true, silent = true })
+local function config_edit_open()
+    if config_edit_tab_id == -1 then
+        vim.cmd[[tabnew $MYVIMRC]]
+        config_edit_tab_id = vim.api.nvim_get_current_tabpage()
+
+        local augroup = vim.api.nvim_create_augroup("ConfigEditTab", {})
+        vim.api.nvim_create_autocmd("TabLeave", {
+            group = augroup,
+            pattern = "*",
+            callback = function()
+                config_edit_tab_id = -1
+                vim.api.nvim_del_augroup_by_id(augroup)
+            end
+        })
+    end
+end
+
+local function on_config_edit()
+    config_edit_open()
+
+    local home = os.getenv("HOME")
+    if home then
+        -- TODO: want vertical split on the right, but good enough for now.
+        require("telescope.builtin").find_files({
+            cwd = home .. "/.config/nvim",
+            attach_mappings = function()
+                local actions = require("telescope.actions")
+                actions.select_default:replace(actions.select_vertical)
+                return true
+            end,
+        })
+    end
+end
+vim.keymap.set("n", "<leader><leader>v", on_config_edit, { noremap = true, silent = true })
 
 -- Fugitive workflow
 local function open_git_if_fugitive()
