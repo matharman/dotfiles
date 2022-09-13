@@ -22,6 +22,7 @@ require("packer").startup(function(use)
 
     -- Autogenerate docstrings :O
     use "danymat/neogen"
+
     -- Colors
     use "marko-cerovac/material.nvim"
     use "EdenEast/nightfox.nvim"
@@ -153,15 +154,15 @@ telescope.setup({
     pickers = {
     },
     extensions = {
-        -- fzf = {
-        --     fuzzy = true,
-        --     override_generic_sort = true,
-        --     override_file_sort = true,
-        -- },
+        fzf = {
+            fuzzy = true,
+            override_generic_sort = true,
+            override_file_sort = true,
+        },
     },
 })
 
--- telescope.load_extension("fzf")
+telescope.load_extension("fzf")
 
 -- Livegrep
 if vim.g.use_telescope then
@@ -185,20 +186,20 @@ require("nvim-treesitter.configs").setup({
             enable = true,
             set_jumps = true,
             goto_next_start = {
-              [']]'] = '@function.outer',
-              -- [']]'] = '@class.outer',
+                [']]'] = '@function.outer',
+                -- [']]'] = '@class.outer',
             },
             goto_next_end = {
-              [']['] = '@function.outer',
-              -- [']['] = '@class.outer',
+                [']['] = '@function.outer',
+                -- [']['] = '@class.outer',
             },
             goto_previous_start = {
-              ['[['] = '@function.outer',
-              -- ['[['] = '@class.outer',
+                ['[['] = '@function.outer',
+                -- ['[['] = '@class.outer',
             },
             goto_previous_end = {
-              ['[]'] = '@function.outer',
-              -- ['[]'] = '@class.outer',
+                ['[]'] = '@function.outer',
+                -- ['[]'] = '@class.outer',
             },
         },
     },

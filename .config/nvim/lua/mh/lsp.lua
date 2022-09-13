@@ -121,28 +121,35 @@ local function get_extended_options(server)
     return opts
 end
 
-require("mason-lspconfig").setup_handlers {
-    function(server)
-        local options = get_extended_options(server)
-        require("lspconfig")[server].setup(options)
-    end,
-    ["rust_analyzer"] = function()
-        require("mh").create_automagic_cmd("Format RUST on save", "BufWritePre", {
-            pattern = "*.rs",
-            callback = function()
-                vim.lsp.buf.formatting_sync()
-            end
-        })
+function M.setup_lsp()
+    require("lspconfig").ccls.setup(get_extended_options("ccls"))
+    require("mason-lspconfig").setup_handlers {
+        -- Default handler
+        function(server)
+            local options = get_extended_options(server)
+            require("lspconfig")[server].setup(options)
+        end,
+        ["clangd"] = function()
+            -- nothing because using ccls for now
+        end,
+        ["rust_analyzer"] = function()
+            require("mh").create_automagic_cmd("Format RUST on save", "BufWritePre", {
+                pattern = "*.rs",
+                callback = function()
+                    vim.lsp.buf.formatting_sync()
+                end
+            })
 
-        -- Initialize the LSP via rust-tools instead
-        require("rust-tools").setup {
-            -- The "server" property provided in rust-tools setup function are the
-            -- settings rust-tools will provide to lspconfig during init.
-            -- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
-            -- with the user's own settings (opts).
-            server = get_extended_options("rust_analyzer"),
-        }
-    end,
-}
+            -- Initialize the LSP via rust-tools instead
+            require("rust-tools").setup {
+                -- The "server" property provided in rust-tools setup function are the
+                -- settings rust-tools will provide to lspconfig during init.
+                -- We merge the necessary settings from nvim-lsp-installer (server:get_default_options())
+                -- with the user's own settings (opts).
+                server = get_extended_options("rust_analyzer"),
+            }
+        end,
+    }
+end
 
 return M
