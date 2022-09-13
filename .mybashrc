@@ -3,6 +3,9 @@ alias vi='vim'
 alias vim='nvim'
 alias dots='git --git-dir=$HOME/.dots --work-tree=$HOME'
 
+export HISTSIZE=30000
+export HISTFILESIZE=30000
+
 export CMAKE_EXPORT_COMPILE_COMMANDS=1
 export PATH=$PATH:$HOME/tools
 export PATH=$PATH:$HOME/.local/bin
