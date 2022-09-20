@@ -31,6 +31,7 @@ M.extend_lsp_options("ccls", function()
     return {
         init_options = {
             cache = { directory = "/tmp/ccls-cache" },
+            compilationDatabaseDirectory = "build",
         },
     }
 end)
