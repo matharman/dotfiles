@@ -1,3 +1,4 @@
+# vim: set ft=gitconfig:
 [user]
         name = Mathew Harman
         email = mathew.harman@gmail.com
@@ -34,4 +35,6 @@
 [apply]
         whitespace = nowarn
 
-# vim: set ft=gitconfig:
+## harmless if the file doesn't exist.
+[include]
+        path = ~/.config/git-gpg
