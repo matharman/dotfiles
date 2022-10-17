@@ -47,7 +47,7 @@ function M.cxx_format_on_save()
 
 	if has_clang_format then
 		M.add_on_save_hook("Format CXX on save", pattern, function()
-			vim.lsp.buf.formatting_sync()
+			vim.lsp.buf.format()
 		end)
 	end
 end
@@ -60,7 +60,7 @@ function M.project_local_config_cxx_cross(triple, toolchain_path, opts)
 					extraArgs = {
 						"--target=" .. triple,
 						"--gcc-toolchain=" .. toolchain_path,
-						"--sysroot=" .. toolchain_path .. "/" .. triple .. "/libc",
+						"--sysroot=" .. toolchain_path .. "/" .. triple,
 					},
 				},
 			},
@@ -74,6 +74,14 @@ function M.project_local_config_cxx_host(opts)
 		return opts or {}
 	end)
 	M.cxx_format_on_save()
+end
+
+-- Fugitive workflow
+function M.open_git_if_fugitive()
+	if vim.g.loaded_fugitive then
+		vim.api.nvim_command([[tabnew | Git log | only]])
+		vim.api.nvim_command([[vert Git]])
+	end
 end
 
 local function load_nvimrc(path)

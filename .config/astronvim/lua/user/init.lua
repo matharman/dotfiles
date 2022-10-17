@@ -46,7 +46,11 @@ local config = {
 	options = {
 		opt = {
 			relativenumber = true, -- sets vim.opt.relativenumber
-			cursorline = true,
+			tabstop = 8,
+			shiftwidth = 4,
+			softtabstop = 4,
+			expandtab = true,
+			clipboard = "",
 		},
 		g = {
 			mapleader = " ", -- sets vim.g.mapleader
@@ -125,11 +129,30 @@ local config = {
 		mappings = {
 			n = {
 				-- ["<leader>lf"] = false -- disable formatting keymap
+				["<leader>p"] = {
+					function()
+						vim.diagnostic.goto_prev()
+					end,
+				},
+				["<leader>n"] = {
+					function()
+						vim.diagnostic.goto_next()
+					end,
+				},
 			},
 		},
 		-- add to the global LSP on_attach function
-		-- on_attach = function(client, bufnr)
-		-- end,
+		on_attach = function(client, bufnr)
+			-- if client.server_capabilities.documentFormattingProvider then
+			--     vim.api.nvim_del_augroup_by_name("auto_format")
+			-- end
+		end,
+		formatting = {
+			timeout_ms = 2000,
+			-- disabled = {
+			-- 	"sumneko_lua",
+			-- },
+		},
 
 		-- override the mason server-registration function
 		-- server_registration = function(server, opts)
@@ -166,6 +189,11 @@ local config = {
 	-- automatically pick-up stored data by this setting.)
 	mappings = {
 		-- first key is the mode
+		i = {
+			-- No better-escape mappings
+			["jj"] = false,
+			["jk"] = false,
+		},
 		n = {
 			-- second key is the lefthand side of the map
 			-- mappings seen under group name "Buffer"
@@ -175,6 +203,27 @@ local config = {
 			["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
 			-- quick save
 			-- ["<C-s>"] = { ":w!<cr>", desc = "Save File" },  -- change description but the same command
+
+			["<leader>gf"] = {
+				function()
+					require("telescope.builtin").git_files()
+				end,
+				desc = "GFiles",
+			},
+
+			["<leader>b"] = {
+				function()
+					require("telescope.builtin").buffers()
+				end,
+				desc = "Buffers",
+			},
+
+			["<leader>G"] = {
+				function()
+					require("mh").open_git_if_fugitive()
+				end,
+				desc = "Git dashboard",
+			},
 		},
 		t = {
 			-- setting a mapping to false will disable it
@@ -187,7 +236,9 @@ local config = {
 		init = {
 			-- You can disable default plugins as follows:
 			-- ["goolord/alpha-nvim"] = { disable = true },
-			["max39754/better-escape.nvim"] = { disable = true },
+			-- ["max39754/better-escape.nvim"] = { disable = true },
+			["Darazaki/indent-o-matic"] = { disable = true },
+			["lukas-reineke/indent-blankline.nvim"] = { disable = true },
 
 			-- You can also add new plugins here as well:
 			-- Add plugins, the packer syntax without the "use"
@@ -207,9 +258,7 @@ local config = {
 			--     require("lsp_signature").setup()
 			--   end,
 			-- },
-			["danymat/neogen"] = {
-				enabled = true,
-			},
+			{ "danymat/neogen" },
 			{ "christoomey/vim-tmux-navigator" },
 			{ "tpope/vim-abolish" },
 			{ "tpope/vim-fugitive" },
@@ -227,17 +276,6 @@ local config = {
 				null_ls.builtins.formatting.stylua,
 				null_ls.builtins.formatting.prettier,
 			}
-			-- set up null-ls's on_attach function
-			-- NOTE: You can remove this on attach function to disable format on save
-			config.on_attach = function(client)
-				if client.resolved_capabilities.document_formatting then
-					vim.api.nvim_create_autocmd("BufWritePre", {
-						desc = "Auto format before save",
-						pattern = "<buffer>",
-						callback = vim.lsp.buf.formatting_sync,
-					})
-				end
-			end
 			return config -- return final config table to use in require("null-ls").setup(config)
 		end,
 		treesitter = { -- overrides `require("treesitter").setup(...)`
@@ -248,7 +286,7 @@ local config = {
 			ensure_installed = { "sumneko_lua" },
 		},
 		-- use mason-tool-installer to configure DAP/Formatters/Linter installation
-		["mason-tool-installer"] = { -- overrides `require("mason-tool-installer").setup(...)`
+		["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
 			ensure_installed = { "prettier", "stylua" },
 		},
 		packer = { -- overrides `require("packer").setup(...)`
@@ -323,12 +361,20 @@ local config = {
 		--     ["~/%.config/foo/.*"] = "fooscript",
 		--   },
 		-- }
+		vim.filetype.add({
+			filename = {
+				["prj.conf"] = "kconfig",
+			},
+			pattern = {
+				[".*/boards/.*conf"] = "kconfig",
+				[".*/boards/.*overlay"] = "dts",
+			},
+		})
 	end,
 }
 
 require("mh").load_project_local()
-config.lsp["server-settings"] =
-	vim.tbl_deep_extend("force", config.lsp["server-settings"], require("mh.lsp").get_extended_options())
+config.lsp["server-settings"] = require("mh.lsp").extend_options(config.lsp["server-settings"])
 
 local neogen_custom_cxx_template = {
 	template = {
@@ -346,9 +392,12 @@ local neogen_custom_cxx_template = {
 	},
 }
 
-config.plugins.init["danymat/neogen"].languages = {
-	c = neogen_custom_cxx_template,
-	cpp = neogen_custom_cxx_template,
-}
+require("neogen").setup({
+	enabled = true,
+	languages = {
+		c = neogen_custom_cxx_template,
+		cpp = neogen_custom_cxx_template,
+	},
+})
 
 return config
