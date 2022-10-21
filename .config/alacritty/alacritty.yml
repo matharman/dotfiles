@@ -176,7 +176,8 @@ font:
 #draw_bold_text_with_bright_colors: false
 
 import:
-  - ~/.config/alacritty/nightfox_alacritty.yml
+  - ~/.config/alacritty/terafox_alacritty.yml
+  # - ~/.config/alacritty/nightfox_alacritty.yml
   # - ~/.config/alacritty/kanagawa.yml
   # - ~/.config/alacritty/gruvbox_dark.yml
   # - ~/.config/alacritty/tokyo_night.yml

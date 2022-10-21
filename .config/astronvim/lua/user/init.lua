@@ -27,7 +27,7 @@ local config = {
 
 	-- Set colorscheme to use
 	-- colorscheme = "default_theme",
-	colorscheme = "nightfox",
+	colorscheme = "terafox",
 
 	-- Override highlight groups in any theme
 	highlights = {
@@ -189,11 +189,6 @@ local config = {
 	-- automatically pick-up stored data by this setting.)
 	mappings = {
 		-- first key is the mode
-		i = {
-			-- No better-escape mappings
-			["jj"] = false,
-			["jk"] = false,
-		},
 		n = {
 			-- second key is the lefthand side of the map
 			-- mappings seen under group name "Buffer"
@@ -236,7 +231,7 @@ local config = {
 		init = {
 			-- You can disable default plugins as follows:
 			-- ["goolord/alpha-nvim"] = { disable = true },
-			-- ["max39754/better-escape.nvim"] = { disable = true },
+			["max39754/better-escape.nvim"] = { disable = true },
 			["Darazaki/indent-o-matic"] = { disable = true },
 			["lukas-reineke/indent-blankline.nvim"] = { disable = true },
 

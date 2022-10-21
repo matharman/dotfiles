@@ -104,4 +104,9 @@ function M.load_project_local()
 	end
 end
 
+local ok, err = pcall(require, "mh.snippets")
+if not ok then
+	vim.api.nvim_err_writeln("failed to laod snippets\n\n" .. err)
+end
+
 return M
