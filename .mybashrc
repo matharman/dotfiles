@@ -23,6 +23,32 @@ fi
 [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
 [ -f "/usr/share/fzf/shell/key-bindings.bash" ] && source "/usr/share/fzf/shell/key-bindings.bash"
 
+## Learned from distrobox, thanks for the tricks!
+if  [ -e /.dockerenv ]; then
+	# we're in docker, let's use this trick
+	CONTAINER_ID=$(grep "memory:/" < /proc/self/cgroup | sed 's|.*/||')
+	## TODO -- get true container ID, not name
+elif [ -e /run/.containerenv ]; then
+	# we're in podman, use this other trick
+	CONTAINER_ID=$(grep "^id=" /run/.containerenv | cut -d'=' -f2- | tr -d '"')
+fi
+
+export DBX_TMUX_BRIDGE=$XDG_RUNTIME_DIR/dbx-tmux
+if [ -n "$TMUX" ]; then
+    tmux setenv DBX_TMUX_BRIDGE $DBX_TMUX_BRIDGE
+fi
+mkdir -p $DBX_TMUX_BRIDGE
+
+if [ ! -z "$DISTROBOX_ENTER_PATH" ]; then
+    DBX_TMUX_BRIDGE_OURS=$DBX_TMUX_BRIDGE/$TMUX_PANE
+
+    mkdir -p $DBX_TMUX_BRIDGE_OURS
+    trap "rm -r $DBX_TMUX_BRIDGE_OURS" EXIT
+
+    echo ${CONTAINER_ID} > $DBX_TMUX_BRIDGE_OURS/container_id
+    echo `tty` > $DBX_TMUX_BRIDGE_OURS/tty
+fi
+
 command -v starship &> /dev/null
 if [ $? == 0 ]; then
     eval "$(starship init bash)"
