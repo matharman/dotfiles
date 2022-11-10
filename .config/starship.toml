@@ -1,4 +1,5 @@
 format = """
+$custom\
 $hostname\
 $directory\
 $git_branch\
@@ -30,6 +31,15 @@ disabled = true
 success_symbol = "[❯](bold green)"
 error_symbol = "[❯](bold red)"
 vicmd_symbol = "[❮](bold green)"
+
+[custom.podman-container]
+command = "grep '^name=' /run/.containerenv | cut -d'=' -f2- | tr -d '\"'"
+when = "[ -e /run/.containerenv ]"
+
+## TODO
+#[custom.docker-container]
+#command = "????"
+#when = "[ -e /run/.dockerenv ]"
 
 [package]
 disabled = true
