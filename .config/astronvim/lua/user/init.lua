@@ -9,15 +9,15 @@ local config = {
 	-- Configure AstroNvim updates
 	updater = {
 		remote = "origin", -- remote to use
-		channel = "nightly", -- "stable" or "nightly"
+		channel = "stable", -- "stable" or "nightly"
 		version = "latest", -- "latest", tag name, or regex search like "v1.*" to only do updates before v2 (STABLE ONLY)
-		branch = "main", -- branch name (NIGHTLY ONLY)
-		commit = nil, -- commit hash (NIGHTLY ONLY)
+		-- branch = "main", -- branch name (NIGHTLY ONLY)
+		-- commit = nil, -- commit hash (NIGHTLY ONLY)
 		pin_plugins = nil, -- nil, true, false (nil will pin plugins on stable only)
 		skip_prompts = false, -- skip prompts about breaking changes
 		show_changelog = true, -- show the changelog after performing an update
-		auto_reload = false, -- automatically reload and sync packer after a successful update
-		auto_quit = false, -- automatically quit the current session after a successful update
+		auto_reload = true, -- automatically reload and sync packer after a successful update
+		auto_quit = true, -- automatically quit the current session after a successful update
 		-- remotes = { -- easily add new remotes to track
 		--   ["remote_name"] = "https://remote_url.come/repo.git", -- full remote url
 		--   ["remote2"] = "github_user/repo", -- GitHub user/repo shortcut,
@@ -29,17 +29,14 @@ local config = {
 	-- colorscheme = "default_theme",
 	colorscheme = "terafox",
 
-	-- Override highlight groups in any theme
+	-- Add highlight groups in any theme
 	highlights = {
-		-- duskfox = { -- a table of overrides/changes to the default
+		-- init = { -- this table overrides highlights in all themes
+		--   Normal = { bg = "#000000" },
+		-- }
+		-- duskfox = { -- a table of overrides/changes to the duskfox theme
 		--   Normal = { bg = "#000000" },
 		-- },
-		default_theme = function(highlights) -- or a function that returns a new table of colors to set
-			local C = require("default_theme.colors")
-
-			highlights.Normal = { fg = C.fg, bg = C.bg }
-			return highlights
-		end,
 	},
 
 	-- set vim options here (vim.<first_key>.<second_key> =  value)
@@ -54,6 +51,13 @@ local config = {
 		},
 		g = {
 			mapleader = " ", -- sets vim.g.mapleader
+			autoformat_enabled = true, -- enable or disable auto formatting at start (lsp.formatting.format_on_save must be enabled)
+			cmp_enabled = true, -- enable completion at start
+			autopairs_enabled = true, -- enable autopairs at start
+			diagnostics_enabled = true, -- enable diagnostics at start
+			status_diagnostics_enabled = true, -- enable diagnostics in statusline
+			icons_enabled = false, -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
+			ui_notifications_enabled = true, -- disable notifications when toggling UI elements
 		},
 	},
 	-- If you need more control, you can use the function()...end notation
@@ -83,18 +87,30 @@ local config = {
 
 	-- Default theme configuration
 	default_theme = {
-		-- set the highlight style for diagnostic messages
-		diagnostics_style = { italic = true },
 		-- Modify the color palette for the default theme
 		colors = {
 			fg = "#abb2bf",
 			bg = "#1e222a",
 		},
+		highlights = function(hl) -- or a function that returns a new table of colors to set
+			local C = require("default_theme.colors")
+
+			hl.Normal = { fg = C.fg, bg = C.bg }
+
+			-- New approach instead of diagnostic_style
+			hl.DiagnosticError.italic = true
+			hl.DiagnosticHint.italic = true
+			hl.DiagnosticInfo.italic = true
+			hl.DiagnosticWarn.italic = true
+
+			return hl
+		end,
 		-- enable or disable highlighting for extra plugins
 		plugins = {
 			aerial = true,
 			beacon = false,
 			bufferline = true,
+			cmp = true,
 			dashboard = true,
 			highlighturl = true,
 			hop = false,
@@ -107,6 +123,7 @@ local config = {
 			rainbow = true,
 			symbols_outline = false,
 			telescope = true,
+			treesitter = true,
 			vimwiki = false,
 			["which-key"] = true,
 		},
@@ -125,6 +142,25 @@ local config = {
 			-- "pyright"
 			"ccls",
 		},
+		formatting = {
+			-- control auto formatting on save
+			format_on_save = {
+				enabled = true, -- enable or disable format on save globally
+				allow_filetypes = { -- enable format on save for specified filetypes only
+					-- "go",
+				},
+				ignore_filetypes = { -- disable format on save for specified filetypes
+					-- "python",
+				},
+			},
+			disabled = { -- disable formatting capabilities for the listed language servers
+				-- "sumneko_lua",
+			},
+			timeout_ms = 1000, -- default format timeout
+			-- filter = function(client) -- fully override the default formatting function
+			--   return true
+			-- end
+		},
 		-- easily add or disable built in mappings added during LSP attaching
 		mappings = {
 			n = {
@@ -142,17 +178,13 @@ local config = {
 			},
 		},
 		-- add to the global LSP on_attach function
-		on_attach = function(client, bufnr)
-			-- if client.server_capabilities.documentFormattingProvider then
-			--     vim.api.nvim_del_augroup_by_name("auto_format")
-			-- end
-		end,
-		formatting = {
-			timeout_ms = 2000,
-			-- disabled = {
-			-- 	"sumneko_lua",
-			-- },
-		},
+		-- on_attach = function(client, bufnr)
+		-- end,
+
+		-- override the mason server-registration function
+		-- server_registration = function(server, opts)
+		--   require("lspconfig")[server].setup(opts)
+		-- end,
 
 		-- override the mason server-registration function
 		-- server_registration = function(server, opts)
@@ -173,12 +205,6 @@ local config = {
 			--     },
 			--   },
 			-- },
-			-- Example disabling formatting for a specific language server
-			-- gopls = { -- override table for require("lspconfig").gopls.setup({...})
-			--   on_attach = function(client, bufnr)
-			--     client.resolved_capabilities.document_formatting = false
-			--   end
-			-- }
 		},
 	},
 
@@ -231,7 +257,7 @@ local config = {
 		init = {
 			-- You can disable default plugins as follows:
 			-- ["goolord/alpha-nvim"] = { disable = true },
-			["max39754/better-escape.nvim"] = { disable = true },
+			["max397574/better-escape.nvim"] = { disable = true },
 			["Darazaki/indent-o-matic"] = { disable = true },
 			["lukas-reineke/indent-blankline.nvim"] = { disable = true },
 
@@ -291,11 +317,14 @@ local config = {
 
 	-- LuaSnip Options
 	luasnip = {
-		-- Add paths for including more VS Code style snippets in luasnip
-		vscode_snippet_paths = {},
 		-- Extend filetypes
 		filetype_extend = {
-			javascript = { "javascriptreact" },
+			-- javascript = { "javascriptreact" },
+		},
+		-- Configure luasnip loaders (vscode, lua, and/or snipmate)
+		vscode = {
+			-- Add paths for including more VS Code style snippets in luasnip
+			paths = {},
 		},
 	},
 
@@ -334,16 +363,6 @@ local config = {
 	-- augroups/autocommands and custom filetypes also this just pure lua so
 	-- anything that doesn't fit in the normal config locations above can go here
 	polish = function()
-		-- Set key binding
-		-- Set autocommands
-		vim.api.nvim_create_augroup("packer_conf", { clear = true })
-		vim.api.nvim_create_autocmd("BufWritePost", {
-			desc = "Sync packer after modifying plugins.lua",
-			group = "packer_conf",
-			pattern = "plugins.lua",
-			command = "source <afile> | PackerSync",
-		})
-
 		-- Set up custom filetypes
 		-- vim.filetype.add {
 		--   extension = {
