@@ -279,7 +279,34 @@ local config = {
 			--     require("lsp_signature").setup()
 			--   end,
 			-- },
-			{ "danymat/neogen" },
+			{
+				"danymat/neogen",
+				config = function()
+					local neogen_custom_cxx_template = {
+						template = {
+							annotation_convention = "custom",
+							custom = {
+								{ nil, "/// @file", { no_results = true, type = { "file" } } },
+								{ nil, "/// @brief $1", { no_results = true, type = { "func", "file" } } },
+								{ nil, "", { no_results = true, type = { "file" } } },
+
+								{ nil, "/// @brief $1", { type = { "func" } } },
+								{ "tparam", "/// @tparam %s $1" },
+								{ "parameters", "/// @param %s $1" },
+								{ "return_statement", "/// @return $1" },
+							},
+						},
+					}
+
+					require("neogen").setup({
+						enabled = true,
+						languages = {
+							c = neogen_custom_cxx_template,
+							cpp = neogen_custom_cxx_template,
+						},
+					})
+				end,
+			},
 			{ "christoomey/vim-tmux-navigator" },
 			{ "tpope/vim-abolish" },
 			{ "tpope/vim-fugitive" },
@@ -300,11 +327,25 @@ local config = {
 			return config -- return final config table to use in require("null-ls").setup(config)
 		end,
 		treesitter = { -- overrides `require("treesitter").setup(...)`
-			ensure_installed = { "lua" },
+			ensure_installed = {
+				"bash",
+				"c",
+				"cpp",
+				"dockerfile",
+				"go",
+				"lua",
+				"python",
+				"rust",
+			},
 		},
 		-- use mason-lspconfig to configure LSP installations
 		["mason-lspconfig"] = { -- overrides `require("mason-lspconfig").setup(...)`
-			ensure_installed = { "sumneko_lua" },
+			ensure_installed = {
+				"cmake",
+				"gopls",
+				"pyright",
+				"rust_analyzer",
+			},
 		},
 		-- use mason-tool-installer to configure DAP/Formatters/Linter installation
 		["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
@@ -320,6 +361,9 @@ local config = {
 		-- Extend filetypes
 		filetype_extend = {
 			-- javascript = { "javascriptreact" },
+		},
+		lua = {
+			paths = "mh.snippets",
 		},
 		-- Configure luasnip loaders (vscode, lua, and/or snipmate)
 		vscode = {
@@ -389,29 +433,5 @@ local config = {
 
 require("mh").load_project_local()
 config.lsp["server-settings"] = require("mh.lsp").extend_options(config.lsp["server-settings"])
-
-local neogen_custom_cxx_template = {
-	template = {
-		annotation_convention = "custom",
-		custom = {
-			{ nil, "/// @file", { no_results = true, type = { "file" } } },
-			{ nil, "/// @brief $1", { no_results = true, type = { "func", "file" } } },
-			{ nil, "", { no_results = true, type = { "file" } } },
-
-			{ nil, "/// @brief $1", { type = { "func" } } },
-			{ "tparam", "/// @tparam %s $1" },
-			{ "parameters", "/// @param %s $1" },
-			{ "return_statement", "/// @return $1" },
-		},
-	},
-}
-
-require("neogen").setup({
-	enabled = true,
-	languages = {
-		c = neogen_custom_cxx_template,
-		cpp = neogen_custom_cxx_template,
-	},
-})
 
 return config
