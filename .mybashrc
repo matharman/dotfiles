@@ -34,7 +34,7 @@ elif [ -e /run/.containerenv ]; then
 fi
 
 export DBX_TMUX_BRIDGE=$XDG_RUNTIME_DIR/dbx-tmux
-if [ -n "$TMUX" ]; then
+if [ -n "$TMUX" ] && [ -z $CONTAINER_ID ]; then
     tmux setenv DBX_TMUX_BRIDGE $DBX_TMUX_BRIDGE
 fi
 mkdir -p $DBX_TMUX_BRIDGE
