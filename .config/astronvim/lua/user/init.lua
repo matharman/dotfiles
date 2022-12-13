@@ -141,6 +141,7 @@ local config = {
 		servers = {
 			-- "pyright"
 			"ccls",
+			"cmake",
 		},
 		formatting = {
 			-- control auto formatting on save
@@ -341,7 +342,8 @@ local config = {
 		-- use mason-lspconfig to configure LSP installations
 		["mason-lspconfig"] = { -- overrides `require("mason-lspconfig").setup(...)`
 			ensure_installed = {
-				"cmake",
+			        -- Running via distrobox-export until they support py311
+				-- "cmake",
 				"gopls",
 				"pyright",
 				"rust_analyzer",
@@ -362,10 +364,10 @@ local config = {
 		filetype_extend = {
 			-- javascript = { "javascriptreact" },
 		},
-		lua = {
-			paths = "mh.snippets",
-		},
 		-- Configure luasnip loaders (vscode, lua, and/or snipmate)
+		-- lua = {
+		-- 	paths = {},
+		-- },
 		vscode = {
 			-- Add paths for including more VS Code style snippets in luasnip
 			paths = {},
@@ -433,5 +435,7 @@ local config = {
 
 require("mh").load_project_local()
 config.lsp["server-settings"] = require("mh.lsp").extend_options(config.lsp["server-settings"])
+
+require("mh.snippets")
 
 return config
