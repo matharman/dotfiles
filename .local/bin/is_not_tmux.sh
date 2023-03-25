@@ -6,7 +6,7 @@ ENABLE_DEBUGGING=0
 pane=$1
 tty=$2
 
-debug () {
+debug() {
     if [ $ENABLE_DEBUGGING != 0 ]; then
         echo "$@" >> /tmp/is_not_tmux.log
     fi
@@ -23,10 +23,10 @@ if [ $? == 0 ]; then
     ## This is the same process list generator used by vim-tmux-navigator, with cgroup added.
     ## Then we filter by the CONTAINER_ID appearing in the cgroup to get only processes inside the DistroBox.
     ## Finally, the cut step reshapes the list to suit the grep filter down below (also borrowed from vim-tmux-navigator)
-    get_process_list="ps -t $distrobox_tmux_tty -o state= -o comm= -o cgroup= | grep $container_id | cut -d' ' -f1,2"
+    get_process_list="ps -t '$distrobox_tmux_tty' -o state= -o comm= -o cgroup= | grep $container_id | cut -d' ' -f1,2"
 else
     ## Process list generator used by vim-tmux-navigator
-    get_process_list="ps -t $tty -o state= -o comm= -t"
+    get_process_list="ps -t '$tty' -o state= -o comm="
 fi
 
 ## grep filter borrowed from vim-tmux-navigator, + fzf added for Ctrl-J Ctrl-K in tui
