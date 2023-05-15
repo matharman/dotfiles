@@ -23,10 +23,10 @@ if test -n "$DISTROBOX_ENTER_PATH"
     set tty $(tty)
 
     mkdir -p $dbx_tmux_bridge_ours
+    function remove_ours_on_exit --on-event fish_exit
+        rm -r $dbx_tmux_bridge_ours
+    end
+
     echo $container_id > $dbx_tmux_bridge_ours/container_id
     echo $(tty) > $dbx_tmux_bridge_ours/tty
-end
-
-function remove_ours_on_exit --on-event fish_exit
-    rm -r $dbx_tmux_bridge_ours
 end
