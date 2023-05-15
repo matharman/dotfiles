@@ -4,7 +4,7 @@ if status is-interactive
 
     alias vi="vim"
     alias vim="nvim"
-    alias dots='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+    alias dots='git --git-dir=$HOME/.dots --work-tree=$HOME'
 
     if command -v -q rg
         set -gx FZF_DEFAULT_COMMAND "rg --files --hidden"
