@@ -1,6 +1,6 @@
 if status is-interactive
     set fish_greeting
-    fish_vi_key_bindings
+    fish_hybrid_key_bindings
 
     alias vi="vim"
     alias vim="nvim"
