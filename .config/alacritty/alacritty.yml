@@ -114,7 +114,7 @@ font:
     family: JetBrainsMono Nerd Font Mono
 
     # The `style` can be specified to pick a specific face.
-    style: Regular
+    # style: Regular
 
   # Bold font face
   #bold:
@@ -176,12 +176,12 @@ font:
 #draw_bold_text_with_bright_colors: false
 
 import:
-  - ~/.config/alacritty/colors/catppuccin/catppuccin-mocha.yml
+  # - ~/.config/alacritty/colors/catppuccin/catppuccin-mocha.yml
   # - ~/.config/alacritty/colors/terafox.yml
   # - ~/.config/alacritty/colors/nightfox.yml
   # - ~/.config/alacritty/colors/kanagawa.yml
   # - ~/.config/alacritty/colors/gruvbox_dark.yml
-  # - ~/.config/alacritty/colors/tokyo_night.yml
+  - ~/.config/alacritty/colors/tokyo_night.yml
 # Bell
 #
 # The bell is rung every time the BEL control character is received.
@@ -293,8 +293,11 @@ import:
 #  program: /bin/bash
 #  args:
 #    - --login
-#    - -c
-#    - "(tmux attach || tmux)"
+shell:
+  program: /bin/fish
+  args:
+    - --login
+    - --interactive
 
 # Startup directory
 #
