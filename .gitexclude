@@ -6,6 +6,7 @@ tags*
 .envrc
 .exrc
 **/.nvimrc
+**/.nvim.lua
 .vim
 **/.ccls-cache
 **/.cache
