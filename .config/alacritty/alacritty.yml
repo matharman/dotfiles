@@ -177,11 +177,12 @@ font:
 
 import:
   # - ~/.config/alacritty/colors/catppuccin/catppuccin-mocha.yml
-  # - ~/.config/alacritty/colors/terafox.yml
-  # - ~/.config/alacritty/colors/nightfox.yml
+  # - ~/.config/alacritty/colors/nightfox/nightfox.yml
+  # - ~/.config/alacritty/colors/nightfox/terafox.yml
+  - ~/.config/alacritty/colors/nightfox/dayfox.yml
   # - ~/.config/alacritty/colors/kanagawa.yml
   # - ~/.config/alacritty/colors/gruvbox_dark.yml
-  - ~/.config/alacritty/colors/tokyo_night.yml
+  # - ~/.config/alacritty/colors/tokyo_night_day.yml
 # Bell
 #
 # The bell is rung every time the BEL control character is received.
@@ -298,7 +299,6 @@ shell:
   args:
     - --login
     - --interactive
-
 # Startup directory
 #
 # Directory the shell is started in. If this is unset, or `None`, the working
