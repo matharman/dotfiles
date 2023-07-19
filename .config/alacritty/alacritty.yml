@@ -176,10 +176,11 @@ font:
 #draw_bold_text_with_bright_colors: false
 
 import:
+  - ~/.config/alacritty/colors.yml
   # - ~/.config/alacritty/colors/catppuccin/catppuccin-mocha.yml
   # - ~/.config/alacritty/colors/nightfox/nightfox.yml
   # - ~/.config/alacritty/colors/nightfox/terafox.yml
-  - ~/.config/alacritty/colors/nightfox/dayfox.yml
+  # - ~/.config/alacritty/colors/nightfox/dayfox.yml
   # - ~/.config/alacritty/colors/kanagawa.yml
   # - ~/.config/alacritty/colors/gruvbox_dark.yml
   # - ~/.config/alacritty/colors/tokyo_night_day.yml
