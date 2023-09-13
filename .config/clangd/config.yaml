@@ -1,0 +1,16 @@
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+
+Diagnostics:
+  UnusedIncludes: Strict
+
+---
+If:
+  PathMatch: /home/mharman/work/m2md-tracker/.*
+
+CompileFlags:
+  Remove:
+    - "-f*"
+    - "-m*"
