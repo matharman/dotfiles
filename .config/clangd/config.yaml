@@ -8,7 +8,7 @@ Diagnostics:
 
 ---
 If:
-  PathMatch: /home/mharman/work/m2md-tracker/.*
+  PathMatch: /home/mharman/work/zephyr-tracker/.*
 
 CompileFlags:
   Remove:
