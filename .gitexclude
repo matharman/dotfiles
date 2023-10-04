@@ -12,3 +12,4 @@ tags*
 **/.cache
 **/.clangd
 .dotfiles
+.venv
