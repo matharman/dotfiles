@@ -8,7 +8,13 @@ Diagnostics:
 
 ---
 If:
-  PathMatch: /home/mharman/work/zephyr-tracker/.*
+  PathMatch:
+    [
+      /home/mharman/work/zephyr-tracker/.*,
+      /opt/ncs/.*,
+      /home/mharman/work/esp-idf/.*,
+      /home/mharman/work/esp-wifi-scan/.*,
+    ]
 
 CompileFlags:
   Remove:
