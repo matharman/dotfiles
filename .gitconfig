@@ -8,7 +8,7 @@
 [color]
         ui = auto
 [init]
-        templatedir = ~/.git-templates/
+	#templatedir = ~/.git-templates/
 	defaultBranch = main
 [diff]
         tool = dtnvim
