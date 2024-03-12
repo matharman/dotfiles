@@ -12,8 +12,10 @@
 	defaultBranch = main
 [diff]
         tool = dtnvim
+	algorithm = histogram
 [merge]
         tool = mtnvim
+	conflictstyle = diff3
 [difftool]
         trustExitCode = true
 [difftool "dtnvim"]
