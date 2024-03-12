@@ -31,8 +31,13 @@ else
     get_process_list="ps -t '$tty' -o state= -o comm="
 fi
 
+proc_list=$(eval "$get_process_list")
+debug "$proc_list"
+
 ## grep filter borrowed from vim-tmux-navigator, + fzf added for Ctrl-J Ctrl-K in tui
-eval "$get_process_list" | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$' >> /dev/null
+# eval "$get_process_list" | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$' >> /dev/null
+# eval "$get_process_list" | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'
+echo "$proc_list" | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'
 result=$?
 debug "grep result $result"
 debug ""
