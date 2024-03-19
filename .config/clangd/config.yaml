@@ -11,6 +11,7 @@ If:
   PathMatch:
     [
       /home/mharman/work/zephyr-tracker/.*,
+      /home/mharman/work/zephyr-tracker-root/.*,
       /opt/ncs/.*,
       /home/mharman/work/esp-idf/.*,
       /home/mharman/work/esp-wifi-scan/.*,
