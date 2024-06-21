@@ -16,8 +16,8 @@ set -gx CMAKE_GENERATOR Ninja
 set -gx EDITOR nvim
 set -gx GPG_TTY (tty)
 
-set -Ux tide_left_prompt_items context vi_mode pwd git
-set -Ux tide_right_prompt_items status direnv node python rustc go distrobox
+set -Ux tide_left_prompt_items distrobox context vi_mode pwd git
+set -Ux tide_right_prompt_items status direnv node python rustc go
 
 fish_add_path $HOME/tools
 fish_add_path $HOME/.local/bin
