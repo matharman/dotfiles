@@ -24,6 +24,10 @@ fish_add_path $HOME/.local/bin
 fish_add_path $HOME/.cargo/bin
 fish_add_path /usr/local/go/bin
 
+if set -q VENV_DIR
+    fish_add_path $VENV_DIR/bin
+end
+
 #if command -v -q starship
 #    starship init fish | source
 #end
