@@ -1,113 +1,158 @@
 #!/usr/bin/env python3
 
+import asyncio
 import os
-import serial
+import re
 import sys
-import time
 import traceback
 
 from datetime import datetime
-from pynrfjprog import LowLevel
+from signal import SIGINT, SIGTERM
+from typing import List
+
+import aiofiles
+import serial_asyncio
+
+from pynrfjprog import HighLevel
+from pynrfjprog.HighLevel import ComPortInfo, DeviceFamily
 
 
 class Devkit:
-    def __init__(self, snr: int, com):
-        debug_vcom = 0
-        trace_vcom = 2
+    def __init__(self):
+        self.seid = None
+        self.ip = None
+        self.ports = {}
+        self.ts = ""
+        self.snr = 0
 
-        self.search = "SEID: "
-        self.iccid = ""
-        self.ip = ""
+        self.debug = None
+        self.debug_path = ""
+        self.debug_closer = None
+        self.debug_file = None
+
+        self.trace = None
+        self.trace_path = ""
+        self.trace_closer = None
+        self.trace_file = None
+
+    @classmethod
+    async def new(cls, snr, ports: List[ComPortInfo]):
+        self = Devkit()
+        for p in ports:
+            if p.vcom == 0:
+                self.ports["debug"] = p.path
+                (
+                    self.debug,
+                    self.debug_closer,
+                ) = await serial_asyncio.open_serial_connection(
+                    url=p.path, baudrate=115200
+                )
+            if p.vcom == 2:
+                self.ports["trace"] = p.path
+                (
+                    self.trace,
+                    self.trace_closer,
+                ) = await serial_asyncio.open_serial_connection(
+                    url=p.path, baudrate=1_000_000, timeout=0
+                )
+
         self.ts = datetime.now().strftime("%Y-%m-%dT%H-%M-%SZ")
         self.snr = snr
-        self.debug_port = next(c.path for c in com if c.vcom == debug_vcom)
-        print(f"SNR {self.snr} debug on {self.debug_port}")
-        self.debug_port = serial.Serial(self.debug_port, baudrate=115200)
-        self.debug_file = open("debug-{}.txt".format(self.snr), "w", buffering=1)
-
-        self.trace_port = next(c.path for c in com if c.vcom == trace_vcom)
-        print(f"SNR {self.snr} trace on {self.trace_port}")
-        self.trace_port = serial.Serial(self.trace_port, baudrate=1_000_000, timeout=0)
-        self.trace_file = open("trace-{}.bin".format(self.snr), "wb")
-
-        self.handle_debug = self._handle_debug_search
+        self.debug_path = f"debug-{snr}.txt"
+        self.trace_path = f"trace-{snr}.bin"
+        self.debug_file = await aiofiles.open(self.debug_path, "w", buffering=1)
+        self.trace_file = await aiofiles.open(self.trace_path, "wb", buffering=0)
+        return self
 
     def __del__(self):
-        debug_path = self.debug_file.name
-        trace_path = self.trace_file.name
+        if self.seid:
+            os.rename(self.debug_path, f"debug-{self.seid}-{self.ts}.txt")
+            os.rename(self.trace_path, f"trace-{self.seid}-{self.ts}.bin")
 
-        self.debug_file.close()
-        self.trace_file.close()
+    async def handle_debug(self):
+        while True:
+            line = await self.debug.readline()
+            await self.debug_file.write(line.decode())
 
-        os.rename(debug_path, f"debug-{self.iccid}-{self.ts}.txt")
-        os.rename(trace_path, f"trace-{self.iccid}-{self.ts}.bin")
+            seid_search = b"SEID: "
+            ip_search = b"IP: "
 
-    def _handle_debug_search(self):
-        data = self.debug_port.readline()
-        if data:
-            data = data.decode()
-            pos = data.find(self.search)
-            if pos != -1:
-                self.timeout = 0
-                start = pos + len(self.search)
-                if "SEID" in self.search:
-                    self.iccid = data[start : start + 20]
-                    print(f"associating {self.snr} to {self.iccid}")
-                    self.search = "IP: "
-                elif "IP" in self.search:
-                    self.ip = data[start:-1]
-                    print(f"associating {self.iccid} to {self.ip}")
-                    self.handle_debug = self._handle_debug_have_params
-                    self.debug_port.timeout = 0
+            if self.seid is None:
+                pos = line.find(seid_search)
+                if pos != -1:
+                    pos += len(seid_search)
+                    # use regex to remove ascii chars at the end
+                    self.seid = (
+                        re.search(
+                            "[0-9a-fA-F]{19,20}", line[pos:].decode().strip()
+                        ).group(0)
+                        or ""
+                    )
+                    print(f"associating {list(self.ports.values())} to {self.seid}")
 
-            self.debug_file.write(data)
+            if self.ip is None and self.seid is not None:
+                pos = line.find(ip_search)
+                if pos != -1:
+                    pos += len(ip_search)
+                    # use regex to remove ascii chars at the end
+                    self.ip = (
+                        re.search(
+                            "([0-9]{1,3}\\.*){4}", line[pos:].decode().strip()
+                        ).group(0)
+                        or ""
+                    )
+                    print(f"associating {self.seid} to {self.ip}")
 
-    def _handle_debug_have_params(self):
-        data = self.debug_port.read_all()
-        if data:
-            self.debug_file.write(data.decode())
+    async def handle_trace(self):
+        while True:
+            data = await self.trace.read(n=4)
+            await self.trace_file.write(data)
 
-    def handle_trace(self):
-        data = self.trace_port.read_all()
-        if data:
-            self.trace_file.write(data)
 
-    def handle_data(self):
-        self.handle_trace()
-        self.handle_debug()
+async def main():
+    dk = []
+
+    with HighLevel.API() as api:
+        print(api.get_connected_probes())
+        for p in api.get_connected_probes():
+            try:
+                with HighLevel.DebugProbe(api, p) as probe:
+                    if probe.get_device_info().device_family == DeviceFamily.NRF91:
+                        probe_inf = probe.get_probe_info()
+                        dk.append(
+                            await Devkit.new(
+                                probe_inf.serial_number, probe_inf.com_ports
+                            )
+                        )
+                    probe.reset()
+            except Exception:
+                traceback.print_exc()
+
+    if not dk:
+        sys.exit("found no NRF9160DKs")
+
+    try:
+        await asyncio.gather(
+            *[d.handle_trace() for d in dk], *[d.handle_debug() for d in dk]
+        )
+    except asyncio.CancelledError:
+        pass
+
+    for d in dk:
+        await d.trace_file.close()
+        await d.debug_file.close()
 
 
 if __name__ == "__main__":
-    api = LowLevel.API()
-    api.open()
+    loop = asyncio.get_event_loop()
+    fut = asyncio.ensure_future(main())
 
-    dk = []
-    for s in api.enum_emu_snr():
-        try:
-            api.connect_to_emu_with_snr(s)
-            api.halt()
+    for sig in [SIGINT, SIGTERM]:
+        loop.add_signal_handler(sig, fut.cancel)
 
-            (_, name, _, _) = api.read_device_info()
-            if name == LowLevel.DeviceName.NRF9160:
-                dk.append(Devkit(s, api.enum_emu_com_ports(s)))
-                api.sys_reset()
-                api.go()
-            api.disconnect_from_emu()
-        except Exception:
-            print(f"skipping SNR {s} due to exception", file=sys.stderr)
-            traceback.print_exc()
+    try:
+        loop.run_until_complete(fut)
+    finally:
+        loop.close()
 
-    api.close()
-
-    if len(dk) == 0:
-        print(f"no nrf9160dk devices detected", file=sys.stderr)
-        sys.exit(1)
-
-    while True:
-        try:
-            for d in dk:
-                d.handle_data()
-                time.sleep(0.01)
-        except KeyboardInterrupt:
-            print("Got CTRL-C, quitting...")
-            break
+    print("goodbye!")
