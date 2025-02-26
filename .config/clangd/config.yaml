@@ -15,6 +15,8 @@ If:
       /opt/ncs/.*,
       /home/mharman/work/esp-idf/.*,
       /home/mharman/work/esp-wifi-scan/.*,
+      /home/mharman/raven/.*,
+      /opt/esp/.*,
     ]
 
 CompileFlags:
