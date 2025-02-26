@@ -3,10 +3,10 @@
 CHANNEL=$1
 
 if [ -z $CHANNEL ]; then
-	CHANNEL="nightly"
+    CHANNEL="nightly"
 fi
 
-URL="https://github.com/neovim/neovim/releases/download/${CHANNEL}/nvim-linux64.tar.gz"
+URL="https://github.com/neovim/neovim/releases/download/${CHANNEL}/nvim-linux-x86_64.tar.gz"
 OUTPUT=/tmp/${CHANNEL}-nvim-linux64.tar.gz
 
 set -e
