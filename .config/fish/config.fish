@@ -28,15 +28,7 @@ if grep -q Ubuntu /etc/os-release
     set -gx SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 end
 
-tide configure --auto \
-    --style=Classic \
-    --prompt_colors='True color' \
-    --classic_prompt_color=Darkest \
-    --show_time=No \
-    --classic_prompt_separators=Angled \
-    --powerline_prompt_heads=Sharp \
-    --powerline_prompt_tails=Sharp \
-    --powerline_prompt_style='One line' \
-    --prompt_spacing=Sparse \
-    --icons='Few icons' \
-    --transient=No
+# if test -e /etc/fish/conf.d/distrobox_config.fish
+#     source /etc/fish/conf.d/distrobox_config.fish
+#     source ~/.config/fish/functions/fish_prompt.fish
+# end
