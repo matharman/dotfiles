@@ -1,0 +1,4 @@
+--when.repositories=["~/work/zephyr-tracker-root", "~/work/esp-wifi-scan", "~/work/monorepo"]
+
+[user]
+email = "Mathew.Harman@m2mdtech.com"

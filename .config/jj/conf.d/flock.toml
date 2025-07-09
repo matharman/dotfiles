@@ -1,0 +1,4 @@
+--when.repositories=["~/raven", "~/flock", "~/work/raven"]
+
+[user]
+email = "mathew.harman@flocksafety.com"
