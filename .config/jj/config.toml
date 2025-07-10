@@ -23,6 +23,13 @@ edit-args = [
   "-c",
   """
     set -eu
+
+    # diff-editor creates a 'left' directory and a 'right' directory in a tmp dir.
+    # The 'left' directory is the tree state before the diff-to-edit is applied.
+    # The 'right' directory is the tree state after the diff-to-edit was applied.
+    # Our strategy is to edit using fugitive in $right after constructing a git repo in $left,
+    # then turning $right into a dirty copy of $left's repo state.
+
     git -C "$left" init -q
     git -C "$left" add -A
     git -C "$left" commit -q -m baseline --allow-empty # create parent commit
