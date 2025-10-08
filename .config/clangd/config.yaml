@@ -23,13 +23,3 @@ CompileFlags:
   Remove:
     - "-f*"
     - "-m*"
----
-If:
-  PathMatch:
-    [
-      /opt/ncs/.*,
-      /home/mharman/raven/.*,
-      /opt/esp/.*,
-    ]
-
-DisableFormat: true
