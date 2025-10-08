@@ -1,7 +1,7 @@
 # vim: set ft=gitconfig:
 [user]
         name = Mathew Harman
-        email = mathew.harman@gmail.com
+	email = mathew.harman@gmail.com
 [core]
         editor = nvim
         excludesfile = ~/.gitexclude
@@ -40,3 +40,9 @@
 ## harmless if the file doesn't exist.
 [include]
         path = ~/.config/git-gpg
+[safe]
+	directory = /opt/esp/*
+[includeIf "gitdir:~/flock/**"]
+        path = ~/.config/git-flock
+[includeIf "gitdir:~/raven/**"]
+        path = ~/.config/git-flock
