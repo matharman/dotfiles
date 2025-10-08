@@ -19,11 +19,11 @@ if [ -d "$new_worktree_path" ]; then
 fi
 
 # Initialize a jj repo in the new worktree
-if command -v jj >/dev/null; then
-    pushd "$new_worktree_path" >> /dev/null
-    jj git init --git-repo . .
-    popd >> /dev/null
-fi
+# if command -v jj >/dev/null; then
+#     pushd "$new_worktree_path" >> /dev/null
+#     jj git init --git-repo . .
+#     popd >> /dev/null
+# fi
 
 # Our worktree directory pattern is
 # /path/to/project
