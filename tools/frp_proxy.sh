@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-echo "Make sure you have correct VPN connected" && echo
+echo "Make sure you have correct VPN connected"
+
 if [[ "$#" -ne 3 ]] ; then
     echo "Usage: frp_proxy <dev|prod> <proxy_number> <port>"
     exit 1
@@ -11,8 +12,6 @@ proxy=$2
 port=$3
 
 echo "kubectx: $kubectx, proxy:$proxy, port:$port"
-echo && echo "Logging into AWS SSO..."
-aws sso login
 if [[ "$kubectx" == "dev" ]]; then
     echo && echo "Switching to DEV context..."
     kubectx dev-flocksafety-eks-charlie
@@ -23,12 +22,34 @@ else
     echo "Error: Invalid environment '$kubectx'. Use 'dev' or 'prod'."
     exit 1
 fi
-echo && echo "After tunnel connects, you can:"
-echo "adb connect localhost:$port && adb devices"
-echo "adb -s localhost:$port root"
+
+echo "Starting port-forward on localhost:$port..."
+
+# Start kubectl in the background and capture PID
+kubectl -n tunnel-proxy port-forward "deploy/tunnel-proxy$proxy" "$port:$port" &
+KUBECTL_PID=$!
+
+# Give kubectl a moment to start
+sleep 2
+
+echo "Port-forward started (PID: $KUBECTL_PID)"
+echo "Connecting ADB to localhost:$port..."
+
+# Connect to ADB
+adb connect "localhost:$port"
+trap "adb disconnect localhost:$port" EXIT
+
+echo "Setup complete. Press CTRL-C to stop the port-forward."
+echo "You can now use:"
 echo "adb -s localhost:$port shell"
 echo "or:"
 echo "scr -s localhost:$port"
-echo && echo "Starting port-forward on localhost:$port..."
 
-kubectl -n tunnel-proxy port-forward "deploy/tunnel-proxy$proxy" "$port:$port"
+# Keep the script running until CTRL-C
+while kill -0 "$KUBECTL_PID" 2>/dev/null; do
+    sleep 1
+done
+
+# If we reach here, kubectl died on its own
+echo "Port-forward process ended unexpectedly"
+exit 1
