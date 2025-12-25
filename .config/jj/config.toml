@@ -15,7 +15,7 @@ merge-editor = "mtnvim"
 [signing]
 behavior = "own"
 backend = "gpg"
-key = "FBADB031A22A6F92"
+key = "01CADD0D74010BCC"
 
 [merge-tools.dtnvim]
 program = "sh"

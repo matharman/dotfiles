@@ -2,13 +2,12 @@
 [user]
         name = Mathew Harman
 	email = mathew.harman@gmail.com
+[color]
+        ui = auto
 [core]
         editor = nvim
         excludesfile = ~/.gitexclude
-[color]
-        ui = auto
 [init]
-	#templatedir = ~/.git-templates/
 	defaultBranch = main
 [diff]
         tool = dtnvim
@@ -37,12 +36,13 @@
 [apply]
         whitespace = nowarn
 
-## harmless if the file doesn't exist.
 [include]
-        path = ~/.config/git-gpg
+	path = ~/.config/git-gpg
 [safe]
 	directory = /opt/esp/*
 [includeIf "gitdir:~/flock/**"]
         path = ~/.config/git-flock
 [includeIf "gitdir:~/raven/**"]
         path = ~/.config/git-flock
+[includeIf "gitdir:~/m2md/**"]
+        path = ~/.config/git-m2md

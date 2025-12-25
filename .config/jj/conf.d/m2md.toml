@@ -1,4 +1,12 @@
---when.repositories=["~/work/zephyr-tracker-root", "~/work/esp-wifi-scan", "~/work/monorepo"]
+--when.repositories=[
+    "~/work/zephyr-tracker-root",
+    "~/work/esp-wifi-scan",
+    "~/work/monorepo",
+    "~/m2md",
+]
 
 [user]
 email = "Mathew.Harman@m2mdtech.com"
+
+[signing]
+key = "9E6A7843BF7A2DDD"
