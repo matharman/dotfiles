@@ -1,7 +1,7 @@
 # vim: set ft=gitconfig:
 [user]
 	email = mathew.harman@m2mdtech.com
-	signingKey = 9E6A7843BF7A2DDD
+	signingKey = D28DC6534B501C81
 
 [commit]
 	gpgSign = true

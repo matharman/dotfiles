@@ -36,13 +36,23 @@
 [apply]
         whitespace = nowarn
 
-[include]
-	path = ~/.config/git-gpg
 [safe]
 	directory = /opt/esp/*
-[includeIf "gitdir:~/flock/**"]
-        path = ~/.config/git-flock
-[includeIf "gitdir:~/raven/**"]
-        path = ~/.config/git-flock
+
+# Since we include this default unconditionally,
+# it needs to come first for conditional configs
+# to override its settings (different gpg key, etc).
+[include]
+	path = ~/.config/git/default-gpg
+
 [includeIf "gitdir:~/m2md/**"]
-        path = ~/.config/git-m2md
+        path = ~/.config/git/m2md
+[includeIf "gitdir:~/work/esp-wifi-scan/**"]
+        path = ~/.config/git/m2md
+[includeIf "gitdir:~/work/monorepo/**"]
+        path = ~/.config/git/m2md
+
+[includeIf "gitdir:~/flock/**"]
+        path = ~/.config/git/flock
+[includeIf "gitdir:~/raven/**"]
+        path = ~/.config/git/flock

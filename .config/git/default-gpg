@@ -1,0 +1,5 @@
+# vim: set ft=gitconfig:
+[user]
+	signingKey = D5A9E07E5740AA47
+[commit]
+	gpgSign = true
