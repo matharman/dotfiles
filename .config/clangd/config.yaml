@@ -6,6 +6,10 @@ InlayHints:
 Diagnostics:
   UnusedIncludes: Strict
 
+CompileFlags:
+  Remove:
+    - "-fanalyzer"
+
 ---
 If:
   PathMatch:
