@@ -1,8 +1,10 @@
 --when.repositories=[
     "~/work/zephyr-tracker-root",
+    "~/m2md/zephyr-tracker-root",
     "~/work/esp-wifi-scan",
+    "~/m2md/esp-wifi-scan",
     "~/work/monorepo",
-    "~/m2md",
+    "~/m2md/monorepo",
 ]
 
 [user]
