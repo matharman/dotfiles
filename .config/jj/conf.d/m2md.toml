@@ -8,7 +8,9 @@
 ]
 
 [user]
-email = "Mathew.Harman@m2mdtech.com"
+email = "mathew.harman@m2mdtech.com"
 
 [signing]
+behavior = "own"
+backend = "gpg"
 key = "D28DC6534B501C81"
