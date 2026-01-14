@@ -2,6 +2,13 @@
 
 set -e -o pipefail
 
+WORKTREE_DEFAULT_BASE=..
+if [ -d ./.worktrees ]; then
+    WORKTREE_DEFAULT_BASE=./.worktrees
+fi
+
+WORKTREE_BASE=${WORKTREE_BASE:-$WORKTREE_DEFAULT_BASE}
+
 # Get the list of worktree paths before adding
 before_worktrees=$(git worktree list --porcelain | grep worktree | cut -d' ' -f2)
 
@@ -28,7 +35,7 @@ if command -v jj > /dev/null; then
     trap "rm -rf $TEMPPATH" EXIT
     mv "$new_worktree_path" $TEMPPATH
     # Honor any commit-ish passed to `git worktree add`
-    jj workspace add -r "$new_worktree_rev" "../$new_worktree_base"
+    jj workspace add -r "$new_worktree_rev" "$WORKTREE_BASE/$new_worktree_base"
     cp -r "$TEMPPATH"/* "$new_worktree_path"/
     shopt -u dotglob
     echo "/*" > "$new_worktree_path/.jj/.gitignore"
