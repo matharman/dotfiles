@@ -7,8 +7,8 @@ email = "mathew.harman@gmail.com"
 [ui]
 editor = "nvim"
 # hunk-nvim
-# diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
-diff-editor = "dtnvim"
+diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
+#diff-editor = "dtnvim"
 diff-instructions = false
 merge-editor = "mtnvim"
 
