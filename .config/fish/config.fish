@@ -11,6 +11,8 @@ if status is-interactive
     end
 end
 
+fish_config theme choose fox
+
 set -gx CMAKE_EXPORT_COMPILE_COMMANDS 1
 set -gx CMAKE_GENERATOR Ninja
 set -gx EDITOR nvim
