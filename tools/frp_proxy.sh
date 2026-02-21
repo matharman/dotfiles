@@ -36,8 +36,8 @@ echo "Port-forward started (PID: $KUBECTL_PID)"
 echo "Connecting ADB to localhost:$port..."
 
 # Connect to ADB
-adb connect "localhost:$port"
-trap "adb disconnect localhost:$port" EXIT
+#adb connect "localhost:$port"
+#trap "adb disconnect localhost:$port" EXIT
 
 echo "Setup complete. Press CTRL-C to stop the port-forward."
 echo "You can now use:"
