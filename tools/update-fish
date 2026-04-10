@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+VERSION=$1
+
+if [ -z $VERSION ]; then
+    echo "usage: update-fish <version>"
+    echo "example: update-fish 4.6.0"
+    exit 1
+fi
+
+#  curl -fL -o /tmp/fish-static.tar.xz "https://github.com/fish-shell/fish-shell/releases/download/4.5.0/fish-4.5.0-linux-x86_64.tar.xz"
+URL="https://github.com/fish-shell/fish-shell/releases/download/${VERSION}/fish-${VERSION}-linux-x86_64.tar.xz"
+OUTPUT=/tmp/fish-static.tar.xz
+
+set -e
+
+echo "Downloading ${VERSION} from ${URL}"
+curl -fL -o "${OUTPUT}" "${URL}"
+tar -C $HOME/.local/bin -xJf ${OUTPUT}
+rm ${OUTPUT}
