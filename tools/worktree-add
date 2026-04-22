@@ -2,13 +2,6 @@
 
 set -e -o pipefail
 
-WORKTREE_DEFAULT_BASE=..
-if [ -d ./.worktrees ]; then
-    WORKTREE_DEFAULT_BASE=./.worktrees
-fi
-
-WORKTREE_BASE=${WORKTREE_BASE:-$WORKTREE_DEFAULT_BASE}
-
 # Get the list of worktree paths before adding
 before_worktrees=$(git worktree list --porcelain | grep worktree | cut -d' ' -f2)
 
@@ -20,25 +13,9 @@ after_worktrees=$(git worktree list --porcelain | grep worktree | cut -d' ' -f2)
 
 # Find the new worktree path
 new_worktree_path=$(comm -13 <(echo "$before_worktrees" | sort) <(echo "$after_worktrees" | sort))
-new_worktree_base=$(basename "$new_worktree_path")
-new_worktree_rev=$(git -C "$new_worktree_path" rev-parse HEAD)
 
 if [ -d "$new_worktree_path" ]; then
     git -C "$new_worktree_path" submodule update --init --recursive || echo "WARNING: submodule init failed; you'll have to try again later!"
-fi
-
-# Create the jj workspace so we can steal the workspace's linkage to our root .jj
-if command -v jj > /dev/null; then
-    shopt -s dotglob
-    # Temporarily get the worktree out of the way, or we can't make our workspace
-    TEMPPATH=$(mktemp -d -u)
-    trap "rm -rf $TEMPPATH" EXIT
-    mv "$new_worktree_path" $TEMPPATH
-    # Honor any commit-ish passed to `git worktree add`
-    jj workspace add -r "$new_worktree_rev" "$WORKTREE_BASE/$new_worktree_base"
-    cp -r "$TEMPPATH"/* "$new_worktree_path"/
-    shopt -u dotglob
-    echo "/*" > "$new_worktree_path/.jj/.gitignore"
 fi
 
 # Our worktree directory pattern is
