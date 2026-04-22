@@ -17,7 +17,7 @@
 [difftool]
         trustExitCode = true
 [difftool "dtnvim"]
-        cmd = nvim -d $LOCAL $REMOTE -c 'wincmd l'
+        cmd = nvim -d $LOCAL $REMOTE -c 'packadd nvim.difftool' -c 'wincmd l'
 [mergetool]
         trustExitCode = true
 	keepBackup = false

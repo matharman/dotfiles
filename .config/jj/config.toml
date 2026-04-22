@@ -4,46 +4,38 @@
 name = "Mathew Harman"
 email = "mathew.harman@gmail.com"
 
+[aliases]
+dt = ["diffedit"]
+
+[fix.tools.clang-format]
+command = ["clang-format", "--assume-filename=$path"]
+patterns = ["glob:**/*.c", "glob:**/*.cpp", "glob:**/*.h", "glob:**/*.hpp"]
+
 [ui]
 editor = "nvim"
-# hunk-nvim
-diff-editor = ["nvim", "-c", "DiffEditor $left $right $output"]
-#diff-editor = "dtnvim"
+diff-editor = "nvimdifftool"
 diff-instructions = false
-merge-editor = "mtnvim"
+
+[merge-tools.nvimdifftool]
+program = "nvim"
+diff-args = [
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffTool $left $right",
+  "-c",
+  "lua vim.g.autoformat=false",
+]
+edit-args = [
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffTool $left $right",
+  "-c",
+  "lua vim.g.autoformat=false",
+]
 
 [signing]
 behavior = "own"
 backend = "gpg"
 key = "D5A9E07E5740AA47"
-
-[merge-tools.dtnvim]
-program = "sh"
-edit-args = [
-  "-c",
-  """
-    set -eu
-
-    # diff-editor creates a 'left' directory and a 'right' directory in a tmp dir.
-    # The 'left' directory is the tree state before the diff-to-edit is applied.
-    # The 'right' directory is the tree state after the diff-to-edit was applied.
-    # Our strategy is to edit using fugitive in $right after constructing a git repo in $left,
-    # then turning $right into a dirty copy of $left's repo state.
-
-    git -C "$left" init -q
-    git -C "$left" add -A
-    git -C "$left" commit -q -m baseline --allow-empty # create parent commit
-    mv "$left/.git" "$right"
-    git -C "$right" add --intent-to-add -A # create current working copy
-    (cd "$right"; nvim -c 'MHDiffTool')
-    git -C "$right" diff-index --quiet --cached HEAD && { echo "No changes done, aborting split."; exit 1; }
-    git -C "$right" commit -q -m split # create commit on top of parent including changes
-    git -C "$right" restore . # undo changes in modified files
-    git -C "$right" reset .   # undo --intent-to-add
-    git -C "$right" clean -q -df # remove untracked files
-  """
-]
-
-[merge-tools.mtnvim]
-program = "nvim"
-merge-args = [ "-d", "$left", "$right", "$output", "-c", "\"$wincmd w\"",  "-c", "\"$wincmd J\""]
