@@ -13,3 +13,4 @@ tags*
 **/.clangd
 .dotfiles
 .venv
+.claude
