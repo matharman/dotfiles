@@ -1,4 +1,4 @@
-"$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
 
 [user]
 name = "Mathew Harman"
@@ -20,19 +20,23 @@ diff-instructions = false
 program = "nvim"
 diff-args = [
   "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
   "packadd nvim.difftool",
   "-c",
   "DiffTool $left $right",
-  "-c",
-  "lua vim.g.autoformat=false",
 ]
 edit-args = [
   "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
   "packadd nvim.difftool",
   "-c",
   "DiffTool $left $right",
-  "-c",
-  "lua vim.g.autoformat=false",
 ]
 
 [signing]
