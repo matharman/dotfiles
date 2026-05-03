@@ -16,20 +16,19 @@
       "Read(~/.claude/**)"
     ],
     "deny": [
-      "Bash(git commit *)",
-      "Bash(git add *)",
-      "Bash(git push *)",
-      "Bash(git clean *)"
+      "Bash(git*commit*)",
+      "Bash(git*add*)",
+      "Bash(git*push*)",
+      "Bash(git*clean*)"
     ],
     "ask": [
-      "Bash(make * clean)"
+      "Bash(make*clean)"
     ]
   },
-  "model": "sonnet",
   "syntaxHighlightingDisabled": false,
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.121",
   "theme": "auto",
-  "editorMode": "vim"
+  "editorMode": "normal"
 }
