@@ -22,7 +22,7 @@
     - For example, if changing the comment style of a file en-masse would require many edits, but a python script just one tool call, say so.
     - The python script to be called must contain comments explaining its purpose, inputs, and outputs.
 - Never use `perl`. I cannot read it, so I can't approve its use.
-- Use `rg` not `grep`.
+- Use `rg` not `grep`. It is recursive by default, so always omit the `-r` flag.
 - Use `tree` to discover directory structure.
 - ONLY use read-only `git` commands unless instructed otherwise.
 
