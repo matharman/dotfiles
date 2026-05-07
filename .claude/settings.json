@@ -17,12 +17,12 @@
     ],
     "deny": [
       "Bash(git*commit*)",
-      "Bash(git*add*)",
       "Bash(git*push*)",
       "Bash(git*clean*)"
     ],
     "ask": [
-      "Bash(make*clean)"
+      "Bash(make*clean)",
+      "Bash(git*add*)"
     ]
   },
   "syntaxHighlightingDisabled": false,
@@ -30,5 +30,10 @@
   "autoUpdatesChannel": "stable",
   "minimumVersion": "2.1.121",
   "theme": "auto",
-  "editorMode": "normal"
+  "editorMode": "normal",
+  "model": "sonnet[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/mharman/.claude/statusline-command.sh"
+  }
 }
