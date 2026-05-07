@@ -13,5 +13,7 @@ tags*
 **/.clangd
 .dotfiles
 .venv
-.claude
+~/**/.claude
+!~/.claude
 .justfile
+.worktrees
