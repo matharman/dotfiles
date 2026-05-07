@@ -5,7 +5,7 @@ name = "Mathew Harman"
 email = "mathew.harman@gmail.com"
 
 [aliases]
-dt = ["diffedit"]
+dt = ["diffedit", "--tool=nvimdifftool"]
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]
@@ -13,7 +13,7 @@ patterns = ["glob:**/*.c", "glob:**/*.cpp", "glob:**/*.h", "glob:**/*.hpp"]
 
 [ui]
 editor = "nvim"
-diff-editor = "nvimdifftool"
+diff-editor = "hunknvim"
 diff-instructions = false
 
 [merge-tools.nvimdifftool]
@@ -37,6 +37,29 @@ edit-args = [
   "packadd nvim.difftool",
   "-c",
   "DiffTool $left $right",
+]
+
+[merge-tools.hunknvim]
+program = "nvim"
+diff-args = [
+  "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffEditor $left $right $output",
+]
+edit-args = [
+  "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffEditor $left $right $output",
 ]
 
 [signing]
