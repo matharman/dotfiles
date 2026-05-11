@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "permissions": {
+        "allow": [
+            "Bash(ls *)",
+            "Bash(ls * ~/.claude/**)",
+            "Bash(rg *)",
+            "Bash(rg * ~/.claude/**)",
+            "Bash(grep *)",
+            "Bash(grep * ~/.claude/**)",
+            "Bash(find *)",
+            "Bash(tail *)",
+            "Bash(head *)",
+            "Bash(ctest *)",
+            "Read(/**)",
+            "Read(~/.claude/**)"
+        ],
+        "deny": [
+            "Bash(git*commit*)",
+            "Bash(git*push*)",
+            "Bash(git*clean*)"
+        ],
+        "ask": [
+            "Bash(make*clean)",
+            "Bash(git*add*)"
+        ]
+    },
+    "statusLine": {
+        "type": "command",
+        "command": "bash /home/mharman/.claude/statusline-command.sh"
+    },
+    "syntaxHighlightingDisabled": false,
+    "effortLevel": "medium",
+    "autoUpdatesChannel": "stable",
+    "minimumVersion": "2.1.121",
+    "theme": "auto",
+    "editorMode": "normal"
+}
