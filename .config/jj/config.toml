@@ -16,6 +16,25 @@ editor = "nvim"
 diff-editor = "hunknvim"
 diff-instructions = false
 
+[merge-tools.jj-stage]
+program = "nvim"
+diff-args = [
+  "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "JJDiffStage $left $right",
+]
+edit-args = [
+  "-c",
+  "let g:flatten_wait=1",
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "JJDiffStage $left $right",
+]
+
 [merge-tools.nvimdifftool]
 program = "nvim"
 diff-args = [
