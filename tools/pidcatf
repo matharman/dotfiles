@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [ "$#" -eq 1 ]; then
+    cat $1 | pidcat --pipe=`tput cols`
+elif [ "$#" -eq 2 ]; then
+    cat $1 | pidcat $2 --pipe=`tput cols`
+else
+    echo "Usage: pidcatf <adb logcat file> <optional: package name>"
+fi
