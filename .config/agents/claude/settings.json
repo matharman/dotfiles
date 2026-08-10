@@ -11,6 +11,7 @@
       "Bash(find *)",
       "Bash(tail *)",
       "Bash(head *)",
+      "Bash(tree *)",
       "Bash(ctest *)",
       "Read(/**)",
       "Read(~/.claude/**)"
@@ -25,14 +26,13 @@
       "Bash(git*add*)"
     ]
   },
-  "model": "sonnet[1m]",
+  "model": "claude-sonnet-4-6[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /home/mharman/.claude/statusline-command.sh"
   },
   "syntaxHighlightingDisabled": false,
   "effortLevel": "medium",
-  "autoUpdatesChannel": "stable",
   "theme": "auto",
   "editorMode": "normal"
 }

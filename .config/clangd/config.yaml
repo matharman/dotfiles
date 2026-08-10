@@ -54,4 +54,8 @@ If:
     ]
 
 Index:
-  Background: Skip
+  # The alternative is Skip, which prevents finding the definition
+  # of a symbol in other translation units. Ever had trouble with
+  # go-to-definition not going beyond a header file? It's because
+  # this was NOT set to Build.
+  Background: Build
