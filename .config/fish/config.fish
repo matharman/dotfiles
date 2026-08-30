@@ -22,7 +22,13 @@ if command -v -q secret-tool
     set -gx GITHUB_PAT_TOKEN (secret-tool lookup service github_pat token_type bearer 2> /dev/null)
 end
 
-set -Ux tide_left_prompt_items distrobox custom_context vi_mode pwd git
+if functions -q _tide_item_vcs
+    set my_tide_vcs_item vcs
+else
+    set my_tide_vcs_item git
+end
+
+set -Ux tide_left_prompt_items distrobox custom_context vi_mode pwd $my_tide_vcs_item
 set -Ux tide_right_prompt_items status direnv node python rustc go
 
 fish_add_path $HOME/tools
@@ -32,4 +38,8 @@ fish_add_path /usr/local/go/bin
 
 if grep -q Ubuntu /etc/os-release
     set -gx SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
+end
+
+if command -v -q zoxide
+    zoxide init fish | source
 end

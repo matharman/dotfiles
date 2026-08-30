@@ -4,8 +4,12 @@
 name = "Mathew Harman"
 email = "mathew.harman@gmail.com"
 
+[revset-aliases]
+'closest_bookmark(to)' = 'heads(::to & bookmarks())'
+
 [aliases]
 dt = ["diffedit", "--tool=nvimdifftool"]
+tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]

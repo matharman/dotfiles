@@ -26,13 +26,11 @@
       "Bash(git*add*)"
     ]
   },
-  "model": "claude-sonnet-4-6[1m]",
   "statusLine": {
     "type": "command",
     "command": "bash /home/mharman/.claude/statusline-command.sh"
   },
   "syntaxHighlightingDisabled": false,
-  "effortLevel": "medium",
   "theme": "auto",
   "editorMode": "normal"
 }
