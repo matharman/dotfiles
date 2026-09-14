@@ -29,6 +29,17 @@
 - Comments should not reference specific items from our conversation. They should be legibile with only the surrounding context, or with reference to another resource (examples: a JIRA ticket, a Confluence page, or other documentation).
     - **EXCEPTION**: you may leave TODOs for multi-phase plans. However, by the end of the plan all such comments should be removed.
 
+## Comments
+- **Never write:** what a library or HAL call already contracts to do; alternatives you
+considered and their costs; the safe or no-op branch of a race (state the race only);
+consequences added for weight ("...right when it's needed most"); a pointer to another
+function that already carries the same explanation.
+- **State each fact once,** at the site where the mechanism lives. If it appears in two
+comments, delete the one further from the mechanism.
+- **Self-check before handing off:** re-read the diff's comment lines with the code
+stripped out (`git diff | grep -E '^\+\s*(//|/\*|\*)'`). Anything that reads as
+narration rather than a warning gets cut.
+
 ## C/C++
 - Follow the conventions of the local `.clang-format`.
 - When documenting functions, structs, classes, or files, use the C-style `/** @brief ... */` Doxygen format.
