@@ -10,6 +10,7 @@ email = "mathew.harman@gmail.com"
 [aliases]
 dt = ["diffedit", "--tool=nvimdifftool"]
 tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
+log-mine = ["log", "--revision", "trunk():: & mine()"]
 
 [fix.tools.clang-format]
 command = ["clang-format", "--assume-filename=$path"]
