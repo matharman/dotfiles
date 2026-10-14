@@ -18,10 +18,6 @@ set -gx CMAKE_GENERATOR Ninja
 set -gx EDITOR (type -p nvim || echo "")
 set -gx GPG_TTY (tty)
 
-if command -v -q secret-tool
-    set -gx GITHUB_PAT_TOKEN (secret-tool lookup service github_pat token_type bearer 2> /dev/null)
-end
-
 if functions -q _tide_item_vcs
     set my_tide_vcs_item vcs
 else
