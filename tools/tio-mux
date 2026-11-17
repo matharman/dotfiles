@@ -1,0 +1,337 @@
+#!/usr/bin/env bash
+# tio-mux: share one serial device between several terminals through a single
+# tio server.
+#
+# Usage: tio-mux [<tio options>] <tty-device>
+#        tio-mux --stop <tty-device>
+#
+# The first invocation for a device starts a background
+# `tio --no-reconnect --socket ...` server, where <name> is the basename of the
+# resolved device path (/dev/serial/by-id/... -> ttyUSB0). Every invocation,
+# including the first, then connects the current terminal to
+# $TIO_MUX_DIR/<name>.sock (default /tmp) through a client tio. ctrl-t q
+# detaches.
+#
+# tio options take effect only when the server starts and apply to the server
+# tio, so timestamps and output modes affect only its log file.
+# The server runs until the device disappears or `tio-mux --stop` is run, which
+# also disconnects any attached clients. Server errors are written to
+# $TIO_MUX_DIR/<name>.err.
+#
+# Each server start logs to a new file, $TIO_MUX_LOG_DIR/<name>_<start>.log
+# (default ${XDG_STATE_HOME:-~/.local/state}/tio-mux). Its first line names the
+# device and its /dev/serial links; its last line records how the server
+# exited, including device loss. Every server start and
+# --stop gzips logs no process has open and deletes compressed logs older than
+# $TIO_MUX_LOG_DAYS days (default 30).
+#
+# With stdin not a terminal, the client forwards stdin to the device and exits
+# shortly after EOF, so `printf 'cmd\r' | tio-mux /dev/ttyUSB0` works.
+set -euo pipefail
+
+log_stamp() {
+    date '+%Y-%m-%d %H:%M:%S'
+}
+
+# Server entry point. tio reads its stdin as a terminal, so the server is
+# re-executed by socat on a pty that is never written to and never reaches EOF.
+# tio logs only device data, so this wrapper writes the first and last lines of
+# the log and records "<wrapper pid> <tio pid>" in the pidfile.
+if [[ -n ${_TIO_MUX_SERVER_ARGV-} ]]; then
+    eval "server_argv=($_TIO_MUX_SERVER_ARGV)"
+    pidfile=$_TIO_MUX_SERVER_PIDFILE
+    log_file=$_TIO_MUX_SERVER_LOG
+    errlog=$_TIO_MUX_SERVER_ERRLOG
+    header=$_TIO_MUX_SERVER_HEADER
+    unset "${!_TIO_MUX_SERVER_@}"
+
+    # Held open until the last line is written, which keeps log rotation off
+    # the file for the server's whole lifetime.
+    exec {log_fd}>>"$log_file"
+    printf '[%s] tio-mux: %s\n' "$(log_stamp)" "$header" >&"$log_fd"
+
+    # Without job control, bash gives a background command /dev/null as stdin
+    # unless stdin is redirected explicitly.
+    "${server_argv[@]}" <&0 {log_fd}>&- &
+    tio_pid=$!
+    echo "$$ $tio_pid" >"$pidfile"
+
+    status=0
+    wait "$tio_pid" || status=$?
+    if ((status > 128)); then
+        reason="killed by SIG$(kill -l "$((status - 128))")"
+    else
+        reason="exit status $status"
+    fi
+    tio_error=$(tail -n 1 -- "$errlog" 2>/dev/null | sed 's/\x1b\[[0-9;]*m//g') || tio_error=
+    printf '[%s] tio-mux: server exited, tio %s%s\n' "$(log_stamp)" "$reason" \
+        "${tio_error:+: $tio_error}" >&"$log_fd"
+    exit "$status"
+fi
+
+readonly mux_dir=${TIO_MUX_DIR:-/tmp}
+readonly log_dir=${TIO_MUX_LOG_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/tio-mux}
+readonly log_days=${TIO_MUX_LOG_DAYS:-30}
+
+# tio 3.8 options that consume the following argument.
+readonly value_short=bdfspoOamcS
+readonly -a value_long=(
+    --baudrate --databits --flow --stopbits --parity --output-delay
+    --output-line-delay --line-pulse-duration --auto-connect --exclude-devices
+    --exclude-drivers --exclude-tids --input-mode --output-mode
+    --timestamp-format --timestamp-timeout --log-file --log-directory --map
+    --color --socket --rs-485-config --alert --script --script-file
+    --script-run --exec
+)
+
+die() {
+    echo "tio-mux: $*" >&2
+    exit 1
+}
+
+takes_value_long() {
+    local opt
+    for opt in "${value_long[@]}"; do
+        [[ $1 == "$opt" ]] && return 0
+    done
+    return 1
+}
+
+device=
+set_device() {
+    [[ -z $device ]] || die "more than one device given: '$device' and '$1'"
+    device=$1
+}
+
+passthrough=false
+stop=false
+args=("$@")
+i=0
+while ((i < ${#args[@]})); do
+    arg=${args[i]}
+    case $arg in
+        --)
+            for ((i++; i < ${#args[@]}; i++)); do
+                set_device "${args[i]}"
+            done
+            break
+            ;;
+        --socket | --socket=* | --auto-connect | --auto-connect=* | \
+            --log-file | --log-file=* | --log-directory | --log-directory=*)
+            die "${arg%%=*} is managed by tio-mux"
+            ;;
+        --list | --version | --help)
+            passthrough=true
+            ;;
+        --stop)
+            stop=true
+            ;;
+        --*=*) ;;
+        --*)
+            if takes_value_long "$arg"; then
+                i=$((i + 1))
+            fi
+            ;;
+        -?*)
+            for ((j = 1; j < ${#arg}; j++)); do
+                c=${arg:j:1}
+                case $c in
+                    S | a) die "-$c is managed by tio-mux" ;;
+                    l | v | h) passthrough=true ;;
+                esac
+                if [[ $value_short == *"$c"* ]]; then
+                    if ((j + 1 == ${#arg})); then
+                        i=$((i + 1))
+                    fi
+                    break
+                fi
+            done
+            ;;
+        *)
+            set_device "$arg"
+            ;;
+    esac
+    i=$((i + 1))
+done
+
+tio_bin=$(command -v tio) || die "tio not found in PATH"
+
+if $passthrough; then
+    exec "$tio_bin" "$@"
+fi
+
+if $stop && { (($# != 2)) || [[ -z $device ]]; }; then
+    die "usage: tio-mux --stop <tty-device>"
+fi
+[[ -n $device ]] || die "usage: tio-mux [<tio options>] <tty-device>"
+real=$(readlink -f -- "$device")
+if ! $stop && [[ ! -c $real ]]; then
+    die "'$device' is not a character device (profiles and topology IDs are not supported)"
+fi
+
+name=${real##*/}
+sock=$mux_dir/$name.sock
+errlog=$mux_dir/$name.err
+pidfile=$mux_dir/$name.pid
+
+self=$(readlink -f -- "${BASH_SOURCE[0]}")
+# socat splits EXEC on spaces and treats , : ! quotes and \ as address syntax.
+if [[ $self == *[[:space:],:\!\'\"\\]* ]]; then
+    die "script path '$self' contains characters socat cannot EXEC"
+fi
+
+server_alive() {
+    socat -u /dev/null "UNIX-CONNECT:$sock" 2>/dev/null
+}
+
+[[ $log_days =~ ^[0-9]+$ ]] || die "TIO_MUX_LOG_DAYS must be a whole number of days"
+# fuser has no -- separator, so log paths must not look like options.
+[[ $log_dir == /* ]] || die "TIO_MUX_LOG_DIR must be an absolute path"
+
+# Covers every device's logs. A tio server holds its log open, so open logs are
+# never compressed; gzip unlinks its input, and tio would keep writing to the
+# unlinked file.
+rotate_logs() {
+    local f
+    for f in "$log_dir"/*.log; do
+        [[ -e $f ]] || continue
+        fuser -s "$f" 2>/dev/null && continue
+        nice gzip -- "$f" || true
+    done
+    find "$log_dir" -maxdepth 1 -name '*.log.gz' -mtime "+$log_days" -delete
+}
+
+start_log_rotation() {
+    rotate_logs </dev/null >/dev/null 2>&1 {lock_fd}>&- &
+}
+
+wrapper_pid=
+tio_pid=
+read_pidfile() {
+    wrapper_pid=
+    tio_pid=
+    read -r wrapper_pid tio_pid 2>/dev/null <"$pidfile" || true
+}
+
+server_pid_dead() {
+    read_pidfile
+    # Empty while the server is between creating and writing the file.
+    [[ -n $wrapper_pid ]] || return 1
+    ! kill -0 "$wrapper_pid" 2>/dev/null
+}
+
+wait_for_exit() {
+    local n
+    for ((n = 0; n < 30; n++)); do
+        kill -0 "$1" 2>/dev/null || return 0
+        sleep 0.1
+    done
+    return 1
+}
+
+exec {lock_fd}>"$mux_dir/$name.lock"
+flock "$lock_fd"
+
+if $stop; then
+    if ! server_alive; then
+        echo "tio-mux: no server running for $name" >&2
+        exit 0
+    fi
+    read_pidfile
+    if [[ -z $wrapper_pid || -z $tio_pid ]]; then
+        die "server for $name is running but $pidfile is incomplete or missing"
+    fi
+    cmdline=$(tr '\0' ' ' <"/proc/$tio_pid/cmdline" 2>/dev/null) || cmdline=
+    if [[ $cmdline != *" --socket unix:$sock "* ]]; then
+        die "pid $tio_pid in $pidfile is not the tio server for $name"
+    fi
+    kill "$tio_pid"
+    wait_for_exit "$tio_pid" ||
+        die "tio server for $name (pid $tio_pid) did not exit on SIGTERM"
+    # The wrapper writes the log's last line after tio exits.
+    wait_for_exit "$wrapper_pid" ||
+        echo "tio-mux: server wrapper (pid $wrapper_pid) still running; its log was not rotated" >&2
+    # tio leaves its socket behind when killed by a signal.
+    rm -f -- "$sock" "$pidfile"
+    echo "tio-mux: stopped server for $name" >&2
+    start_log_rotation
+    exit 0
+fi
+
+if server_alive; then
+    if (($# > 1)); then
+        echo "tio-mux: server for $name already running; ignoring tio options" >&2
+    fi
+else
+    rm -f -- "$sock" "$pidfile"
+    mkdir -p -- "$log_dir"
+    log_file=$log_dir/${name}_$(date +%Y-%m-%dT%H%M%S).log
+    printf -v server_argv '%q ' "$tio_bin" --no-reconnect --socket "unix:$sock" \
+        --log --log-append --log-file "$log_file" "$@"
+
+    links=()
+    for link in /dev/serial/by-id/* /dev/serial/by-path/*; do
+        if [[ -e $link && $(readlink -f -- "$link") == "$real" ]]; then
+            links+=("$link")
+        fi
+    done
+    header="server started on $real"
+    if ((${#links[@]})); then
+        header+=" (${links[*]})"
+    fi
+    printf -v invocation ' %q' "$@"
+    header+="; invoked as: tio-mux$invocation"
+    # tio's stdin must be the pty: on a non-tty stdin tio switches to
+    # non-interactive mode and exits at EOF. ignoreeof keeps the /dev/null
+    # side from ever closing the pty.
+    # tio's screen output is discarded and its stderr is inherited from socat.
+    # The lock fd is closed so the server does not hold the lock while it runs.
+    _TIO_MUX_SERVER_ARGV=$server_argv _TIO_MUX_SERVER_PIDFILE=$pidfile \
+        _TIO_MUX_SERVER_LOG=$log_file _TIO_MUX_SERVER_ERRLOG=$errlog \
+        _TIO_MUX_SERVER_HEADER=$header \
+        setsid -f socat "EXEC:$self,pty,setsid" /dev/null,ignoreeof \
+        </dev/null >/dev/null 2>"$errlog" {lock_fd}>&-
+
+    for ((n = 0; n < 50; n++)); do
+        server_alive && break
+        if server_pid_dead; then
+            cat -- "$errlog" >&2
+            die "tio server for $name failed to start"
+        fi
+        sleep 0.1
+    done
+    if ! server_alive; then
+        cat -- "$errlog" >&2
+        die "timed out waiting for tio server on $sock"
+    fi
+    start_log_rotation
+fi
+
+flock -u "$lock_fd"
+exec {lock_fd}>&-
+
+if [[ -t 0 ]]; then
+    # The client is tio on a private pty bridged to the server socket, so the
+    # usual ctrl-t keys work. Line-control keys (baud, break, DTR/RTS) act on
+    # that pty, not on the device.
+    client_pty=$(mktemp -u "$mux_dir/$name.client.XXXXXX")
+    socat -d0 "PTY,link=$client_pty,rawer" "UNIX-CONNECT:$sock" &
+    relay_pid=$!
+    trap 'kill "$relay_pid" 2>/dev/null || true' EXIT
+    for ((n = 0; n < 50; n++)); do
+        [[ -e $client_pty ]] && break
+        kill -0 "$relay_pid" 2>/dev/null || die "could not connect to $sock"
+        sleep 0.1
+    done
+    [[ -e $client_pty ]] || die "timed out creating client pty"
+    "$tio_bin" --no-reconnect "$client_pty" || true
+else
+    socat STDIO "UNIX-CONNECT:$sock" || true
+fi
+
+if ! server_alive; then
+    echo "tio-mux: tio server for $name has exited" >&2
+    if [[ -s $errlog ]]; then
+        cat -- "$errlog" >&2
+    fi
+fi
