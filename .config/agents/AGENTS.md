@@ -29,6 +29,14 @@
 - Comments should not reference specific items from our conversation. They should be legible with only the surrounding context, or with reference to another resource (examples: a JIRA ticket, a Confluence page, or other documentation).
     - **EXCEPTION**: you may leave TODOs for multi-phase plans. However, by the end of the plan all such comments should be removed.
 
+## Write for a reader who never saw the conversation
+Applies to code comments, docs, docstrings, assert/log messages, and test names. Commit messages and PR descriptions are exempt; history belongs there.
+- Describe only what the code does now. Never describe something the code does not have: no "has no X", "no longer", "instead of", "without the X", "removed", "now".
+- If something we removed leaves a consequence, state the consequence on its own as a current fact.
+    - Bad: "Demotion has no hold, so recovery demotes the master."
+    - Good: "While USB is SUSPENDED, PD output recovery demotes the master."
+- Self-check: delete the sentence and ask whether a reader who has only the current code would notice anything missing. If the sentence only made sense next to an earlier draft, cut it or restate it as a current fact.
+
 ## Comments
 - **Never write:** what a library or HAL call already contracts to do; alternatives you
 considered and their costs; the safe or no-op branch of a race (state the race only);
