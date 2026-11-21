@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Use as VISUAL/EDITOR for Claude Code. Opens nvim with a read-only digest of recent agent
+# turns on the left and the prompt file on the right.
+#
+# Usage:
+#   claude-editor-wrapper <prompt-file>        open nvim with the context split
+#   claude-editor-wrapper --print-context      print the digest to stdout and exit
+#
+# Environment:
+#   CLAUDE_CODE_SESSION_ID  selects the transcript; else the newest in the project dir
+#   CLAUDE_CONFIG_DIR       overrides ~/.claude
+#   CTX_TURNS               number of exchanges to include (default 5)
+set -u
+umask 077
+
+turns="${CTX_TURNS:-5}"
+projects="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects"
+
+find_transcript() {
+    local id="${CLAUDE_CODE_SESSION_ID:-}" dir
+    if [[ -n "$id" ]]; then
+        find "$projects" -maxdepth 2 -name "$id.jsonl" -print -quit 2>/dev/null
+        return
+    fi
+    dir="$projects/$(printf '%s' "$PWD" | sed 's/[^A-Za-z0-9]/-/g')"
+    ls -t "$dir"/*.jsonl 2>/dev/null | head -n 1
+}
+
+render_context() {
+    jq -rs --argjson n "$turns" '
+        def is_human:
+            .type == "user"
+            and (.isMeta | not)
+            and ((.origin.kind // "human") == "human")
+            and (
+                (.message.content | type) == "string"
+                or (
+                    (.message.content | type) == "array"
+                    and any(.message.content[]; .type == "text")
+                    and (any(.message.content[]; .type == "tool_result") | not)
+                )
+            );
+        def prompt_text:
+            if (.message.content | type) == "string" then .message.content
+            else [.message.content[] | select(.type == "text") | .text] | join("\n") end;
+        def tool_title:
+            (.input // {}) as $i
+            | ($i.description // $i.file_path // $i.pattern // $i.url // $i.query
+               // ($i.command // "" | split("\n")[0]))
+            | tostring | .[0:120];
+
+        [ .[] | select((.type == "user" or .type == "assistant") and (.isSidechain | not)) ]
+        | reduce .[] as $m ([];
+            if ($m | is_human) then
+                . + [{prompt: ($m | prompt_text), items: []}]
+            elif $m.type == "assistant" and length > 0 then
+                .[-1].items += [
+                    $m.message.content[]?
+                    | if .type == "text" and (.text | test("\\S")) then {kind: "text", v: .text}
+                      elif .type == "tool_use" then {kind: "tool", v: "\(.name): \(tool_title)"}
+                      else empty end
+                ]
+            else . end)
+        | .[-$n:][]
+        | "## > " + (.prompt | split("\n")[0] | .[0:100]),
+          "",
+          (.items[] | if .kind == "text" then .v + "\n" else "  [tool] " + .v end),
+          ""
+    ' "$1"
+}
+
+if [[ "${1:-}" == "--print-context" ]]; then
+    transcript="$(find_transcript)"
+    [[ -n "$transcript" ]] || { echo "no transcript found" >&2; exit 1; }
+    render_context "$transcript"
+    exit
+fi
+
+prompt_file="${1:?missing prompt file}"
+ctx_file=""
+
+if command -v jq >/dev/null; then
+    transcript="$(find_transcript)"
+    if [[ -n "$transcript" ]]; then
+        ctx_file="$(mktemp --suffix=.md)"
+        trap 'rm -f "$ctx_file"' EXIT
+        render_context "$transcript" >"$ctx_file" 2>/dev/null || ctx_file=""
+    fi
+fi
+
+if [[ -z "$ctx_file" || ! -s "$ctx_file" ]]; then
+    exec nvim "$@"
+fi
+
+nvim -O "$ctx_file" "$prompt_file" \
+    -c 'setlocal readonly nomodifiable wrap linebreak' \
+    -c 'normal! G' \
+    -c 'wincmd l'
