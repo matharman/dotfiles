@@ -1,17 +1,29 @@
 #!/usr/bin/env bash
+# Installs a Neovim release into ~/.local/opt/nvim-<channel> and points ~/.local/bin/nvim at it.
+# Each install replaces the whole tree, so files dropped upstream do not linger.
+set -euo pipefail
 
-CHANNEL=$1
-
-if [ -z $CHANNEL ]; then
-    CHANNEL="nightly"
+# A channel (nightly, stable) or a release version (0.12.2 or v0.12.2).
+CHANNEL=${1:-nightly}
+if [[ $CHANNEL =~ ^[0-9] ]]; then
+    CHANNEL="v${CHANNEL}"
 fi
-
 URL="https://github.com/neovim/neovim/releases/download/${CHANNEL}/nvim-linux-x86_64.tar.gz"
-OUTPUT=/tmp/${CHANNEL}-nvim-linux64.tar.gz
+DEST="$HOME/.local/opt/nvim-${CHANNEL}"
 
-set -e
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
 
 echo "Downloading ${CHANNEL} from ${URL}"
-curl -fL -o "${OUTPUT}" "${URL}"
-tar -C $HOME/.local/ --strip-components=1 -xzf ${OUTPUT}
-rm ${OUTPUT}
+curl -fL -o "$tmp/nvim.tar.gz" "$URL"
+mkdir "$tmp/nvim"
+tar -C "$tmp/nvim" --strip-components=1 -xzf "$tmp/nvim.tar.gz"
+
+mkdir -p "$HOME/.local/opt" "$HOME/.local/bin"
+rm -rf "$DEST.old"
+if [ -d "$DEST" ]; then
+    mv "$DEST" "$DEST.old"
+fi
+mv "$tmp/nvim" "$DEST"
+ln -sfn "$DEST/bin/nvim" "$HOME/.local/bin/nvim"
+"$HOME/.local/bin/nvim" --version | head -n 1

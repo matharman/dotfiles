@@ -26,7 +26,7 @@
 - Never use glyphs, em-dashes, or emojis.
     - Specifically for an arrow, use `->` instead of `→`.
     - For a checkmark, use `[x]` instead of `✓`.
-- Comments should not reference specific items from our conversation. They should be legibile with only the surrounding context, or with reference to another resource (examples: a JIRA ticket, a Confluence page, or other documentation).
+- Comments should not reference specific items from our conversation. They should be legible with only the surrounding context, or with reference to another resource (examples: a JIRA ticket, a Confluence page, or other documentation).
     - **EXCEPTION**: you may leave TODOs for multi-phase plans. However, by the end of the plan all such comments should be removed.
 
 ## Comments
@@ -37,7 +37,7 @@ function that already carries the same explanation.
 - **State each fact once,** at the site where the mechanism lives. If it appears in two
 comments, delete the one further from the mechanism.
 - **Self-check before handing off:** re-read the diff's comment lines with the code
-stripped out (`git diff | grep -E '^\+\s*(//|/\*|\*)'`). Anything that reads as
+stripped out (`git diff | rg '^\+\s*(//|/\*|\*)'`). Anything that reads as
 narration rather than a warning gets cut.
 
 ## C/C++

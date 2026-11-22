@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-VERSION=$1
-
-if [ -z $VERSION ]; then
+VERSION=${1:-}
+if [ -z "$VERSION" ]; then
     echo "usage: update-fish <version>"
     echo "example: update-fish 4.6.0"
     exit 1
 fi
 
-#  curl -fL -o /tmp/fish-static.tar.xz "https://github.com/fish-shell/fish-shell/releases/download/4.5.0/fish-4.5.0-linux-x86_64.tar.xz"
 URL="https://github.com/fish-shell/fish-shell/releases/download/${VERSION}/fish-${VERSION}-linux-x86_64.tar.xz"
-OUTPUT=/tmp/fish-static.tar.xz
 
-set -e
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
 
 echo "Downloading ${VERSION} from ${URL}"
-curl -fL -o "${OUTPUT}" "${URL}"
-tar -C $HOME/.local/bin -xJf ${OUTPUT}
-rm ${OUTPUT}
+curl -fL -o "$tmp/fish.tar.xz" "$URL"
+tar -C "$HOME/.local/bin" -xJf "$tmp/fish.tar.xz"
+"$HOME/.local/bin/fish" --version

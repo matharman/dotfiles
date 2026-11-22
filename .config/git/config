@@ -1,39 +1,38 @@
 # vim: set ft=gitconfig:
 [user]
-        name = Mathew Harman
+	name = Mathew Harman
 	email = mathew.harman@gmail.com
 [color]
-        ui = auto
+	ui = auto
 [core]
-        editor = nvim
+	editor = nvim
 [init]
 	defaultBranch = main
 [diff]
-        tool = dtnvim
+	tool = nvimdifftool
 	algorithm = histogram
 [merge]
-        tool = mtnvim
-	conflictstyle = diff3
+	tool = nvimdiff
+	conflictstyle = zdiff3
 [difftool]
-        trustExitCode = true
-[difftool "dtnvim"]
-        cmd = nvim -d $LOCAL $REMOTE -c 'packadd nvim.difftool' -c 'wincmd l'
+	trustExitCode = true
+[difftool "nvimdifftool"]
+	cmd = nvim -c 'packadd nvim.difftool' -d \"$LOCAL\" \"$REMOTE\" -c 'wincmd l'
 [mergetool]
-        trustExitCode = true
 	keepBackup = false
-[mergetool "mtnvim"]
-        cmd = nvim -d $LOCAL $REMOTE $MERGED -c '$wincmd w' -c 'wincmd J'
+[mergetool "nvimdiff"]
+	layout = LOCAL,REMOTE / MERGED
 [alias]
-        mt = mergetool -y
-        dt = difftool -y
-        lg = log --color --graph --oneline --decorate
-        hist = !git lg --all && exit
+	mt = mergetool -y
+	dt = difftool -y
+	lg = log --color --graph --oneline --decorate
+	hist = !git lg --all
 [push]
-        default = simple
+	default = simple
 [pull]
-        rebase = true
+	rebase = true
 [apply]
-        whitespace = nowarn
+	whitespace = nowarn
 
 [safe]
 	directory = /opt/esp/*
@@ -45,13 +44,17 @@
 	path = ~/.config/git/default-gpg
 
 [includeIf "gitdir:~/m2md/**"]
-        path = ~/.config/git/m2md
+	path = ~/.config/git/m2md
+[includeIf "gitdir:~/work/zephyr-tracker-root/**"]
+	path = ~/.config/git/m2md
 [includeIf "gitdir:~/work/esp-wifi-scan/**"]
-        path = ~/.config/git/m2md
+	path = ~/.config/git/m2md
 [includeIf "gitdir:~/work/monorepo/**"]
-        path = ~/.config/git/m2md
+	path = ~/.config/git/m2md
 
 [includeIf "gitdir:~/flock/**"]
-        path = ~/.config/git/flock
+	path = ~/.config/git/flock
 [includeIf "gitdir:~/raven/**"]
-        path = ~/.config/git/flock
+	path = ~/.config/git/flock
+[includeIf "gitdir:~/work/raven/**"]
+	path = ~/.config/git/flock

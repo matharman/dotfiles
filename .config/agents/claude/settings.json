@@ -6,18 +6,13 @@
   "permissions": {
     "allow": [
       "Bash(ls *)",
-      "Bash(ls * ~/.claude/**)",
       "Bash(rg *)",
-      "Bash(rg * ~/.claude/**)",
-      "Bash(grep *)",
-      "Bash(grep * ~/.claude/**)",
       "Bash(find *)",
       "Bash(tail *)",
       "Bash(head *)",
       "Bash(tree *)",
       "Bash(ctest *)",
-      "Read(/**)",
-      "Read(~/.claude/**)"
+      "Read(/**)"
     ],
     "deny": [
       "Bash(git*commit*)",
