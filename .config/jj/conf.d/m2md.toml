@@ -12,6 +12,6 @@
 email = "mathew.harman@m2mdtech.com"
 
 [signing]
-behavior = "own"
+behavior = "drop"
 backend = "gpg"
 key = "D28DC6534B501C81"

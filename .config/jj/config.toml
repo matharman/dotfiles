@@ -27,13 +27,30 @@ edit-args = ["-c", "let g:autoformat=v:false", "-c", "JJDiffStage $left $right"]
 
 [merge-tools.nvimdifftool]
 program = "nvim"
-edit-args = ["-c", "let g:autoformat=v:false", "-c", "packadd nvim.difftool", "-c", "DiffTool $left $right"]
+edit-args = [
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffTool $left $right",
+]
 
 [merge-tools.hunknvim]
 program = "nvim"
-edit-args = ["-c", "let g:autoformat=v:false", "-c", "packadd nvim.difftool", "-c", "DiffEditor $left $right $output"]
+edit-args = [
+  "-c",
+  "let g:autoformat=v:false",
+  "-c",
+  "packadd nvim.difftool",
+  "-c",
+  "DiffEditor $left $right $output",
+]
 
 [signing]
-behavior = "own"
+behavior = "drop"
 backend = "gpg"
 key = "D5A9E07E5740AA47"
+
+[git]
+sign-on-push = true
