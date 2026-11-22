@@ -18,7 +18,7 @@ export PATH=$PATH:/usr/local/bin
 export PATH=$PATH:/usr/local/go/bin
 export EDITOR=nvim
 
-if [ ! command -v rg &> /dev/null ]; then
+if command -v rg &> /dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden'
 fi
 

@@ -16,6 +16,7 @@ If:
     [
       /home/mharman/work/zephyr-tracker/.*,
       /home/mharman/work/zephyr-tracker-root/.*,
+      /home/mharman/m2md/zephyr-tracker-root/.*,
       /opt/ncs/.*,
       /home/mharman/work/esp-idf/.*,
       /home/mharman/work/esp-wifi-scan/.*,
@@ -46,16 +47,10 @@ CompileFlags:
 
 ---
 If:
-  PathMatch:
-    [
-      *\.asm,
-      *\.s,
-      *\.S,
-    ]
+  PathMatch: '.*\.(asm|s|S)'
 
 Index:
-  # The alternative is Skip, which prevents finding the definition
-  # of a symbol in other translation units. Ever had trouble with
-  # go-to-definition not going beyond a header file? It's because
-  # this was NOT set to Build.
-  Background: Build
+  # Applies only to the assembly files matched above. Skip keeps their
+  # symbols out of the background index, so go-to-definition will not
+  # reach symbols defined in them. All other files keep the default (Build).
+  Background: Skip
