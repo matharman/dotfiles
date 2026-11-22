@@ -37,5 +37,5 @@ if grep -q Ubuntu /etc/os-release
 end
 
 if command -v -q zoxide
-    zoxide init fish | source
+    zoxide init fish --cmd cd | source
 end
